@@ -1,0 +1,136 @@
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.contrib.auth import get_user_model
+from django.shortcuts import get_object_or_404
+from .serializers import (
+    UserRegistrationSerializer,
+    UserSerializer,
+    UserListSerializer,
+    AdminCreateUserSerializer,
+    ChangePasswordSerializer,
+    CustomTokenObtainPairSerializer,
+    PendingStudentSerializer,
+    RESTRICTED_ROLES,
+)
+from .permissions import IsAdminOrModerator
+from .utils import generate_temp_password, send_welcome_email
+
+User = get_user_model()
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    """Connexion via email ou téléphone — retourne les tokens + les infos utilisateur."""
+    serializer_class = CustomTokenObtainPairSerializer
+
+
+class RegisterView(generics.CreateAPIView):
+    """Inscription publique — rôles admin et modérateur exclus."""
+    queryset = User.objects.all()
+    permission_classes = [permissions.AllowAny]
+    serializer_class = UserRegistrationSerializer
+
+
+class UserProfileView(generics.RetrieveUpdateAPIView):
+    """Récupération et mise à jour du profil de l'utilisateur connecté."""
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
+
+    def get_object(self):
+        return self.request.user
+
+
+class AdminCreateUserView(generics.CreateAPIView):
+    """
+    Création de compte par un administrateur.
+    Génère un mot de passe temporaire envoyé par email.
+    Seul l'admin peut créer des comptes modérateur ou admin.
+    """
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    serializer_class = AdminCreateUserSerializer
+
+    def create(self, request, *args, **kwargs):
+        role = request.data.get('role', 'student')
+        if role in RESTRICTED_ROLES and not request.user.role == 'admin':
+            return Response(
+                {"detail": "Seul un administrateur peut créer un compte modérateur ou administrateur."},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        return Response(
+            UserSerializer(user).data,
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class ChangePasswordView(APIView):
+    """
+    Changement de mot de passe — obligatoire à la première connexion.
+    Réinitialise must_change_password=False après un changement réussi.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+
+        user = request.user
+        user.set_password(serializer.validated_data['new_password'])
+        user.must_change_password = False
+        user.save()
+
+        return Response(
+            {"detail": "Mot de passe modifié avec succès."},
+            status=status.HTTP_200_OK,
+        )
+
+
+class UsersListView(generics.ListAPIView):
+    """Liste de tous les utilisateurs — accessible aux admins et modérateurs."""
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrModerator]
+    serializer_class = UserListSerializer
+
+    def get_queryset(self):
+        return User.objects.all().order_by('-date_joined')
+
+
+class PendingStudentsView(generics.ListAPIView):
+    """Liste des étudiants en attente de vérification — accessible aux admins et modérateurs."""
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrModerator]
+    serializer_class = PendingStudentSerializer
+
+    def get_queryset(self):
+        return User.objects.filter(role='student', is_active=False).select_related('student_profile__school')
+
+
+class ApproveStudentView(APIView):
+    """Activation du compte étudiant après vérification du matricule — accessible aux admins et modérateurs."""
+    permission_classes = [permissions.IsAuthenticated, IsAdminOrModerator]
+
+    def post(self, request, pk):
+        student = get_object_or_404(User, pk=pk, role='student')
+
+        if student.is_active:
+            return Response(
+                {"detail": "Ce compte est déjà actif."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        temp_password = generate_temp_password()
+        student.set_password(temp_password)
+        student.is_active = True
+        student.must_change_password = True
+        student.save(update_fields=['password', 'is_active', 'must_change_password'])
+
+        send_welcome_email(student, temp_password)
+
+        return Response(
+            {
+                "detail": "Compte étudiant activé avec succès. Les identifiants ont été envoyés par email.",
+                "user": UserSerializer(student).data,
+            },
+            status=status.HTTP_200_OK,
+        )

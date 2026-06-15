@@ -1,0 +1,22 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Variables d'environnement — ne jamais commiter
+.env
+
+# Base de données locale
+db.sqlite3
+
+# Fichiers uploadés
+media/
+
+# Fichiers statiques collectés
+staticfiles/

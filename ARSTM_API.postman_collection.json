@@ -1,0 +1,1151 @@
+{
+  "info": {
+    "_postman_id": "arstm-backend-api",
+    "name": "ARSTM Backend API",
+    "description": "Collection complète des endpoints de la plateforme ARSTM. Organisée par module applicatif.\n\n**Setup :**\n1. Définir la variable `base_url` (ex: `http://localhost:8000` ou votre URL ngrok)\n2. Faire `POST /api/users/login/` et copier `access_token` dans la variable du même nom\n3. Toutes les requêtes authentifiées utiliseront ce token automatiquement",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:2026",
+      "type": "string",
+      "description": "URL de base du serveur (changer pour ngrok ou production)"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string",
+      "description": "JWT Access Token — obtenu via POST /api/users/login/"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string",
+      "description": "JWT Refresh Token — obtenu via POST /api/users/login/"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 · Authentification",
+      "item": [
+        {
+          "name": "Inscription publique — par rôle",
+          "item": [
+            {
+              "name": "Étudiant / Candidat (student)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"etudiant@example.com\",\n  \"first_name\": \"Kofi\",\n  \"last_name\": \"Asante\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"student\",\n  \"phone\": \"+2250700000001\",\n  \"profile\": {\n    \"current_year\": \"Licence 2\",\n    \"nationality\": \"Ivoirien\",\n    \"birth_date\": \"2001-05-20\",\n    \"matricule\": \"\"\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Champs profile : school (id, optionnel), matricule (auto si vide), current_year, birth_date, nationality"
+              }
+            },
+            {
+              "name": "Professionnel / Entreprise (professional)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"pro@armateur.ci\",\n  \"first_name\": \"Serge\",\n  \"last_name\": \"Aboua\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"professional\",\n  \"phone\": \"+2250700000010\",\n  \"profile\": {\n    \"company_name\": \"SIVOMAR\",\n    \"job_title\": \"Directeur Technique\",\n    \"sector\": \"maritime\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://sivomar.ci\"\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "sector : maritime | port | offshore | security | fishing | other"
+              }
+            },
+            {
+              "name": "Recruteur / Partenaire RH (recruiter)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"rh@groupe-bolloré.com\",\n  \"first_name\": \"Estelle\",\n  \"last_name\": \"Mensah\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"recruiter\",\n  \"phone\": \"+2250700000020\",\n  \"profile\": {\n    \"company_name\": \"Groupe Bolloré Africa Logistics\",\n    \"job_title\": \"Responsable RH\",\n    \"sector\": \"port\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://bollore-africa-logistics.com\"\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Partage le même profil ProfessionalProfile que 'professional'. company_website est utile pour les offres d'emploi."
+              }
+            },
+            {
+              "name": "Chercheur / Expert Maritime (researcher)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"dr.koffi@uao.edu.ci\",\n  \"first_name\": \"Adou\",\n  \"last_name\": \"Koffi\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"researcher\",\n  \"phone\": \"+2250700000030\",\n  \"profile\": {\n    \"academic_title\": \"dr\",\n    \"institution\": \"Université Alassane Ouattara — Bouaké\",\n    \"country\": \"Côte d'Ivoire\",\n    \"research_profile_url\": \"https://orcid.org/0000-0002-1234-5678\"\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "academic_title : dr | prof | mr | ms | eng. specialization = ID du Domain (optionnel). research_profile_url : ORCID, ResearchGate, etc."
+              }
+            },
+            {
+              "name": "Bailleur de fonds / Partenaire Institutionnel (donor)",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"contact@omi-wca.org\",\n  \"first_name\": \"Ibrahim\",\n  \"last_name\": \"Coulibaly\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"donor\",\n  \"phone\": \"+2250700000040\",\n  \"profile\": {\n    \"organization_name\": \"Organisation Maritime Internationale — Région Afrique de l'Ouest\",\n    \"position\": \"Représentant Régional\",\n    \"organization_type\": \"multilateral\",\n    \"country\": \"Côte d'Ivoire\"\n  }\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "organization_type : ministry | multilateral | ngo | private | other"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Connexion (Login)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.access) pm.collectionVariables.set('access_token', json.access);",
+                  "if (json.refresh) pm.collectionVariables.set('refresh_token', json.refresh);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/users/login/", "host": ["{{base_url}}"], "path": ["api", "users", "login", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"etudiant@example.com\",\n  \"password\": \"MonMotDePasse123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Connexion par email. Sauvegarde automatiquement `access_token` et `refresh_token` dans les variables de collection."
+          }
+        },
+        {
+          "name": "Rafraîchir le token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "if (json.access) pm.collectionVariables.set('access_token', json.access);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/users/token/refresh/", "host": ["{{base_url}}"], "path": ["api", "users", "token", "refresh", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 · Profil Utilisateur",
+      "item": [
+        {
+          "name": "Mon profil (GET)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/users/profile/", "host": ["{{base_url}}"], "path": ["api", "users", "profile", ""] },
+            "description": "Retourne le profil complet avec le sous-profil spécifique au rôle (student_profile, professional_profile, etc.)"
+          }
+        },
+        {
+          "name": "Mettre à jour mon profil (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/profile/", "host": ["{{base_url}}"], "path": ["api", "users", "profile", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Kofi\",\n  \"last_name\": \"Asante\",\n  \"phone\": \"+2250700000099\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Changer son mot de passe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/change-password/", "host": ["{{base_url}}"], "path": ["api", "users", "change-password", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"TempPassword123!\",\n  \"new_password\": \"NouveauMotDePasse456!\",\n  \"confirm_password\": \"NouveauMotDePasse456!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Obligatoire à la première connexion si `must_change_password = true`. Réinitialise ce flag après succès."
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 · Administration Utilisateurs",
+      "description": "Réservé aux comptes staff (is_staff=True). Un mot de passe temporaire est généré et envoyé par email. L'utilisateur devra le changer à sa première connexion (must_change_password=true).",
+      "item": [
+        {
+          "name": "Créer — Étudiant (student)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/create/", "host": ["{{base_url}}"], "path": ["api", "users", "create", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"etudiant.nouveau@arstm.ci\",\n  \"first_name\": \"Yao\",\n  \"last_name\": \"Kouame\",\n  \"role\": \"student\",\n  \"phone\": \"+2250700000050\",\n  \"profile\": {\n    \"current_year\": \"Licence 1\",\n    \"nationality\": \"Ivoirien\",\n    \"birth_date\": \"2003-09-12\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Créer — Professionnel (professional)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/create/", "host": ["{{base_url}}"], "path": ["api", "users", "create", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"capitaine@armement.ci\",\n  \"first_name\": \"Marcel\",\n  \"last_name\": \"Guehi\",\n  \"role\": \"professional\",\n  \"phone\": \"+2250700000060\",\n  \"profile\": {\n    \"company_name\": \"PETROCI\",\n    \"job_title\": \"Capitaine de navire\",\n    \"sector\": \"offshore\",\n    \"country\": \"Côte d'Ivoire\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Créer — Recruteur (recruiter)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/create/", "host": ["{{base_url}}"], "path": ["api", "users", "create", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"rh@port-abidjan.ci\",\n  \"first_name\": \"Carine\",\n  \"last_name\": \"Bamba\",\n  \"role\": \"recruiter\",\n  \"phone\": \"+2250700000070\",\n  \"profile\": {\n    \"company_name\": \"Port Autonome d'Abidjan\",\n    \"job_title\": \"Chargée de Recrutement\",\n    \"sector\": \"port\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://paa.ci\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Créer — Chercheur (researcher)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/create/", "host": ["{{base_url}}"], "path": ["api", "users", "create", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"prof.toure@ucad.sn\",\n  \"first_name\": \"Mamadou\",\n  \"last_name\": \"Touré\",\n  \"role\": \"researcher\",\n  \"phone\": \"+2210700000080\",\n  \"profile\": {\n    \"academic_title\": \"prof\",\n    \"institution\": \"Université Cheikh Anta Diop de Dakar\",\n    \"country\": \"Sénégal\",\n    \"research_profile_url\": \"https://researchgate.net/profile/mamadou-toure\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Créer — Bailleur institutionnel (donor)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/create/", "host": ["{{base_url}}"], "path": ["api", "users", "create", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"partenaire@cedeao.int\",\n  \"first_name\": \"Fatou\",\n  \"last_name\": \"Diallo\",\n  \"role\": \"donor\",\n  \"phone\": \"+2230700000090\",\n  \"profile\": {\n    \"organization_name\": \"Commission de la CEDEAO\",\n    \"position\": \"Directrice des Transports Maritimes\",\n    \"organization_type\": \"multilateral\",\n    \"country\": \"Nigeria\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Créer — Agent ARSTM (admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/create/", "host": ["{{base_url}}"], "path": ["api", "users", "create", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"agent.dcm@arstm.ci\",\n  \"first_name\": \"Jean\",\n  \"last_name\": \"Dupont\",\n  \"role\": \"admin\",\n  \"phone\": \"+2250700000002\",\n  \"profile\": {\n    \"department\": \"Direction de la Communication Maritime (DCM)\",\n    \"employee_id\": \"ARSTM-2024-001\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Crée un agent interne ARSTM avec un profil StaffProfile. employee_id doit être unique."
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 · Institution",
+      "description": "Lecture publique (AllowAny). Écriture (POST/PATCH/DELETE) réservée aux admins (is_staff=True).",
+      "item": [
+        {
+          "name": "Écoles",
+          "item": [
+            {
+              "name": "Liste des écoles",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/schools/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", ""] }
+              }
+            },
+            {
+              "name": "Créer une école",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/schools/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"École Supérieure de Navigation\",\n  \"description_fr\": \"Formation des officiers et personnels de la marine marchande.\",\n  \"description_en\": \"Training of merchant marine officers and staff.\",\n  \"presentation_video_url\": \"\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Le `slug` est auto-généré depuis `name`. Pour uploader `featured_image`, utiliser multipart/form-data."
+              }
+            },
+            {
+              "name": "Détail d'une école",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/schools/esn/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", "esn", ""] },
+                "description": "Remplacer `esn` par le slug de l'école (ex: estm, ceam, ismi)"
+              }
+            },
+            {
+              "name": "Modifier une école (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/schools/esn/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", "esn", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description_fr\": \"Description mise à jour.\",\n  \"description_en\": \"Updated description.\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                }
+              }
+            },
+            {
+              "name": "Supprimer une école",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/schools/esn/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", "esn", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Infrastructures",
+          "item": [
+            {
+              "name": "Liste des infrastructures",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/infrastructures/", "host": ["{{base_url}}"], "path": ["api", "institution", "infrastructures", ""] }
+              }
+            },
+            {
+              "name": "Créer une infrastructure",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/infrastructures/", "host": ["{{base_url}}"], "path": ["api", "institution", "infrastructures", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title_fr", "value": "Simulateur de Navigation GMDSS", "type": "text" },
+                    { "key": "title_en", "value": "GMDSS Navigation Simulator", "type": "text" },
+                    { "key": "description_fr", "value": "Simulateur de pointe pour la formation aux communications maritimes.", "type": "text" },
+                    { "key": "description_en", "value": "State-of-the-art simulator for maritime communications training.", "type": "text" },
+                    { "key": "image", "type": "file", "description": "Photo de l'infrastructure (obligatoire)" }
+                  ]
+                },
+                "description": "Utilise multipart/form-data car une image est requise."
+              }
+            },
+            {
+              "name": "Détail d'une infrastructure",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/infrastructures/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "infrastructures", "1", ""] }
+              }
+            },
+            {
+              "name": "Modifier une infrastructure (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/infrastructures/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "infrastructures", "1", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title_fr", "value": "Simulateur GMDSS — Version 2", "type": "text" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Supprimer une infrastructure",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/infrastructures/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "infrastructures", "1", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Partenaires",
+          "item": [
+            {
+              "name": "Liste des partenaires",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/partners/", "host": ["{{base_url}}"], "path": ["api", "institution", "partners", ""] }
+              }
+            },
+            {
+              "name": "Partenaires filtrés par type",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/institution/partners/?type=international",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "institution", "partners", ""],
+                  "query": [{ "key": "type", "value": "international", "description": "regional | international | corporate" }]
+                }
+              }
+            },
+            {
+              "name": "Créer un partenaire",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/partners/", "host": ["{{base_url}}"], "path": ["api", "institution", "partners", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Organisation Maritime Internationale (OMI)", "type": "text" },
+                    { "key": "partner_type", "value": "international", "type": "text", "description": "regional | international | corporate" },
+                    { "key": "website_url", "value": "https://imo.org", "type": "text" },
+                    { "key": "logo", "type": "file", "description": "Logo du partenaire (obligatoire)" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Détail d'un partenaire",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/partners/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "partners", "1", ""] }
+              }
+            },
+            {
+              "name": "Modifier un partenaire (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/partners/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "partners", "1", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "website_url", "value": "https://imo.org/fr", "type": "text" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Supprimer un partenaire",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/partners/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "partners", "1", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Témoignages",
+          "item": [
+            {
+              "name": "Liste des témoignages",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/testimonials/", "host": ["{{base_url}}"], "path": ["api", "institution", "testimonials", ""] }
+              }
+            },
+            {
+              "name": "Témoignages mis en avant",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/institution/testimonials/?featured=true",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "institution", "testimonials", ""],
+                  "query": [{ "key": "featured", "value": "true" }]
+                }
+              }
+            },
+            {
+              "name": "Créer un témoignage",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/testimonials/", "host": ["{{base_url}}"], "path": ["api", "institution", "testimonials", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"full_name\": \"Capitaine Ange N'Dri\",\n  \"current_position\": \"Officier de pont — CMA CGM\",\n  \"school\": 1,\n  \"content\": \"La formation reçue à l'ESN m'a permis de décrocher mon premier poste à l'international dès la fin de mes études.\",\n  \"is_featured\": true\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "`school` = ID de l'école (optionnel). Pour uploader une `photo`, utiliser multipart/form-data."
+              }
+            },
+            {
+              "name": "Détail d'un témoignage",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/testimonials/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "testimonials", "1", ""] }
+              }
+            },
+            {
+              "name": "Modifier un témoignage (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/testimonials/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "testimonials", "1", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_featured\": false\n}",
+                  "options": { "raw": { "language": "json" } }
+                }
+              }
+            },
+            {
+              "name": "Supprimer un témoignage",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/testimonials/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "testimonials", "1", ""] }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 · Académique",
+      "description": "Lecture publique (AllowAny). Écriture (POST/PATCH/DELETE) réservée aux admins (is_staff=True).",
+      "item": [
+        {
+          "name": "Domaines",
+          "item": [
+            {
+              "name": "Liste des domaines",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/domains/", "host": ["{{base_url}}"], "path": ["api", "academic", "domains", ""] }
+              }
+            },
+            {
+              "name": "Créer un domaine",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/academic/domains/", "host": ["{{base_url}}"], "path": ["api", "academic", "domains", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name_fr\": \"Transport Maritime\",\n  \"name_en\": \"Maritime Transport\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "`slug` est auto-généré depuis `name_fr`."
+              }
+            },
+            {
+              "name": "Détail d'un domaine",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/domains/transport-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "domains", "transport-maritime", ""] }
+              }
+            },
+            {
+              "name": "Modifier un domaine (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/academic/domains/transport-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "domains", "transport-maritime", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name_en\": \"Shipping & Maritime Transport\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                }
+              }
+            },
+            {
+              "name": "Supprimer un domaine",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/academic/domains/transport-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "domains", "transport-maritime", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Programmes",
+          "item": [
+            {
+              "name": "Liste des programmes",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/programs/", "host": ["{{base_url}}"], "path": ["api", "academic", "programs", ""] }
+              }
+            },
+            {
+              "name": "Programmes filtrés",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/academic/programs/?type=initiale&regime=navigant&domain=transport-maritime",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "academic", "programs", ""],
+                  "query": [
+                    { "key": "type", "value": "initiale", "description": "initiale | continue" },
+                    { "key": "regime", "value": "navigant", "description": "sedentaire | navigant" },
+                    { "key": "domain", "value": "transport-maritime", "description": "slug du domaine" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Créer un programme",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/academic/programs/", "host": ["{{base_url}}"], "path": ["api", "academic", "programs", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"domain\": 1,\n  \"school\": 1,\n  \"title_fr\": \"Licence Professionnelle en Navigation Maritime\",\n  \"title_en\": \"Professional Licence in Maritime Navigation\",\n  \"program_type\": \"initiale\",\n  \"regime\": \"navigant\",\n  \"duration\": \"3 ans\",\n  \"description_fr\": \"Formation des officiers de pont destinés à la marine marchande.\",\n  \"description_en\": \"Training of deck officers for the merchant navy.\",\n  \"career_opportunities_fr\": \"Officier de pont\\nCapitaine de navire\\nPilote portuaire\",\n  \"career_opportunities_en\": \"Deck officer\\nShip captain\\nHarbour pilot\",\n  \"is_active\": true,\n  \"meta_title\": \"Licence Navigation Maritime — ARSTM\",\n  \"meta_description\": \"Formez-vous aux métiers de la navigation à l'ARSTM.\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "`domain` et `school` = IDs. `slug` auto-généré depuis `title_fr`. `program_type` : initiale | continue. `regime` : sedentaire | navigant."
+              }
+            },
+            {
+              "name": "Détail d'un programme",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/programs/licence-professionnelle-en-navigation-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "programs", "licence-professionnelle-en-navigation-maritime", ""] }
+              }
+            },
+            {
+              "name": "Modifier un programme (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/academic/programs/licence-professionnelle-en-navigation-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "programs", "licence-professionnelle-en-navigation-maritime", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_active\": false,\n  \"meta_title\": \"Licence Navigation Maritime — ARSTM — ESN\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                }
+              }
+            },
+            {
+              "name": "Supprimer un programme",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/academic/programs/licence-professionnelle-en-navigation-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "programs", "licence-professionnelle-en-navigation-maritime", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Documents / Brochures",
+          "item": [
+            {
+              "name": "Liste des documents",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/documents/", "host": ["{{base_url}}"], "path": ["api", "academic", "documents", ""] }
+              }
+            },
+            {
+              "name": "Uploader un document",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/academic/documents/", "host": ["{{base_url}}"], "path": ["api", "academic", "documents", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title", "value": "Plaquette Licence Navigation 2024", "type": "text" },
+                    { "key": "program", "value": "1", "type": "text", "description": "ID du programme (optionnel)" },
+                    { "key": "file", "type": "file", "description": "Fichier PDF de la brochure" }
+                  ]
+                },
+                "description": "Utilise multipart/form-data. `program` est optionnel (brochure générale sans programme associé)."
+              }
+            },
+            {
+              "name": "Détail d'un document",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/documents/1/", "host": ["{{base_url}}"], "path": ["api", "academic", "documents", "1", ""] }
+              }
+            },
+            {
+              "name": "Modifier un document (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/academic/documents/1/", "host": ["{{base_url}}"], "path": ["api", "academic", "documents", "1", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title", "value": "Plaquette Licence Navigation 2025", "type": "text" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Supprimer un document",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/academic/documents/1/", "host": ["{{base_url}}"], "path": ["api", "academic", "documents", "1", ""] }
+              }
+            },
+            {
+              "name": "Télécharger (tracking KPI)",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/documents/1/download/", "host": ["{{base_url}}"], "path": ["api", "academic", "documents", "1", "download", ""] },
+                "description": "Incrémente `download_count` et retourne le compteur. Appelé par le frontend quand l'utilisateur clique sur Télécharger."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "06 · Interactions & Formulaires",
+      "item": [
+        {
+          "name": "Formulaire de contact",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/interactions/contact/", "host": ["{{base_url}}"], "path": ["api", "interactions", "contact", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Marie\",\n  \"last_name\": \"Coulibaly\",\n  \"email\": \"marie@example.com\",\n  \"phone\": \"+2250700000003\",\n  \"subject\": \"Demande d'information sur les formations\",\n  \"message\": \"Bonjour, je souhaite avoir des informations sur le programme de navigation.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Demande d'admission",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/interactions/admission/", "host": ["{{base_url}}"], "path": ["api", "interactions", "admission", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"Kwame\",\n  \"last_name\": \"Diallo\",\n  \"email\": \"kwame@example.com\",\n  \"phone\": \"+2250700000004\",\n  \"program\": 1,\n  \"academic_level\": \"Licence\",\n  \"birth_date\": \"2000-01-15\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Demande de stage / emploi",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "multipart/form-data" }],
+            "url": { "raw": "{{base_url}}/api/interactions/internship/", "host": ["{{base_url}}"], "path": ["api", "interactions", "internship", ""] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "first_name", "value": "Amina", "type": "text" },
+                { "key": "last_name", "value": "Traoré", "type": "text" },
+                { "key": "email", "value": "amina@example.com", "type": "text" },
+                { "key": "phone", "value": "+2250700000005", "type": "text" },
+                { "key": "request_type", "value": "stage", "type": "text", "description": "stage ou emploi" },
+                { "key": "cover_letter", "value": "Je suis étudiante en navigation maritime...", "type": "text" },
+                { "key": "cv_file", "type": "file", "description": "Fichier CV (PDF)" }
+              ]
+            },
+            "description": "Utilise `multipart/form-data` car un fichier CV peut être joint. `request_type` : `stage` ou `emploi`."
+          }
+        },
+        {
+          "name": "Liste des offres d'emploi / stages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/interactions/jobs/", "host": ["{{base_url}}"], "path": ["api", "interactions", "jobs", ""] }
+          }
+        },
+        {
+          "name": "Offres filtrées par type",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/interactions/jobs/?type=stage",
+              "host": ["{{base_url}}"],
+              "path": ["api", "interactions", "jobs", ""],
+              "query": [{ "key": "type", "value": "stage", "description": "stage ou emploi" }]
+            }
+          }
+        },
+        {
+          "name": "Détail d'une offre",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/interactions/jobs/officier-de-pont/", "host": ["{{base_url}}"], "path": ["api", "interactions", "jobs", "officier-de-pont", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 · Événements & Actualités",
+      "item": [
+        {
+          "name": "Agenda — événements actifs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/events/agenda/", "host": ["{{base_url}}"], "path": ["api", "events", "agenda", ""] }
+          }
+        },
+        {
+          "name": "Détail d'un événement",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/events/agenda/journee-maritime-mondiale-2024/", "host": ["{{base_url}}"], "path": ["api", "events", "agenda", "journee-maritime-mondiale-2024", ""] }
+          }
+        },
+        {
+          "name": "Bannières actives",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/events/banners/", "host": ["{{base_url}}"], "path": ["api", "events", "banners", ""] }
+          }
+        },
+        {
+          "name": "Tracker un clic sur bannière",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/events/banners/1/click/", "host": ["{{base_url}}"], "path": ["api", "events", "banners", "1", "click", ""] },
+            "description": "Incrémenter le compteur de clics pour une bannière. Remplacer `1` par l'ID de la bannière."
+          }
+        },
+        {
+          "name": "S'inscrire aux alertes concours",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/events/subscribe-competition-alert/", "host": ["{{base_url}}"], "path": ["api", "events", "subscribe-competition-alert", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"candidat@example.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Actualités — toutes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/events/news/", "host": ["{{base_url}}"], "path": ["api", "events", "news", ""] }
+          }
+        },
+        {
+          "name": "Actualités — par catégorie",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/events/news/?category=actualite",
+              "host": ["{{base_url}}"],
+              "path": ["api", "events", "news", ""],
+              "query": [{ "key": "category", "value": "actualite", "description": "actualite | communique | revue_presse" }]
+            }
+          }
+        },
+        {
+          "name": "Détail d'une actualité",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/events/news/journee-securite-maritime/", "host": ["{{base_url}}"], "path": ["api", "events", "news", "journee-securite-maritime", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 · Bibliothèque & Recherche",
+      "item": [
+        {
+          "name": "Articles de recherche",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/library/papers/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", ""] }
+          }
+        },
+        {
+          "name": "Détail d'un article",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/library/papers/securite-maritime-golfe-de-guinee/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", "securite-maritime-golfe-de-guinee", ""] }
+          }
+        },
+        {
+          "name": "Télécharger un article (tracking)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/library/papers/1/download/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", "1", "download", ""] }
+          }
+        },
+        {
+          "name": "Veille sectorielle",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/library/watch/", "host": ["{{base_url}}"], "path": ["api", "library", "watch", ""] }
+          }
+        },
+        {
+          "name": "Détail d'une veille",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/library/watch/revue-maritime-2024-q1/", "host": ["{{base_url}}"], "path": ["api", "library", "watch", "revue-maritime-2024-q1", ""] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 · Boutique & Paiement",
+      "item": [
+        {
+          "name": "Liste des produits",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/shop/products/", "host": ["{{base_url}}"], "path": ["api", "shop", "products", ""] }
+          }
+        },
+        {
+          "name": "Passer commande (checkout)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/shop/checkout/", "host": ["{{base_url}}"], "path": ["api", "shop", "checkout", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"product\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Crée une commande et initialise une transaction Mobile Money (Orange/MTN/Wave). Retourne `transaction_reference` et `payment_url`."
+          }
+        },
+        {
+          "name": "Webhook paiement (agrégateur → serveur)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/payments/webhook/", "host": ["{{base_url}}"], "path": ["api", "payments", "webhook", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reference\": \"ARSTM-ABC123DEF4\",\n  \"status\": \"success\",\n  \"amount\": 15000\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Appelé automatiquement par l'agrégateur de paiement (Orange Money, MTN, Wave). À configurer dans le dashboard de l'agrégateur avec l'URL ngrok/production."
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 · Forum",
+      "item": [
+        {
+          "name": "Catégories du forum",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/forum/categories/", "host": ["{{base_url}}"], "path": ["api", "forum", "categories", ""] }
+          }
+        },
+        {
+          "name": "Liste des sujets",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/forum/topics/", "host": ["{{base_url}}"], "path": ["api", "forum", "topics", ""] }
+          }
+        },
+        {
+          "name": "Créer un sujet",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/forum/topics/", "host": ["{{base_url}}"], "path": ["api", "forum", "topics", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Question sur les admissions à l'ESN\",\n  \"category\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "Liste des messages",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/forum/posts/?topic=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "forum", "posts", ""],
+              "query": [{ "key": "topic", "value": "1", "description": "ID du sujet" }]
+            }
+          }
+        },
+        {
+          "name": "Répondre dans un sujet",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/forum/posts/", "host": ["{{base_url}}"], "path": ["api", "forum", "posts", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"topic\": 1,\n  \"body\": \"Je voudrais savoir si les admissions sont encore ouvertes pour l'année 2024-2025.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 · Analytics (DCM)",
+      "item": [
+        {
+          "name": "Tracker une action utilisateur",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/api/analytics/track/", "host": ["{{base_url}}"], "path": ["api", "analytics", "track", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content_type\": \"program\",\n  \"object_id\": 1,\n  \"action\": \"view\",\n  \"visitor_country\": \"CI\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Appelé en arrière-plan par le frontend. `action` : `view` ou `click` ou `download`. `content_type` : `program`, `paper`, `banner`, etc."
+          }
+        },
+        {
+          "name": "Tableau de bord DCM",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/analytics/dashboard/summary/", "host": ["{{base_url}}"], "path": ["api", "analytics", "dashboard", "summary", ""] },
+            "description": "Réservé aux utilisateurs avec `role = admin`. Retourne les KPIs : objectif leads mensuels (100), répartition géographique, volume de clics et téléchargements."
+          }
+        }
+      ]
+    }
+  ]
+}
