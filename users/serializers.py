@@ -5,10 +5,25 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import (
     StudentProfile, ProfessionalProfile,
     ResearcherProfile, InstitutionalProfile, StaffProfile,
+    Sector, OrganizationType,
 )
 from .utils import generate_temp_password, send_welcome_email
 
 User = get_user_model()
+
+
+# ─── Listes de valeurs dynamiques ───────────────────────────────────────────
+
+class SectorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sector
+        fields = ['code', 'label']
+
+
+class OrganizationTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrganizationType
+        fields = ['code', 'label']
 
 
 # ─── Profil serializers ───────────────────────────────────────────────────────
@@ -20,6 +35,10 @@ class StudentProfileSerializer(serializers.ModelSerializer):
 
 
 class ProfessionalProfileSerializer(serializers.ModelSerializer):
+    sector = serializers.SlugRelatedField(
+        slug_field='code', queryset=Sector.objects.filter(is_active=True), required=False, allow_null=True,
+    )
+
     class Meta:
         model = ProfessionalProfile
         fields = ['company_name', 'job_title', 'sector', 'country', 'company_website']
@@ -32,6 +51,10 @@ class ResearcherProfileSerializer(serializers.ModelSerializer):
 
 
 class InstitutionalProfileSerializer(serializers.ModelSerializer):
+    organization_type = serializers.SlugRelatedField(
+        slug_field='code', queryset=OrganizationType.objects.filter(is_active=True), required=False, allow_null=True,
+    )
+
     class Meta:
         model = InstitutionalProfile
         fields = ['organization_name', 'position', 'organization_type', 'country']
@@ -56,7 +79,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'email', 'first_name', 'last_name', 'role', 'phone',
+            'id', 'email', 'first_name', 'last_name', 'role', 'phone', 'avatar',
             'must_change_password',
             'student_profile', 'professional_profile',
             'researcher_profile', 'institutional_profile', 'staff_profile',
@@ -233,5 +256,5 @@ class UserListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'role', 'phone', 'is_active', 'date_joined']
+        fields = ['id', 'email', 'first_name', 'last_name', 'role', 'phone', 'avatar', 'is_active', 'date_joined']
         read_only_fields = fields

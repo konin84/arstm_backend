@@ -9,6 +9,8 @@ from .views import (
     UsersListView,
     PendingStudentsView,
     ApproveStudentView,
+    SectorListView,
+    OrganizationTypeListView,
 )
 
 urlpatterns = [
@@ -20,6 +22,10 @@ urlpatterns = [
     # Espace sécurisé utilisateur
     path('profile/', UserProfileView.as_view(), name='user_profile'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
+
+    # Listes de valeurs dynamiques — publiques, pour peupler les formulaires
+    path('sectors/', SectorListView.as_view(), name='sector_list'),
+    path('organization-types/', OrganizationTypeListView.as_view(), name='organization_type_list'),
 
     # Administration — création de comptes avec mot de passe temporaire
     path('create/', AdminCreateUserView.as_view(), name='admin_create_user'),

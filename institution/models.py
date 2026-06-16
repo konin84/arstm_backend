@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from users.models import LookupValue
 
 class School(models.Model):
     """
@@ -21,6 +22,25 @@ class School(models.Model):
         return self.name
 
 
+class DirectorMessage(models.Model):
+    """
+    Mot du Directeur : photo et message affichés sur la page dédiée.
+    Un seul enregistrement peut être actif (is_active=True) à la fois.
+    """
+    full_name = models.CharField(max_length=255, verbose_name="Nom complet")
+    title = models.CharField(max_length=255, verbose_name="Titre / Fonction")
+    photo = models.ImageField(upload_to='institution/directors/')
+    message = models.TextField(verbose_name="Message")
+    is_active = models.BooleanField(default=True, verbose_name="Afficher sur la page")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-is_active', '-created_at']
+
+    def __str__(self):
+        return f"{self.full_name} — {self.title}"
+
+
 class Infrastructure(models.Model):
     """
     Équipements et infrastructures pédagogiques de l'Académie (Simulateurs, laboratoires, complexes).
@@ -33,18 +53,17 @@ class Infrastructure(models.Model):
         return self.title
 
 
+class PartnerType(LookupValue):
+    """Type de partenaire (régional, international, société privée…)."""
+
+
 class Partner(models.Model):
     """
     Partenariats institutionnels et internationaux (OMI, UEMOA, CEDEAO, Sociétés privées).
     Démontre l'ancrage régional de l'ARSTM.
     """
-    PARTNER_TYPE_CHOICES = (
-        ('regional', 'Régional / Institutionnel'),
-        ('international', 'International'),
-        ('corporate', 'Société Privée / Partenaire Métier'),
-    )
     name = models.CharField(max_length=255)
-    partner_type = models.CharField(max_length=20, choices=PARTNER_TYPE_CHOICES)
+    partner_type = models.ForeignKey(PartnerType, on_delete=models.PROTECT, related_name='partners')
     logo = models.ImageField(upload_to='institution/partners/')
     website_url = models.URLField(blank=True, null=True)
 

@@ -2,10 +2,11 @@ from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .models import Domain, Program, Document
+from .models import Domain, Program, ProgramType, Regime, Document
 from .serializers import (
     DomainSerializer,
     ProgramListSerializer, ProgramDetailSerializer, ProgramWriteSerializer,
+    ProgramTypeSerializer, RegimeSerializer,
     DocumentSerializer,
 )
 
@@ -33,6 +34,22 @@ class DomainDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'slug'
 
 
+# ─── Program types & régimes (listes dynamiques) ───────────────────────────────
+
+class ProgramTypeListView(generics.ListAPIView):
+    """Endpoint public — types de formation disponibles (filtre/création de programme)."""
+    queryset = ProgramType.objects.filter(is_active=True)
+    serializer_class = ProgramTypeSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class RegimeListView(generics.ListAPIView):
+    """Endpoint public — régimes de formation disponibles (filtre/création de programme)."""
+    queryset = Regime.objects.filter(is_active=True)
+    serializer_class = RegimeSerializer
+    permission_classes = [permissions.AllowAny]
+
+
 # ─── Programs ─────────────────────────────────────────────────────────────────
 
 class ProgramListView(generics.ListCreateAPIView):
@@ -54,11 +71,11 @@ class ProgramListView(generics.ListCreateAPIView):
         regime = self.request.query_params.get('regime')
 
         if program_type:
-            queryset = queryset.filter(program_type=program_type)
+            queryset = queryset.filter(program_type__code=program_type)
         if domain_slug:
             queryset = queryset.filter(domain__slug=domain_slug)
         if regime:
-            queryset = queryset.filter(regime=regime)
+            queryset = queryset.filter(regime__code=regime)
 
         return queryset
 

@@ -40,10 +40,10 @@
                 "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"etudiant@example.com\",\n  \"first_name\": \"Kofi\",\n  \"last_name\": \"Asante\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"student\",\n  \"phone\": \"+2250700000001\",\n  \"profile\": {\n    \"current_year\": \"Licence 2\",\n    \"nationality\": \"Ivoirien\",\n    \"birth_date\": \"2001-05-20\",\n    \"matricule\": \"\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"etudiant@example.com\",\n  \"first_name\": \"Kofi\",\n  \"last_name\": \"Asante\",\n  \"role\": \"student\",\n  \"phone\": \"+2250700000001\",\n  \"profile\": {\n    \"school\": 1,\n    \"current_year\": \"Licence 2\",\n    \"nationality\": \"Ivoirien\",\n    \"birth_date\": \"2001-05-20\",\n    \"matricule\": \"\"\n  }\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "Champs profile : school (id, optionnel), matricule (auto si vide), current_year, birth_date, nationality"
+                "description": "Aucun mot de passe requis. Le compte est créé désactivé (is_active=false). Un mot de passe temporaire est généré et envoyé par email uniquement après validation du matricule par un admin ou modérateur. `profile.school` est l'id d'une École (voir GET /api/institution/schools/, public, pour peupler le menu déroulant du formulaire d'inscription)."
               }
             },
             {
@@ -54,10 +54,10 @@
                 "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"pro@armateur.ci\",\n  \"first_name\": \"Serge\",\n  \"last_name\": \"Aboua\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"professional\",\n  \"phone\": \"+2250700000010\",\n  \"profile\": {\n    \"company_name\": \"SIVOMAR\",\n    \"job_title\": \"Directeur Technique\",\n    \"sector\": \"maritime\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://sivomar.ci\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"pro@armateur.ci\",\n  \"first_name\": \"Serge\",\n  \"last_name\": \"Aboua\",\n  \"role\": \"professional\",\n  \"phone\": \"+2250700000010\",\n  \"profile\": {\n    \"company_name\": \"SIVOMAR\",\n    \"job_title\": \"Directeur Technique\",\n    \"sector\": \"maritime\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://sivomar.ci\"\n  }\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "sector : maritime | port | offshore | security | fishing | other"
+                "description": "Aucun mot de passe requis. Un mot de passe temporaire est généré et envoyé immédiatement par email. L'utilisateur devra le changer à la première connexion (must_change_password=true). sector : maritime | port | offshore | security | fishing | other"
               }
             },
             {
@@ -68,10 +68,10 @@
                 "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"rh@groupe-bolloré.com\",\n  \"first_name\": \"Estelle\",\n  \"last_name\": \"Mensah\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"recruiter\",\n  \"phone\": \"+2250700000020\",\n  \"profile\": {\n    \"company_name\": \"Groupe Bolloré Africa Logistics\",\n    \"job_title\": \"Responsable RH\",\n    \"sector\": \"port\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://bollore-africa-logistics.com\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"rh@groupe-bolloré.com\",\n  \"first_name\": \"Estelle\",\n  \"last_name\": \"Mensah\",\n  \"role\": \"recruiter\",\n  \"phone\": \"+2250700000020\",\n  \"profile\": {\n    \"company_name\": \"Groupe Bolloré Africa Logistics\",\n    \"job_title\": \"Responsable RH\",\n    \"sector\": \"port\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://bollore-africa-logistics.com\"\n  }\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "Partage le même profil ProfessionalProfile que 'professional'. company_website est utile pour les offres d'emploi."
+                "description": "Aucun mot de passe requis. Un mot de passe temporaire est envoyé immédiatement par email. Partage le même profil ProfessionalProfile que 'professional'. company_website est utile pour les offres d'emploi."
               }
             },
             {
@@ -82,10 +82,10 @@
                 "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"dr.koffi@uao.edu.ci\",\n  \"first_name\": \"Adou\",\n  \"last_name\": \"Koffi\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"researcher\",\n  \"phone\": \"+2250700000030\",\n  \"profile\": {\n    \"academic_title\": \"dr\",\n    \"institution\": \"Université Alassane Ouattara — Bouaké\",\n    \"country\": \"Côte d'Ivoire\",\n    \"research_profile_url\": \"https://orcid.org/0000-0002-1234-5678\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"dr.koffi@uao.edu.ci\",\n  \"first_name\": \"Adou\",\n  \"last_name\": \"Koffi\",\n  \"role\": \"researcher\",\n  \"phone\": \"+2250700000030\",\n  \"profile\": {\n    \"academic_title\": \"dr\",\n    \"institution\": \"Université Alassane Ouattara — Bouaké\",\n    \"country\": \"Côte d'Ivoire\",\n    \"research_profile_url\": \"https://orcid.org/0000-0002-1234-5678\"\n  }\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "academic_title : dr | prof | mr | ms | eng. specialization = ID du Domain (optionnel). research_profile_url : ORCID, ResearchGate, etc."
+                "description": "Aucun mot de passe requis. Un mot de passe temporaire est envoyé immédiatement par email. academic_title : dr | prof | mr | ms | eng. specialization = ID du Domain (optionnel). research_profile_url : ORCID, ResearchGate, etc."
               }
             },
             {
@@ -96,10 +96,10 @@
                 "url": { "raw": "{{base_url}}/api/users/register/", "host": ["{{base_url}}"], "path": ["api", "users", "register", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"contact@omi-wca.org\",\n  \"first_name\": \"Ibrahim\",\n  \"last_name\": \"Coulibaly\",\n  \"password\": \"MonMotDePasse123!\",\n  \"role\": \"donor\",\n  \"phone\": \"+2250700000040\",\n  \"profile\": {\n    \"organization_name\": \"Organisation Maritime Internationale — Région Afrique de l'Ouest\",\n    \"position\": \"Représentant Régional\",\n    \"organization_type\": \"multilateral\",\n    \"country\": \"Côte d'Ivoire\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"contact@omi-wca.org\",\n  \"first_name\": \"Ibrahim\",\n  \"last_name\": \"Coulibaly\",\n  \"role\": \"donor\",\n  \"phone\": \"+2250700000040\",\n  \"profile\": {\n    \"organization_name\": \"Organisation Maritime Internationale — Région Afrique de l'Ouest\",\n    \"position\": \"Représentant Régional\",\n    \"organization_type\": \"multilateral\",\n    \"country\": \"Côte d'Ivoire\"\n  }\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "organization_type : ministry | multilateral | ngo | private | other"
+                "description": "Aucun mot de passe requis. Un mot de passe temporaire est envoyé immédiatement par email. organization_type : ministry | multilateral | ngo | private | other"
               }
             }
           ]
@@ -162,6 +162,24 @@
       "name": "02 · Profil Utilisateur",
       "item": [
         {
+          "name": "Secteurs d'activité disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/users/sectors/", "host": ["{{base_url}}"], "path": ["api", "users", "sectors", ""] },
+            "description": "Public. Liste {code, label} à utiliser pour peupler le menu déroulant `profile.sector` (Professionnel/Recruteur). Gérable depuis l'admin Django sans déploiement."
+          }
+        },
+        {
+          "name": "Types d'organisation disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/users/organization-types/", "host": ["{{base_url}}"], "path": ["api", "users", "organization-types", ""] },
+            "description": "Public. Liste {code, label} à utiliser pour peupler le menu déroulant `profile.organization_type` (Bailleur de fonds)."
+          }
+        },
+        {
           "name": "Mon profil (GET)",
           "request": {
             "method": "GET",
@@ -187,6 +205,21 @@
           }
         },
         {
+          "name": "Changer ma photo de profil (PATCH)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/users/profile/", "host": ["{{base_url}}"], "path": ["api", "users", "profile", ""] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "avatar", "type": "file", "description": "Image de profil (jpg/png)" }
+              ]
+            },
+            "description": "Utilise multipart/form-data car c'est un fichier. `avatar` accepte aussi `null`/vide pour supprimer la photo actuelle."
+          }
+        },
+        {
           "name": "Changer son mot de passe",
           "request": {
             "method": "POST",
@@ -207,7 +240,7 @@
     },
     {
       "name": "03 · Administration Utilisateurs",
-      "description": "Réservé aux comptes staff (is_staff=True). Un mot de passe temporaire est généré et envoyé par email. L'utilisateur devra le changer à sa première connexion (must_change_password=true).",
+      "description": "Création de comptes réservée aux admins (is_staff=True). Les modérateurs peuvent lister les utilisateurs, consulter les étudiants en attente et approuver leurs comptes. Un mot de passe temporaire est toujours généré et envoyé par email — l'utilisateur devra le changer à sa première connexion (must_change_password=true). Les rôles admin et modérateur ne peuvent être créés que par un admin.",
       "item": [
         {
           "name": "Créer — Étudiant (student)",
@@ -290,6 +323,23 @@
           }
         },
         {
+          "name": "Créer — Modérateur ARSTM (moderator)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": { "raw": "{{base_url}}/api/users/create/", "host": ["{{base_url}}"], "path": ["api", "users", "create", ""] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"moderateur@arstm.ci\",\n  \"first_name\": \"Ange\",\n  \"last_name\": \"Konan\",\n  \"role\": \"moderator\",\n  \"phone\": \"+2250700000003\",\n  \"profile\": {\n    \"department\": \"Direction des Études et de la Scolarité\",\n    \"employee_id\": \"ARSTM-MOD-001\"\n  }\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Réservé aux admins uniquement. Crée un modérateur ARSTM avec un profil StaffProfile. Peut approuver des étudiants et lister les utilisateurs, mais ne peut pas créer de comptes. employee_id doit être unique."
+          }
+        },
+        {
           "name": "Créer — Agent ARSTM (admin)",
           "request": {
             "method": "POST",
@@ -303,8 +353,40 @@
               "raw": "{\n  \"email\": \"agent.dcm@arstm.ci\",\n  \"first_name\": \"Jean\",\n  \"last_name\": \"Dupont\",\n  \"role\": \"admin\",\n  \"phone\": \"+2250700000002\",\n  \"profile\": {\n    \"department\": \"Direction de la Communication Maritime (DCM)\",\n    \"employee_id\": \"ARSTM-2024-001\"\n  }\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "description": "Crée un agent interne ARSTM avec un profil StaffProfile. employee_id doit être unique."
+            "description": "Réservé aux admins uniquement. Crée un agent interne ARSTM avec un profil StaffProfile et droits complets. employee_id doit être unique."
           }
+        },
+        {
+          "name": "Vérification & Activation étudiants",
+          "item": [
+            {
+              "name": "Liste de tous les utilisateurs",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/users/", "host": ["{{base_url}}"], "path": ["api", "users", ""] },
+                "description": "Accessible aux admins et modérateurs. Retourne id, email, nom, rôle, statut is_active et date d'inscription."
+              }
+            },
+            {
+              "name": "Étudiants en attente de vérification",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/users/pending-students/", "host": ["{{base_url}}"], "path": ["api", "users", "pending-students", ""] },
+                "description": "Accessible aux admins et modérateurs. Liste tous les étudiants avec is_active=false, incluant leur matricule et école."
+              }
+            },
+            {
+              "name": "Approuver un étudiant",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/users/1/approve/", "host": ["{{base_url}}"], "path": ["api", "users", "1", "approve", ""] },
+                "description": "Accessible aux admins et modérateurs. Remplacer `1` par l'ID de l'étudiant. Active le compte (is_active=true), génère un mot de passe temporaire et l'envoie par email à l'étudiant. L'étudiant devra le changer à sa première connexion."
+              }
+            }
+          ]
         }
       ]
     },
@@ -316,28 +398,56 @@
           "name": "Écoles",
           "item": [
             {
-              "name": "Liste des écoles",
+              "name": "Liste des écoles (FR)",
               "request": {
                 "method": "GET",
-                "header": [],
+                "header": [{ "key": "Accept-Language", "value": "fr" }],
+                "url": { "raw": "{{base_url}}/api/institution/schools/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", ""] },
+                "description": "La langue de `description` est choisie automatiquement (django-modeltranslation) selon l'en-tête `Accept-Language`. Sans cet en-tête, `LANGUAGE_CODE` (fr) est utilisé par défaut."
+              }
+            },
+            {
+              "name": "Liste des écoles (EN)",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Accept-Language", "value": "en" }],
                 "url": { "raw": "{{base_url}}/api/institution/schools/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", ""] }
               }
             },
             {
-              "name": "Créer une école",
+              "name": "Créer une école (FR)",
               "request": {
                 "method": "POST",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "fr" }
                 ],
                 "url": { "raw": "{{base_url}}/api/institution/schools/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"École Supérieure de Navigation\",\n  \"description_fr\": \"Formation des officiers et personnels de la marine marchande.\",\n  \"description_en\": \"Training of merchant marine officers and staff.\",\n  \"presentation_video_url\": \"\"\n}",
+                  "raw": "{\n  \"name\": \"École Supérieure de Navigation\",\n  \"description\": \"Formation des officiers et personnels de la marine marchande.\",\n  \"presentation_video_url\": \"\"\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "Le `slug` est auto-généré depuis `name`. Pour uploader `featured_image`, utiliser multipart/form-data."
+                "description": "Le `slug` est auto-généré depuis `name`. Pour uploader `featured_image`, utiliser multipart/form-data. `description` est enregistré dans la langue indiquée par `Accept-Language` (ici fr)."
+              }
+            },
+            {
+              "name": "Ajouter la traduction EN d'une école (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "en" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/schools/esn/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", "esn", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Training of merchant marine officers and staff.\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Avec `Accept-Language: en`, ce PATCH renseigne uniquement la colonne anglaise (`description_en` en base) sans toucher au texte français déjà saisi."
               }
             },
             {
@@ -355,14 +465,16 @@
                 "method": "PATCH",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "fr" }
                 ],
                 "url": { "raw": "{{base_url}}/api/institution/schools/esn/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", "esn", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"description_fr\": \"Description mise à jour.\",\n  \"description_en\": \"Updated description.\"\n}",
+                  "raw": "{\n  \"description\": \"Description mise à jour.\"\n}",
                   "options": { "raw": { "language": "json" } }
-                }
+                },
+                "description": "Met à jour la langue indiquée par `Accept-Language` (ici fr). Répéter avec `Accept-Language: en` pour mettre à jour la version anglaise."
               }
             },
             {
@@ -371,6 +483,98 @@
                 "method": "DELETE",
                 "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
                 "url": { "raw": "{{base_url}}/api/institution/schools/esn/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", "esn", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Mot du Directeur",
+          "item": [
+            {
+              "name": "Mot du Directeur actif (public)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/director-message/active/", "host": ["{{base_url}}"], "path": ["api", "institution", "director-message", "active", ""] },
+                "description": "Renvoie l'enregistrement avec is_active=true, utilisé par la page publique du Directeur."
+              }
+            },
+            {
+              "name": "Liste des mots du Directeur",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/director-message/", "host": ["{{base_url}}"], "path": ["api", "institution", "director-message", ""] }
+              }
+            },
+            {
+              "name": "Créer un mot du Directeur (FR)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "fr" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/director-message/", "host": ["{{base_url}}"], "path": ["api", "institution", "director-message", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"full_name\": \"Capitaine N'Guessan Kouassi\",\n  \"title\": \"Directeur Général de l'ARSTM\",\n  \"message\": \"Chers visiteurs, bienvenue à l'ARSTM...\",\n  \"is_active\": true\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Pour uploader `photo`, utiliser multipart/form-data. `title`/`message` sont enregistrés dans la langue indiquée par `Accept-Language` (ici fr). Mettre `is_active` à true désactive logiquement les autres (à gérer côté admin)."
+              }
+            },
+            {
+              "name": "Ajouter la traduction EN d'un mot du Directeur (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "en" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/director-message/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "director-message", "1", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Director General of ARSTM\",\n  \"message\": \"Dear visitors, welcome to ARSTM...\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Avec `Accept-Language: en`, ce PATCH renseigne uniquement la version anglaise sans toucher au texte français déjà saisi."
+              }
+            },
+            {
+              "name": "Détail d'un mot du Directeur",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/director-message/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "director-message", "1", ""] }
+              }
+            },
+            {
+              "name": "Modifier un mot du Directeur (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "fr" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/director-message/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "director-message", "1", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"message\": \"Message mis à jour.\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Met à jour la langue indiquée par `Accept-Language` (ici fr)."
+              }
+            },
+            {
+              "name": "Supprimer un mot du Directeur",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/institution/director-message/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "director-message", "1", ""] }
               }
             }
           ]
@@ -387,22 +591,42 @@
               }
             },
             {
-              "name": "Créer une infrastructure",
+              "name": "Créer une infrastructure (FR)",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Accept-Language", "value": "fr" }
+                ],
                 "url": { "raw": "{{base_url}}/api/institution/infrastructures/", "host": ["{{base_url}}"], "path": ["api", "institution", "infrastructures", ""] },
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "title_fr", "value": "Simulateur de Navigation GMDSS", "type": "text" },
-                    { "key": "title_en", "value": "GMDSS Navigation Simulator", "type": "text" },
-                    { "key": "description_fr", "value": "Simulateur de pointe pour la formation aux communications maritimes.", "type": "text" },
-                    { "key": "description_en", "value": "State-of-the-art simulator for maritime communications training.", "type": "text" },
+                    { "key": "title", "value": "Simulateur de Navigation GMDSS", "type": "text" },
+                    { "key": "description", "value": "Simulateur de pointe pour la formation aux communications maritimes.", "type": "text" },
                     { "key": "image", "type": "file", "description": "Photo de l'infrastructure (obligatoire)" }
                   ]
                 },
-                "description": "Utilise multipart/form-data car une image est requise."
+                "description": "Utilise multipart/form-data car une image est requise. `title`/`description` sont enregistrés dans la langue indiquée par `Accept-Language` (ici fr)."
+              }
+            },
+            {
+              "name": "Ajouter la traduction EN d'une infrastructure (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Accept-Language", "value": "en" }
+                ],
+                "url": { "raw": "{{base_url}}/api/institution/infrastructures/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "infrastructures", "1", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title", "value": "GMDSS Navigation Simulator", "type": "text" },
+                    { "key": "description", "value": "State-of-the-art simulator for maritime communications training.", "type": "text" }
+                  ]
+                },
+                "description": "Avec `Accept-Language: en`, ce PATCH renseigne uniquement la version anglaise."
               }
             },
             {
@@ -417,12 +641,15 @@
               "name": "Modifier une infrastructure (PATCH)",
               "request": {
                 "method": "PATCH",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Accept-Language", "value": "fr" }
+                ],
                 "url": { "raw": "{{base_url}}/api/institution/infrastructures/1/", "host": ["{{base_url}}"], "path": ["api", "institution", "infrastructures", "1", ""] },
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "title_fr", "value": "Simulateur GMDSS — Version 2", "type": "text" }
+                    { "key": "title", "value": "Simulateur GMDSS — Version 2", "type": "text" }
                   ]
                 }
               }
@@ -440,6 +667,15 @@
         {
           "name": "Partenaires",
           "item": [
+            {
+              "name": "Types de partenaires disponibles",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/institution/partner-types/", "host": ["{{base_url}}"], "path": ["api", "institution", "partner-types", ""] },
+                "description": "Public. Liste {code, label} à utiliser pour `partner_type`. Gérable depuis l'admin Django sans déploiement."
+              }
+            },
             {
               "name": "Liste des partenaires",
               "request": {
@@ -603,20 +839,39 @@
               }
             },
             {
-              "name": "Créer un domaine",
+              "name": "Créer un domaine (FR)",
               "request": {
                 "method": "POST",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "fr" }
                 ],
                 "url": { "raw": "{{base_url}}/api/academic/domains/", "host": ["{{base_url}}"], "path": ["api", "academic", "domains", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name_fr\": \"Transport Maritime\",\n  \"name_en\": \"Maritime Transport\"\n}",
+                  "raw": "{\n  \"name\": \"Transport Maritime\"\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "`slug` est auto-généré depuis `name_fr`."
+                "description": "`slug` est auto-généré depuis `name`. `name` est enregistré dans la langue indiquée par `Accept-Language` (ici fr)."
+              }
+            },
+            {
+              "name": "Ajouter la traduction EN d'un domaine (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "en" }
+                ],
+                "url": { "raw": "{{base_url}}/api/academic/domains/transport-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "domains", "transport-maritime", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Maritime Transport\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Avec `Accept-Language: en`, ce PATCH renseigne uniquement la version anglaise."
               }
             },
             {
@@ -633,12 +888,13 @@
                 "method": "PATCH",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "en" }
                 ],
                 "url": { "raw": "{{base_url}}/api/academic/domains/transport-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "domains", "transport-maritime", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name_en\": \"Shipping & Maritime Transport\"\n}",
+                  "raw": "{\n  \"name\": \"Shipping & Maritime Transport\"\n}",
                   "options": { "raw": { "language": "json" } }
                 }
               }
@@ -656,6 +912,24 @@
         {
           "name": "Programmes",
           "item": [
+            {
+              "name": "Types de formation disponibles",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/program-types/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", ""] },
+                "description": "Public. Liste {code, label} à utiliser pour `program_type`. Gérable depuis l'admin Django sans déploiement."
+              }
+            },
+            {
+              "name": "Régimes disponibles",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/academic/regimes/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", ""] },
+                "description": "Public. Liste {code, label} à utiliser pour `regime`."
+              }
+            },
             {
               "name": "Liste des programmes",
               "request": {
@@ -682,20 +956,39 @@
               }
             },
             {
-              "name": "Créer un programme",
+              "name": "Créer un programme (FR)",
               "request": {
                 "method": "POST",
                 "header": [
                   { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "fr" }
                 ],
                 "url": { "raw": "{{base_url}}/api/academic/programs/", "host": ["{{base_url}}"], "path": ["api", "academic", "programs", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"domain\": 1,\n  \"school\": 1,\n  \"title_fr\": \"Licence Professionnelle en Navigation Maritime\",\n  \"title_en\": \"Professional Licence in Maritime Navigation\",\n  \"program_type\": \"initiale\",\n  \"regime\": \"navigant\",\n  \"duration\": \"3 ans\",\n  \"description_fr\": \"Formation des officiers de pont destinés à la marine marchande.\",\n  \"description_en\": \"Training of deck officers for the merchant navy.\",\n  \"career_opportunities_fr\": \"Officier de pont\\nCapitaine de navire\\nPilote portuaire\",\n  \"career_opportunities_en\": \"Deck officer\\nShip captain\\nHarbour pilot\",\n  \"is_active\": true,\n  \"meta_title\": \"Licence Navigation Maritime — ARSTM\",\n  \"meta_description\": \"Formez-vous aux métiers de la navigation à l'ARSTM.\"\n}",
+                  "raw": "{\n  \"domain\": 1,\n  \"school\": 1,\n  \"title\": \"Licence Professionnelle en Navigation Maritime\",\n  \"program_type\": \"initiale\",\n  \"regime\": \"navigant\",\n  \"duration\": \"3 ans\",\n  \"description\": \"Formation des officiers de pont destinés à la marine marchande.\",\n  \"career_opportunities\": \"Officier de pont\\nCapitaine de navire\\nPilote portuaire\",\n  \"is_active\": true,\n  \"meta_title\": \"Licence Navigation Maritime — ARSTM\",\n  \"meta_description\": \"Formez-vous aux métiers de la navigation à l'ARSTM.\"\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "`domain` et `school` = IDs. `slug` auto-généré depuis `title_fr`. `program_type` : initiale | continue. `regime` : sedentaire | navigant."
+                "description": "`domain` et `school` = IDs. `slug` auto-généré depuis `title`. `program_type` : initiale | continue. `regime` : sedentaire | navigant. Les champs traduits (`title`, `description`, `career_opportunities`) sont enregistrés dans la langue indiquée par `Accept-Language` (ici fr)."
+              }
+            },
+            {
+              "name": "Ajouter la traduction EN d'un programme (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" },
+                  { "key": "Accept-Language", "value": "en" }
+                ],
+                "url": { "raw": "{{base_url}}/api/academic/programs/licence-professionnelle-en-navigation-maritime/", "host": ["{{base_url}}"], "path": ["api", "academic", "programs", "licence-professionnelle-en-navigation-maritime", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Professional Licence in Maritime Navigation\",\n  \"description\": \"Training of deck officers for the merchant navy.\",\n  \"career_opportunities\": \"Deck officer\\nShip captain\\nHarbour pilot\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Avec `Accept-Language: en`, ce PATCH renseigne uniquement la version anglaise sans toucher au texte français déjà saisi."
               }
             },
             {
@@ -931,6 +1224,15 @@
               "raw": "{\n  \"email\": \"candidat@example.com\"\n}",
               "options": { "raw": { "language": "json" } }
             }
+          }
+        },
+        {
+          "name": "Catégories d'actualités disponibles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/events/news-categories/", "host": ["{{base_url}}"], "path": ["api", "events", "news-categories", ""] },
+            "description": "Public. Liste {code, label} à utiliser pour `category`. Gérable depuis l'admin Django sans déploiement."
           }
         },
         {

@@ -12,8 +12,11 @@ from .serializers import (
     ChangePasswordSerializer,
     CustomTokenObtainPairSerializer,
     PendingStudentSerializer,
+    SectorSerializer,
+    OrganizationTypeSerializer,
     RESTRICTED_ROLES,
 )
+from .models import Sector, OrganizationType
 from .permissions import IsAdminOrModerator
 from .utils import generate_temp_password, send_welcome_email
 
@@ -134,3 +137,19 @@ class ApproveStudentView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+# ─── Listes de valeurs dynamiques ──────────────────────────────────────────
+
+class SectorListView(generics.ListAPIView):
+    """Endpoint public — secteurs d'activité disponibles pour le profil Professionnel/Recruteur."""
+    queryset = Sector.objects.filter(is_active=True)
+    serializer_class = SectorSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class OrganizationTypeListView(generics.ListAPIView):
+    """Endpoint public — types d'organisation disponibles pour le profil Bailleur de fonds."""
+    queryset = OrganizationType.objects.filter(is_active=True)
+    serializer_class = OrganizationTypeSerializer
+    permission_classes = [permissions.AllowAny]

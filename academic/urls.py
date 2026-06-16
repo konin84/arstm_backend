@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     DomainListView, DomainDetailView,
     ProgramListView, ProgramDetailView,
+    ProgramTypeListView, RegimeListView,
     DocumentListView, DocumentDetailView,
     track_document_download,
 )
@@ -9,6 +10,9 @@ from .views import (
 urlpatterns = [
     path('domains/', DomainListView.as_view(), name='domain_list'),
     path('domains/<slug:slug>/', DomainDetailView.as_view(), name='domain_detail'),
+
+    path('program-types/', ProgramTypeListView.as_view(), name='program_type_list'),
+    path('regimes/', RegimeListView.as_view(), name='regime_list'),
 
     path('programs/', ProgramListView.as_view(), name='program_list'),
     path('programs/<slug:slug>/', ProgramDetailView.as_view(), name='program_detail'),

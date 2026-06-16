@@ -1,6 +1,7 @@
 # apps/events/models.py
 from django.db import models
 from django.utils.text import slugify
+from users.models import LookupValue
 
 class Event(models.Model):
     """Agenda dynamique des événements de l'ARSTM (Soutenances, conférences, séminaires)"""
@@ -48,17 +49,15 @@ class CompetitionAlertSubscription(models.Model):
     subscribed_at = models.DateTimeField(auto_now_add=True)
 
 
+class NewsCategory(LookupValue):
+    """Catégorie d'actualité (institutionnelle, communiqué, revue de presse…)."""
+
+
 class NewsPost(models.Model):
     """Actualités institutionnelles, communiqués de presse et revue de presse de l'ARSTM"""
-    CATEGORY_CHOICES = (
-        ('actualite', 'Actualité institutionnelle'),
-        ('communique', 'Communiqué de presse'),
-        ('revue_presse', 'Revue de presse'),
-    )
-
     title = models.CharField(max_length=255, verbose_name="Titre")
     slug = models.SlugField(unique=True, blank=True)
-    category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='actualite')
+    category = models.ForeignKey(NewsCategory, on_delete=models.PROTECT, null=True, blank=True, related_name='news_posts')
     content = models.TextField(verbose_name="Contenu")
     featured_image = models.ImageField(upload_to='events/news/', blank=True, null=True)
     is_published = models.BooleanField(default=False)

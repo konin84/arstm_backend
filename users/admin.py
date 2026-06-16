@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 
-from users.models import StudentProfile, User
+from users.models import StudentProfile, User, Sector, OrganizationType
 from users.utils import generate_temp_password, send_welcome_email
 
 admin.site.site_header = "ARSTM - Administration"
@@ -75,3 +75,17 @@ class StudentProfileAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related('user', 'school')
+
+
+@admin.register(Sector)
+class SectorAdmin(admin.ModelAdmin):
+    list_display = ['code', 'label', 'is_active', 'order']
+    list_editable = ['is_active', 'order']
+    search_fields = ['code', 'label']
+
+
+@admin.register(OrganizationType)
+class OrganizationTypeAdmin(admin.ModelAdmin):
+    list_display = ['code', 'label', 'is_active', 'order']
+    list_editable = ['is_active', 'order']
+    search_fields = ['code', 'label']

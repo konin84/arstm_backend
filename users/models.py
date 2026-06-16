@@ -3,6 +3,26 @@ from django.db import models
 import uuid
 
 
+class LookupValue(models.Model):
+    """
+    Base abstraite pour les listes de valeurs éditables depuis l'admin sans
+    déploiement (secteur, type d'organisation, titre académique, etc.).
+    `code` est la valeur stable utilisée par l'API et le frontend ;
+    `label` est le texte affiché (modifiable librement par un admin).
+    """
+    code = models.SlugField(max_length=30, unique=True)
+    label = models.CharField(max_length=150)
+    is_active = models.BooleanField(default=True)
+    order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        abstract = True
+        ordering = ['order', 'label']
+
+    def __str__(self):
+        return self.label
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         if not email:
@@ -43,6 +63,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=150, unique=True, blank=True)
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='student')
     phone = models.CharField(max_length=20, blank=True, null=True)
+    avatar = models.ImageField(upload_to='users/avatars/', blank=True, null=True, verbose_name="Photo de profil")
     must_change_password = models.BooleanField(
         default=False,
         help_text="Oblige l'utilisateur à changer son mot de passe à la prochaine connexion"
@@ -54,7 +75,21 @@ class User(AbstractUser):
             self.username = f"{prefix}_{uuid.uuid4().hex[:6]}"
         if self.is_superuser:
             self.must_change_password = False
+        if self.pk:
+            old_avatar = User.objects.filter(pk=self.pk).values_list('avatar', flat=True).first()
+            if old_avatar and old_avatar != self.avatar.name:
+                self.avatar.storage.delete(old_avatar)
         super().save(*args, **kwargs)
+
+
+# ─── Listes de valeurs dynamiques ───────────────────────────────────────────
+
+class Sector(LookupValue):
+    """Secteur d'activité (Professionnel / Recruteur)."""
+
+
+class OrganizationType(LookupValue):
+    """Type d'organisation (Bailleur de fonds / Partenaire institutionnel)."""
 
 
 # ─── Profils par rôle ────────────────────────────────────────────────────────
@@ -74,18 +109,10 @@ class StudentProfile(models.Model):
 
 class ProfessionalProfile(models.Model):
     """Professionnel / Entreprise et Recruteur / Partenaire RH"""
-    SECTOR_CHOICES = (
-        ('maritime', 'Transport Maritime'),
-        ('port', 'Logistique Portuaire'),
-        ('offshore', 'Offshore / Industrie Navale'),
-        ('security', 'Sûreté et Sécurité Maritime'),
-        ('fishing', 'Pêche'),
-        ('other', 'Autre'),
-    )
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='professional_profile')
     company_name = models.CharField(max_length=255, verbose_name="Entreprise / Organisation")
     job_title = models.CharField(max_length=255, verbose_name="Poste occupé")
-    sector = models.CharField(max_length=20, choices=SECTOR_CHOICES, default='maritime')
+    sector = models.ForeignKey(Sector, on_delete=models.PROTECT, null=True, blank=True, related_name='professional_profiles')
     country = models.CharField(max_length=100, verbose_name="Pays")
     company_website = models.URLField(blank=True, null=True, verbose_name="Site web (recruteurs)")
 
@@ -100,6 +127,7 @@ class ResearcherProfile(models.Model):
         ('prof', 'Prof.'),
         ('mr', 'M.'),
         ('ms', 'Mme'),
+        ('ml', 'Mle'),
         ('eng', 'Ing.'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='researcher_profile')
@@ -121,17 +149,10 @@ class ResearcherProfile(models.Model):
 
 class InstitutionalProfile(models.Model):
     """Bailleur de fonds / Partenaire Institutionnel"""
-    ORG_TYPE_CHOICES = (
-        ('ministry', 'Ministère / Administration publique'),
-        ('multilateral', 'Organisation Multilatérale (UA, CEDEAO, OMI…)'),
-        ('ngo', 'ONG / Fondation'),
-        ('private', "Secteur Privé / Fondation d'entreprise"),
-        ('other', 'Autre'),
-    )
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='institutional_profile')
     organization_name = models.CharField(max_length=255, verbose_name="Nom de l'organisation")
     position = models.CharField(max_length=255, verbose_name="Fonction / Titre")
-    organization_type = models.CharField(max_length=20, choices=ORG_TYPE_CHOICES, default='multilateral')
+    organization_type = models.ForeignKey(OrganizationType, on_delete=models.PROTECT, null=True, blank=True, related_name='institutional_profiles')
     country = models.CharField(max_length=100, verbose_name="Pays")
 
     def __str__(self):

@@ -3,8 +3,11 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from .models import Event, PromotionBanner, CompetitionAlertSubscription, NewsPost
-from .serializers import EventSerializer, PromotionBannerSerializer, CompetitionAlertSubscriptionSerializer, NewsPostSerializer
+from .models import Event, PromotionBanner, CompetitionAlertSubscription, NewsPost, NewsCategory
+from .serializers import (
+    EventSerializer, PromotionBannerSerializer, CompetitionAlertSubscriptionSerializer,
+    NewsPostSerializer, NewsCategorySerializer,
+)
 
 class EventActiveListView(generics.ListAPIView):
     """Endpoint public pour lister les événements à venir dans l'agenda"""
@@ -64,7 +67,7 @@ class NewsPostListView(generics.ListAPIView):
         queryset = NewsPost.objects.filter(is_published=True)
         category = self.request.query_params.get('category')
         if category:
-            queryset = queryset.filter(category=category)
+            queryset = queryset.filter(category__code=category)
         return queryset
 
 
@@ -73,4 +76,11 @@ class NewsPostDetailView(generics.RetrieveAPIView):
     queryset = NewsPost.objects.filter(is_published=True)
     serializer_class = NewsPostSerializer
     lookup_field = 'slug'
+    permission_classes = [permissions.AllowAny]
+
+
+class NewsCategoryListView(generics.ListAPIView):
+    """Endpoint public — catégories d'actualités disponibles pour filtrer les actualités."""
+    queryset = NewsCategory.objects.filter(is_active=True)
+    serializer_class = NewsCategorySerializer
     permission_classes = [permissions.AllowAny]

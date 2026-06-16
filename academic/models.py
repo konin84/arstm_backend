@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.text import slugify
+from users.models import LookupValue
 
 class Domain(models.Model):
     """Domaines d'expertise / Filières (Maritime, Portuaire, Logistique, Industriel)"""
@@ -15,25 +16,24 @@ class Domain(models.Model):
         return self.name
 
 
+class ProgramType(LookupValue):
+    """Type de formation (initiale, continue…)."""
+
+
+class Regime(LookupValue):
+    """Régime de formation (sédentaire, navigant…)."""
+
+
 class Program(models.Model):
     """Formations offertes (Initiale ou Continue) par les composantes de l'ARSTM"""
-    PROGRAM_TYPE_CHOICES = (
-        ('initiale', 'Formation Initiale'), 
-        ('continue', 'Formation Continue')
-    )
-    REGIME_CHOICES = (
-        ('sedentaire', 'Sédentaire'),
-        ('navigant', 'Navigant'),
-    )
-    
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='programs')
     school = models.ForeignKey('institution.School', on_delete=models.CASCADE, related_name='programs')
-    
+
     title = models.CharField(max_length=255, verbose_name="Titre")
     slug = models.SlugField(unique=True, blank=True)
 
-    program_type = models.CharField(max_length=20, choices=PROGRAM_TYPE_CHOICES)
-    regime = models.CharField(max_length=20, choices=REGIME_CHOICES, default='sedentaire')
+    program_type = models.ForeignKey(ProgramType, on_delete=models.PROTECT, related_name='programs')
+    regime = models.ForeignKey(Regime, on_delete=models.PROTECT, related_name='programs', null=True, blank=True)
     duration = models.CharField(max_length=100, help_text="Ex: 3 ans, 12 mois")
 
     description = models.TextField(verbose_name="Description")

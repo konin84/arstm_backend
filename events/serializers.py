@@ -1,6 +1,12 @@
 # apps/events/serializers.py
 from rest_framework import serializers
-from .models import Event, PromotionBanner, CompetitionAlertSubscription, NewsPost
+from .models import Event, PromotionBanner, CompetitionAlertSubscription, NewsPost, NewsCategory
+
+
+class NewsCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsCategory
+        fields = ['code', 'label']
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,7 +28,8 @@ class CompetitionAlertSubscriptionSerializer(serializers.ModelSerializer):
 
 
 class NewsPostSerializer(serializers.ModelSerializer):
-    category_display = serializers.CharField(source='get_category_display', read_only=True)
+    category = serializers.SlugRelatedField(slug_field='code', read_only=True)
+    category_display = serializers.CharField(source='category.label', read_only=True)
 
     class Meta:
         model = NewsPost

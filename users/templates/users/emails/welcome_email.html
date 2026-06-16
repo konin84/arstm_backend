@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>{{ subject }}</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f4f6f8;font-family:Arial,Helvetica,sans-serif;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f4f6f8;padding:24px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="480" cellpadding="0" cellspacing="0" style="background-color:#ffffff;border-radius:8px;overflow:hidden;">
+          <tr>
+            <td align="center" style="background-color:#0b3d91;padding:24px;">
+              <img src="cid:{{ logo_cid }}" alt="ARSTM" width="64" height="64" style="display:block;width:64px;height:64px;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:32px;color:#1a1a1a;font-size:15px;line-height:1.6;">
+              <p>Bonjour {{ full_name }},</p>
+              <p>Votre compte a été créé sur la plateforme de l'<strong>ARSTM</strong> avec le profil : <strong>{{ role_label }}</strong>.</p>
+              <table role="presentation" width="100%" cellpadding="8" cellspacing="0" style="background-color:#f4f6f8;border-radius:6px;margin:24px 0;">
+                <tr>
+                  <td style="font-size:14px;color:#555555;">Identifiant</td>
+                  <td style="font-size:14px;font-weight:bold;text-align:right;">{{ email }}</td>
+                </tr>
+                <tr>
+                  <td style="font-size:14px;color:#555555;">Mot de passe temporaire</td>
+                  <td style="font-size:14px;font-weight:bold;text-align:right;">{{ temp_password }}</td>
+                </tr>
+              </table>
+              <p>Veuillez vous connecter et changer votre mot de passe dès votre première connexion. Ce mot de passe est temporaire et ne sera plus valide après modification.</p>
+              <p style="margin-top:32px;">Cordialement,<br>L'équipe ARSTM</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

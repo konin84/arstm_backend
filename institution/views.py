@@ -1,6 +1,10 @@
 from rest_framework import generics, permissions
-from .models import School, Infrastructure, Partner, Testimonial
-from .serializers import SchoolSerializer, InfrastructureSerializer, PartnerSerializer, TestimonialSerializer
+from rest_framework.exceptions import NotFound
+from .models import School, Infrastructure, Partner, PartnerType, Testimonial, DirectorMessage
+from .serializers import (
+    SchoolSerializer, InfrastructureSerializer, PartnerSerializer, PartnerTypeSerializer, TestimonialSerializer,
+    DirectorMessageSerializer,
+)
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -26,6 +30,32 @@ class SchoolDetailView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field = 'slug'
 
 
+# ─── Director message ────────────────────────────────────────────────────────
+
+class DirectorMessageListView(generics.ListCreateAPIView):
+    queryset = DirectorMessage.objects.all()
+    serializer_class = DirectorMessageSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class DirectorMessageDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = DirectorMessage.objects.all()
+    serializer_class = DirectorMessageSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+
+class DirectorMessageActiveView(generics.RetrieveAPIView):
+    """Renvoie le mot du Directeur actuellement actif, pour la page publique."""
+    serializer_class = DirectorMessageSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_object(self):
+        instance = DirectorMessage.objects.filter(is_active=True).first()
+        if not instance:
+            raise NotFound("Aucun mot du Directeur actif.")
+        return instance
+
+
 # ─── Infrastructures ──────────────────────────────────────────────────────────
 
 class InfrastructureListView(generics.ListCreateAPIView):
@@ -40,6 +70,15 @@ class InfrastructureDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAdminOrReadOnly]
 
 
+# ─── Partner types (liste dynamique) ───────────────────────────────────────────
+
+class PartnerTypeListView(generics.ListAPIView):
+    """Endpoint public — types de partenaires disponibles pour filtrer/créer un partenaire."""
+    queryset = PartnerType.objects.filter(is_active=True)
+    serializer_class = PartnerTypeSerializer
+    permission_classes = [permissions.AllowAny]
+
+
 # ─── Partners ─────────────────────────────────────────────────────────────────
 
 class PartnerListView(generics.ListCreateAPIView):
@@ -50,7 +89,7 @@ class PartnerListView(generics.ListCreateAPIView):
         queryset = Partner.objects.all()
         partner_type = self.request.query_params.get('type')
         if partner_type:
-            queryset = queryset.filter(partner_type=partner_type)
+            queryset = queryset.filter(partner_type__code=partner_type)
         return queryset
 
 

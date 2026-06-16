@@ -1,22 +1,35 @@
 from rest_framework import serializers
-from .models import School, Infrastructure, Partner, Testimonial
+from .models import School, Infrastructure, Partner, PartnerType, Testimonial, DirectorMessage
 
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
-        fields = ['id', 'name', 'slug', 'description', 'description_fr', 'description_en',
-                  'presentation_video_url', 'featured_image']
+        fields = ['id', 'name', 'slug', 'description', 'presentation_video_url', 'featured_image']
         read_only_fields = ['slug']
+
+
+class DirectorMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DirectorMessage
+        fields = ['id', 'full_name', 'title', 'photo', 'message', 'is_active', 'created_at']
+        read_only_fields = ['created_at']
 
 
 class InfrastructureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Infrastructure
-        fields = ['id', 'title', 'title_fr', 'title_en', 'description', 'description_fr', 'description_en', 'image']
+        fields = ['id', 'title', 'description', 'image']
+
+
+class PartnerTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PartnerType
+        fields = ['code', 'label']
 
 
 class PartnerSerializer(serializers.ModelSerializer):
-    partner_type_display = serializers.CharField(source='get_partner_type_display', read_only=True)
+    partner_type = serializers.SlugRelatedField(slug_field='code', queryset=PartnerType.objects.filter(is_active=True))
+    partner_type_display = serializers.CharField(source='partner_type.label', read_only=True)
 
     class Meta:
         model = Partner

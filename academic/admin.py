@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from academic.models import Document, Domain, Program
+from academic.models import Document, Domain, Program, ProgramType, Regime
 
 # Register your models here.
 admin.site.site_header = "ARSTM - Administration"
@@ -11,3 +11,17 @@ admin.site.enable_nav_sidebar = False  # Désactive la barre latérale de naviga
 admin.site.register(Domain) # Enregistre le modèle Domain pour l'administration
 admin.site.register(Program)  # Enregistre le modèle Program pour l'administration
 admin.site.register(Document)  # Enregistre le modèle Program pour l'administration
+
+
+@admin.register(ProgramType)
+class ProgramTypeAdmin(admin.ModelAdmin):
+    list_display = ['code', 'label', 'is_active', 'order']
+    list_editable = ['is_active', 'order']
+    search_fields = ['code', 'label']
+
+
+@admin.register(Regime)
+class RegimeAdmin(admin.ModelAdmin):
+    list_display = ['code', 'label', 'is_active', 'order']
+    list_editable = ['is_active', 'order']
+    search_fields = ['code', 'label']
