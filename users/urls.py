@@ -12,6 +12,7 @@ from .views import (
     DeleteUserView,
     SectorListView,
     OrganizationTypeListView,
+    TestEmailView,
 )
 
 urlpatterns = [
@@ -30,6 +31,9 @@ urlpatterns = [
 
     # Administration — création de comptes avec mot de passe temporaire
     path('create/', AdminCreateUserView.as_view(), name='admin_create_user'),
+
+    # Test email — admin uniquement
+    path('test-email/', TestEmailView.as_view(), name='test_email'),
 
     # Administration — liste des utilisateurs et gestion des comptes étudiants
     path('', UsersListView.as_view(), name='users_list'),

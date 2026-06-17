@@ -2,7 +2,9 @@ from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.views import TokenObtainPairView
+from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from .serializers import (
     UserRegistrationSerializer,
@@ -151,6 +153,28 @@ class ApproveStudentView(APIView):
             },
             status=status.HTTP_200_OK,
         )
+
+
+# ─── Test email ─────────────────────────────────────────────────────────────
+
+class TestEmailView(APIView):
+    """Envoie un email de test synchrone — réservé aux administrateurs."""
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+
+    def post(self, request):
+        recipient = getattr(settings, 'TEST_EMAIL_RECIPIENT', '') or request.user.email
+        try:
+            send_mail(
+                subject='[ARSTM] Email de test',
+                message='Cet email confirme que l\'envoi d\'emails fonctionne correctement.',
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[recipient],
+                fail_silently=False,
+            )
+        except Exception as e:
+            return Response({'detail': f'Échec : {e}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({'detail': f'Email envoyé à {recipient}.'}, status=status.HTTP_200_OK)
 
 
 # ─── Listes de valeurs dynamiques ──────────────────────────────────────────
