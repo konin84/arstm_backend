@@ -856,6 +856,15 @@
                 },
                 "description": "Réservé aux admins (is_staff=True). Remplacer `1` par l'ID de l'utilisateur à supprimer. Un admin ne peut pas supprimer son propre compte (retourne 400). Retourne 204 No Content en cas de succès."
               }
+            },
+            {
+              "name": "Test email",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/users/test-email/", "host": ["{{base_url}}"], "path": ["api", "users", "test-email", ""] },
+                "description": "Réservé aux admins. Envoie un email de test synchrone à TEST_EMAIL_RECIPIENT (ou à l'email de l'admin connecté si non défini). Retourne 200 avec confirmation ou 500 avec le message d'erreur exact."
+              }
             }
           ]
         }
