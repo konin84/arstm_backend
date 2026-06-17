@@ -1,4 +1,4 @@
-anymail==15.0
+django-anymail==15.0
 asgiref==3.11.1
 certifi==2026.5.20
 charset-normalizer==3.4.7
