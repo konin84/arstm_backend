@@ -17,7 +17,7 @@ from .serializers import (
     RESTRICTED_ROLES,
 )
 from .models import Sector, OrganizationType
-from .permissions import IsAdminOrModerator
+from .permissions import IsAdmin, IsAdminOrModerator
 
 User = get_user_model()
 
@@ -49,7 +49,7 @@ class AdminCreateUserView(generics.CreateAPIView):
     Génère un mot de passe temporaire envoyé par email.
     Seul l'admin peut créer des comptes modérateur ou admin.
     """
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated, IsAdmin]
     serializer_class = AdminCreateUserSerializer
 
     def create(self, request, *args, **kwargs):
@@ -113,7 +113,7 @@ class PendingStudentsView(generics.ListAPIView):
 
 class DeleteUserView(APIView):
     """Suppression d'un compte utilisateur — réservée aux administrateurs."""
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+    permission_classes = [permissions.IsAuthenticated, IsAdmin]
 
     def delete(self, request, pk):
         user = get_object_or_404(User, pk=pk)
