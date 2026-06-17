@@ -18,7 +18,6 @@ from .serializers import (
 )
 from .models import Sector, OrganizationType
 from .permissions import IsAdminOrModerator
-from .utils import generate_temp_password, send_welcome_email
 
 User = get_user_model()
 
@@ -142,17 +141,12 @@ class ApproveStudentView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        temp_password = generate_temp_password()
-        student.set_password(temp_password)
         student.is_active = True
-        student.must_change_password = True
-        student.save(update_fields=['password', 'is_active', 'must_change_password'])
-
-        send_welcome_email(student, temp_password)
+        student.save(update_fields=['is_active'])
 
         return Response(
             {
-                "detail": "Compte étudiant activé avec succès. Les identifiants ont été envoyés par email.",
+                "detail": "Compte étudiant activé avec succès.",
                 "user": UserSerializer(student).data,
             },
             status=status.HTTP_200_OK,

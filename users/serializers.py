@@ -7,7 +7,6 @@ from .models import (
     ResearcherProfile, InstitutionalProfile, StaffProfile,
     Sector, OrganizationType,
 )
-from .utils import generate_temp_password, send_welcome_email
 
 User = get_user_model()
 
@@ -103,16 +102,13 @@ RESTRICTED_ROLES = ('admin', 'moderator')
 
 
 class AdminCreateUserSerializer(serializers.ModelSerializer):
-    """
-    Création de compte par un administrateur.
-    Un mot de passe temporaire est généré et envoyé à l'email du nouvel utilisateur.
-    Le champ de profil requis varie selon le rôle fourni.
-    """
+    """Création de compte par un administrateur. Le mot de passe est saisi manuellement."""
     profile = serializers.DictField(child=serializers.CharField(allow_blank=True), required=False)
+    password = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'phone', 'role', 'profile']
+        fields = ['email', 'first_name', 'last_name', 'phone', 'role', 'password', 'profile']
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -127,37 +123,33 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
+        password = validated_data.pop('password')
         role = validated_data.get('role', 'student')
 
-        temp_password = generate_temp_password()
-        user = User.objects.create_user(
-            password=temp_password,
-            must_change_password=True,
-            **validated_data,
-        )
+        user = User.objects.create_user(password=password, **validated_data)
 
-        # Création du profil spécifique au rôle
         if role in ROLE_PROFILE_MAP:
             _, ProfileModel, ProfileSerializer = ROLE_PROFILE_MAP[role]
             profile_serializer = ProfileSerializer(data=profile_data)
             profile_serializer.is_valid(raise_exception=True)
             ProfileModel.objects.create(user=user, **profile_serializer.validated_data)
 
-        send_welcome_email(user, temp_password)
         return user
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     Auto-inscription publique.
-    Les étudiants n'ont pas de mot de passe à ce stade — il leur sera envoyé par
-    email lors de l'activation du compte par un administrateur.
+    Les étudiants n'ont pas de mot de passe à ce stade — il leur sera défini lors
+    de l'activation du compte par un administrateur.
+    Les autres rôles saisissent leur mot de passe directement.
     """
     profile = serializers.DictField(child=serializers.CharField(allow_blank=True), required=False)
+    password = serializers.CharField(write_only=True, min_length=8, required=False)
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'role', 'phone', 'profile']
+        fields = ['email', 'first_name', 'last_name', 'role', 'phone', 'password', 'profile']
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -174,24 +166,23 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Ce rôle ne peut pas être attribué lors de l'inscription publique.")
         return value
 
+    def validate(self, attrs):
+        role = attrs.get('role', 'student')
+        if role != 'student' and not attrs.get('password'):
+            raise serializers.ValidationError({"password": "Ce champ est obligatoire pour ce rôle."})
+        return attrs
+
     @transaction.atomic
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
+        password = validated_data.pop('password', None)
         role = validated_data.get('role', 'student')
 
         if role == 'student':
-            # Disabled and passwordless until an admin verifies the matricule
             validated_data['is_active'] = False
-            user = User.objects.create_user(password=None, **validated_data)
+            user = User.objects.create_user(password=password or None, **validated_data)
         else:
-            # Active immediately; temp password emailed right away
-            temp_password = generate_temp_password()
-            user = User.objects.create_user(
-                password=temp_password,
-                must_change_password=True,
-                **validated_data,
-            )
-            send_welcome_email(user, temp_password)
+            user = User.objects.create_user(password=password, **validated_data)
 
         if role in ROLE_PROFILE_MAP:
             _, ProfileModel, ProfileSerializer = ROLE_PROFILE_MAP[role]
@@ -234,15 +225,25 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
 class PendingStudentSerializer(serializers.ModelSerializer):
     """Étudiant en attente de vérification de matricule par un admin."""
     matricule = serializers.SerializerMethodField()
+    nationality = serializers.SerializerMethodField()
+    current_year = serializers.SerializerMethodField()
     school = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'date_joined', 'matricule', 'school']
+        fields = ['id', 'email', 'first_name', 'last_name', 'phone', 'date_joined', 'matricule', 'nationality', 'current_year', 'school']
 
     def get_matricule(self, obj):
         profile = getattr(obj, 'student_profile', None)
         return profile.matricule if profile else None
+
+    def get_nationality(self, obj):
+        profile = getattr(obj, 'student_profile', None)
+        return profile.nationality if profile else None
+
+    def get_current_year(self, obj):
+        profile = getattr(obj, 'student_profile', None)
+        return profile.current_year if profile else None
 
     def get_school(self, obj):
         profile = getattr(obj, 'student_profile', None)
