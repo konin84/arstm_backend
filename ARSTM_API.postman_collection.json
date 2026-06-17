@@ -365,7 +365,7 @@
                 "method": "GET",
                 "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
                 "url": { "raw": "{{base_url}}/api/users/", "host": ["{{base_url}}"], "path": ["api", "users", ""] },
-                "description": "Accessible aux admins et modérateurs. Retourne id, email, nom, rôle, statut is_active et date d'inscription."
+                "description": "Accessible aux admins et modérateurs. Retourne id, email, nom, rôle, téléphone, avatar, statut is_active, date d'inscription et le profil complet de l'utilisateur (student_profile, professional_profile, researcher_profile, institutional_profile ou staff_profile selon le rôle — les autres sont null)."
               }
             },
             {
