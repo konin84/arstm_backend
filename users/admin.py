@@ -34,7 +34,10 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ['role', 'is_active', 'is_staff']
     search_fields = ['email', 'first_name', 'last_name']
     ordering = ['email']
-    actions = [approve_students]
+    actions = [approve_students, 'delete_selected']
+
+    def has_delete_permission(self, request, obj=None):
+        return True
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),

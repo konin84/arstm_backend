@@ -9,6 +9,7 @@ from .views import (
     UsersListView,
     PendingStudentsView,
     ApproveStudentView,
+    DeleteUserView,
     SectorListView,
     OrganizationTypeListView,
 )
@@ -34,4 +35,5 @@ urlpatterns = [
     path('', UsersListView.as_view(), name='users_list'),
     path('pending-students/', PendingStudentsView.as_view(), name='pending_students'),
     path('<int:pk>/approve/', ApproveStudentView.as_view(), name='approve_student'),
+    path('<int:pk>/delete/', DeleteUserView.as_view(), name='delete_user'),
 ]

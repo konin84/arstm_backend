@@ -10,11 +10,10 @@ class School(models.Model):
     name = models.CharField(max_length=255, help_text="Ex: École Supérieure de Navigation (ESN)")
     slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(verbose_name="Description")
+    website_url = models.URLField(verbose_name="Site web de l'école", blank=True, null=True)
     presentation_video_url = models.URLField(verbose_name="URL Vidéo de présentation", blank=True, null=True)
     featured_image = models.ImageField(upload_to='institution/schools/', blank=True, null=True)
-    # .programs = related_name for Program model (defined in programs/models.py)
-    # .url  = related_name for SchoolURL model (defined in institution/models.py)
-    # ;categories = related_name for SchoolCategory model (defined in institution/models.py)
+   
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)

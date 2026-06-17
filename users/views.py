@@ -109,6 +109,23 @@ class PendingStudentsView(generics.ListAPIView):
         return User.objects.filter(role='student', is_active=False).select_related('student_profile__school')
 
 
+class DeleteUserView(APIView):
+    """Suppression d'un compte utilisateur — réservée aux administrateurs."""
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
+
+    def delete(self, request, pk):
+        user = get_object_or_404(User, pk=pk)
+
+        if user == request.user:
+            return Response(
+                {"detail": "Vous ne pouvez pas supprimer votre propre compte."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 class ApproveStudentView(APIView):
     """Activation du compte étudiant après vérification du matricule — accessible aux admins et modérateurs."""
     permission_classes = [permissions.IsAuthenticated, IsAdminOrModerator]

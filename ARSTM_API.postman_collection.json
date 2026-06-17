@@ -385,6 +385,15 @@
                 "url": { "raw": "{{base_url}}/api/users/1/approve/", "host": ["{{base_url}}"], "path": ["api", "users", "1", "approve", ""] },
                 "description": "Accessible aux admins et modérateurs. Remplacer `1` par l'ID de l'étudiant. Active le compte (is_active=true), génère un mot de passe temporaire et l'envoie par email à l'étudiant. L'étudiant devra le changer à sa première connexion."
               }
+            },
+            {
+              "name": "Supprimer un utilisateur",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/users/1/delete/", "host": ["{{base_url}}"], "path": ["api", "users", "1", "delete", ""] },
+                "description": "Réservé aux admins (is_staff=True). Remplacer `1` par l'ID de l'utilisateur à supprimer. Un admin ne peut pas supprimer son propre compte (retourne 400). Retourne 204 No Content en cas de succès."
+              }
             }
           ]
         }
@@ -426,7 +435,7 @@
                 "url": { "raw": "{{base_url}}/api/institution/schools/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"name\": \"École Supérieure de Navigation\",\n  \"description\": \"Formation des officiers et personnels de la marine marchande.\",\n  \"presentation_video_url\": \"\"\n}",
+                  "raw": "{\n  \"name\": \"École Supérieure de Navigation\",\n  \"description\": \"Formation des officiers et personnels de la marine marchande.\",\n  \"website_url\": \"https://esn.arstm.ci\",\n  \"presentation_video_url\": \"\"\n}",
                   "options": { "raw": { "language": "json" } }
                 },
                 "description": "Le `slug` est auto-généré depuis `name`. Pour uploader `featured_image`, utiliser multipart/form-data. `description` est enregistré dans la langue indiquée par `Accept-Language` (ici fr)."
