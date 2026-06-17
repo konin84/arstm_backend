@@ -162,11 +162,11 @@ DEFAULT_FILE_STORAGE = STORAGES['default']['BACKEND']
 # CORS — à restreindre aux origines réelles en production
 CORS_ALLOWED_ORIGINS = config('CORS_ALLOWED_ORIGINS', default='http://localhost:3000,http://localhost:5173', cast=Csv())
 
-# Email — Brevo HTTP API (contourne le blocage SMTP de Render free tier)
-BREVO_API_KEY = config('BREVO_API_KEY', default='')
-if BREVO_API_KEY:
-    EMAIL_BACKEND = 'anymail.backends.brevo.EmailBackend'
-    ANYMAIL = {'BREVO_API_KEY': BREVO_API_KEY}
+# Email — Resend HTTP API (contourne le blocage SMTP de Render free tier)
+RESEND_API_KEY = config('RESEND_API_KEY', default='')
+if RESEND_API_KEY:
+    EMAIL_BACKEND = 'anymail.backends.resend.EmailBackend'
+    ANYMAIL = {'RESEND_API_KEY': RESEND_API_KEY}
 else:
     EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
     EMAIL_HOST = config('EMAIL_HOST', default='smtp.gmail.com')
