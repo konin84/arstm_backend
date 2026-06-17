@@ -97,7 +97,10 @@ class UsersListView(generics.ListAPIView):
     serializer_class = UserListSerializer
 
     def get_queryset(self):
-        return User.objects.all().order_by('-date_joined')
+        return User.objects.select_related(
+            'student_profile', 'professional_profile',
+            'researcher_profile', 'institutional_profile', 'staff_profile',
+        ).order_by('-date_joined')
 
 
 class PendingStudentsView(generics.ListAPIView):

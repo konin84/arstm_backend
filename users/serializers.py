@@ -253,8 +253,17 @@ class PendingStudentSerializer(serializers.ModelSerializer):
 
 class UserListSerializer(serializers.ModelSerializer):
     """Lecture seule — utilisée par les admins et modérateurs pour lister les utilisateurs."""
+    student_profile = StudentProfileSerializer(read_only=True)
+    professional_profile = ProfessionalProfileSerializer(read_only=True)
+    researcher_profile = ResearcherProfileSerializer(read_only=True)
+    institutional_profile = InstitutionalProfileSerializer(read_only=True)
+    staff_profile = StaffProfileSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'first_name', 'last_name', 'role', 'phone', 'avatar', 'is_active', 'date_joined']
+        fields = [
+            'id', 'email', 'first_name', 'last_name', 'role', 'phone', 'avatar', 'is_active', 'date_joined',
+            'student_profile', 'professional_profile', 'researcher_profile',
+            'institutional_profile', 'staff_profile',
+        ]
         read_only_fields = fields
