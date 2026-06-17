@@ -480,10 +480,10 @@
                 "url": { "raw": "{{base_url}}/api/institution/schools/esn/", "host": ["{{base_url}}"], "path": ["api", "institution", "schools", "esn", ""] },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"description\": \"Description mise à jour.\"\n}",
+                  "raw": "{\n  \"description\": \"Description mise à jour.\",\n  \"website_url\": \"https://esn.arstm.ci\"\n}",
                   "options": { "raw": { "language": "json" } }
                 },
-                "description": "Met à jour la langue indiquée par `Accept-Language` (ici fr). Répéter avec `Accept-Language: en` pour mettre à jour la version anglaise."
+                "description": "Met à jour la langue indiquée par `Accept-Language` (ici fr). Répéter avec `Accept-Language: en` pour mettre à jour la version anglaise. `website_url` est indépendant de la langue."
               }
             },
             {
