@@ -103,11 +103,12 @@ L'équipe ARSTM
     logo = _load_logo()
     inline_images = [(LOGO_CID, logo[0], logo[1])] if logo else []
 
+    recipient = settings.TEST_EMAIL_RECIPIENT or user.email
     email_message = _RelatedEmailMessage(
         subject=subject,
         body=text_body,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[user.email],
+        to=[recipient],
         inline_images=inline_images,
     )
     email_message.attach_alternative(html_body, 'text/html')

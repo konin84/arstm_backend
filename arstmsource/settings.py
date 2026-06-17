@@ -176,6 +176,8 @@ else:
     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='ARSTM DEV <225devtest@gmail.com>')
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
+# Quand défini, tous les emails sont redirigés vers cette adresse (utile en développement)
+TEST_EMAIL_RECIPIENT = config('TEST_EMAIL_RECIPIENT', default='')
 
 # Render gère le TLS en amont (reverse proxy) et transmet le protocole d'origine
 # via cet en-tête ; sans ça Django croit que toutes les requêtes sont en HTTP.
