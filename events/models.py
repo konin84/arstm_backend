@@ -6,7 +6,7 @@ from users.models import LookupValue
 class Event(models.Model):
     """Agenda dynamique des événements de l'ARSTM (Soutenances, conférences, séminaires)"""
     title = models.CharField(max_length=255, verbose_name="Titre")
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     description = models.TextField(verbose_name="Description")
     
     start_date = models.DateTimeField(verbose_name="Date et heure de début")
@@ -56,7 +56,7 @@ class NewsCategory(LookupValue):
 class NewsPost(models.Model):
     """Actualités institutionnelles, communiqués de presse et revue de presse de l'ARSTM"""
     title = models.CharField(max_length=255, verbose_name="Titre")
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     category = models.ForeignKey(NewsCategory, on_delete=models.PROTECT, null=True, blank=True, related_name='news_posts')
     content = models.TextField(verbose_name="Contenu")
     featured_image = models.ImageField(upload_to='events/news/', blank=True, null=True)

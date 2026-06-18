@@ -5,7 +5,7 @@ from django.utils.text import slugify
 class Category(models.Model):
     """Catégories dynamiques pour la veille sectorielle (Sûreté maritime, Logistique portuaire, etc.)"""
     name = models.CharField(max_length=100, verbose_name="Nom de la catégorie")
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     class Meta:
         verbose_name = "Catégorie de veille"
@@ -23,7 +23,7 @@ class Category(models.Model):
 class ResearchPaper(models.Model):
     """Publications scientifiques et espace média du CREMPOL / ISMI"""
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     domain = models.ForeignKey('academic.Domain', on_delete=models.CASCADE)
     authors = models.CharField(max_length=255, help_text="Chercheurs ou Experts ARSTM")
     abstract = models.TextField(help_text="Résumé de la publication")
@@ -44,7 +44,7 @@ class ResearchPaper(models.Model):
 class SectorWatch(models.Model):
     """Articles d'analyse et de veille sectorielle"""
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     
     # Remplacement du CharField par une relation dynamique ForeignKey
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='articles', verbose_name="Catégorie")

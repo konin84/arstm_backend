@@ -80,7 +80,7 @@ class JobOffer(models.Model):
     )
 
     title = models.CharField(max_length=255, verbose_name="Intitulé du poste")
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     offer_type = models.CharField(max_length=10, choices=OFFER_TYPE_CHOICES, default='emploi')
     organization = models.CharField(max_length=255, verbose_name="Entreprise / Institution")
     location = models.CharField(max_length=255, verbose_name="Lieu")

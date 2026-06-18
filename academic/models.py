@@ -5,7 +5,7 @@ from users.models import LookupValue
 class Domain(models.Model):
     """Domaines d'expertise / Filières (Maritime, Portuaire, Logistique, Industriel)"""
     name = models.CharField(max_length=255, verbose_name="Nom")
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.pk:
@@ -34,7 +34,7 @@ class Program(models.Model):
     school = models.ForeignKey('institution.School', on_delete=models.CASCADE, related_name='programs')
 
     title = models.CharField(max_length=255, verbose_name="Titre")
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
 
     program_type = models.ForeignKey(ProgramType, on_delete=models.PROTECT, related_name='programs')
     regime = models.ForeignKey(Regime, on_delete=models.PROTECT, related_name='programs', null=True, blank=True)

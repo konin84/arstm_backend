@@ -10,7 +10,7 @@ class Product(models.Model):
         ('formation_continue', 'Module Court / FOAD'),
     )
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
     product_type = models.CharField(max_length=30, choices=PRODUCT_TYPE)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Prix en FCFA")
