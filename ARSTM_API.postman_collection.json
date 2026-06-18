@@ -1972,7 +1972,7 @@
     },
     {
       "name": "05 · Académique",
-      "description": "Lecture publique (AllowAny). Écriture (POST/PATCH/DELETE) réservée aux admins (is_staff=True).",
+      "description": "Lecture publique (AllowAny). Écriture (POST/PATCH/DELETE) réservée aux admins et modérateurs (role = admin | moderator).",
       "item": [
         {
           "name": "Domaines",
@@ -2190,7 +2190,7 @@
                     ""
                   ]
                 },
-                "description": "Public. Liste {code, label} à utiliser pour `program_type`. Gérable depuis l'admin Django sans déploiement."
+                "description": "Public (actifs seulement). Liste {id, code, label, is_active, order}. Admins et modérateurs voient aussi les inactifs. CRUD disponible dans le sous-dossier Admin — Types de formation."
               }
             },
             {
@@ -2210,7 +2210,7 @@
                     ""
                   ]
                 },
-                "description": "Public. Liste {code, label} à utiliser pour `regime`."
+                "description": "Public (actifs seulement). Liste {id, code, label, is_active, order}. Admins et modérateurs voient aussi les inactifs. CRUD disponible dans le sous-dossier Admin — Régimes."
               }
             },
             {
@@ -2300,14 +2300,14 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"domain\": 1,\n  \"school\": 1,\n  \"title\": \"Licence Professionnelle en Navigation Maritime\",\n  \"program_type\": \"initiale\",\n  \"regime\": \"navigant\",\n  \"duration\": \"3 ans\",\n  \"description\": \"Formation des officiers de pont destinés à la marine marchande.\",\n  \"career_opportunities\": \"Officier de pont\\nCapitaine de navire\\nPilote portuaire\",\n  \"is_active\": true,\n  \"meta_title\": \"Licence Navigation Maritime — ARSTM\",\n  \"meta_description\": \"Formez-vous aux métiers de la navigation à l'ARSTM.\"\n}",
+                  "raw": "{\n  \"domain\": 1,\n  \"school\": 1,\n  \"title\": \"Licence Professionnelle en Navigation Maritime\",\n  \"program_type\": \"initiale\",\n  \"regime\": \"navigant\",\n  \"duration\": \"3 ans\",\n  \"description\": \"Formation des officiers de pont destinés à la marine marchande.\",\n  \"career_opportunities\": \"Officier de pont\\nCapitaine de navire\\nPilote portuaire\",\n  \"is_active\": true\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
                 },
-                "description": "`domain` et `school` = IDs. `slug` auto-généré depuis `title`. `program_type` : initiale | continue. `regime` : sedentaire | navigant. Les champs traduits (`title`, `description`, `career_opportunities`) sont enregistrés dans la langue indiquée par `Accept-Language` (ici fr)."
+                "description": "`domain` et `school` = IDs. `slug` auto-généré depuis `title`. `program_type` : code d'un ProgramType actif (ex: `initiale`). `regime` : code d'un Regime actif (ex: `navigant`), optionnel. Les champs traduits (`title`, `description`, `career_opportunities`) sont enregistrés dans la langue indiquée par `Accept-Language` (ici fr)."
               }
             },
             {
@@ -2402,13 +2402,14 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"is_active\": false,\n  \"meta_title\": \"Licence Navigation Maritime — ARSTM — ESN\"\n}",
+                  "raw": "{\n  \"title\": \"Licence Professionnelle de Navigation Maritime — ESN\",\n  \"domain\": 1,\n  \"school\": 1,\n  \"program_type\": \"initiale\",\n  \"regime\": \"navigant\",\n  \"duration\": \"3 ans\",\n  \"description\": \"Formation des officiers de pont destinés à la marine marchande.\",\n  \"career_opportunities\": \"Officier de pont\\nCapitaine de navire\\nPilote portuaire\",\n  \"is_active\": true\n}",
                   "options": {
                     "raw": {
                       "language": "json"
                     }
                   }
-                }
+                },
+                "description": "Champs modifiables : `title`, `domain`, `school`, `program_type`, `regime`, `duration`, `description`, `career_opportunities`, `is_active`. Le `slug` est en lecture seule mais se régénère automatiquement si `title` change — mettre à jour l'URL en conséquence. PATCH partiel accepté."
               }
             },
             {
@@ -2435,6 +2436,122 @@
                   ]
                 }
               }
+            },
+            {
+              "name": "Admin — Types de formation",
+              "description": "CRUD sur les types de formation (ProgramType). Écriture réservée aux admins et modérateurs. Lookup par `code`.",
+              "item": [
+                {
+                  "name": "Créer un type de formation",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                      { "key": "Content-Type", "value": "application/json" }
+                    ],
+                    "url": { "raw": "{{base_url}}/api/academic/program-types/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", ""] },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"code\": \"initiale\",\n  \"label\": \"Formation Initiale\",\n  \"is_active\": true,\n  \"order\": 1\n}",
+                      "options": { "raw": { "language": "json" } }
+                    },
+                    "description": "`code` doit être unique. `order` contrôle l'ordre d'affichage."
+                  }
+                },
+                {
+                  "name": "Détail d'un type de formation",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": { "raw": "{{base_url}}/api/academic/program-types/initiale/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", "initiale", ""] },
+                    "description": "Remplacer `initiale` par le code du type."
+                  }
+                },
+                {
+                  "name": "Modifier un type de formation (PATCH)",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                      { "key": "Content-Type", "value": "application/json" }
+                    ],
+                    "url": { "raw": "{{base_url}}/api/academic/program-types/initiale/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", "initiale", ""] },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"label\": \"Formation Initiale Diplômante\",\n  \"is_active\": true\n}",
+                      "options": { "raw": { "language": "json" } }
+                    },
+                    "description": "Remplacer `initiale` par le code du type. Champs modifiables : `label`, `is_active`, `order`."
+                  }
+                },
+                {
+                  "name": "Supprimer un type de formation",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                    "url": { "raw": "{{base_url}}/api/academic/program-types/initiale/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", "initiale", ""] },
+                    "description": "Attention : protégé par PROTECT si des programmes y sont liés."
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Admin — Régimes",
+              "description": "CRUD sur les régimes de formation (Regime). Écriture réservée aux admins et modérateurs. Lookup par `code`.",
+              "item": [
+                {
+                  "name": "Créer un régime",
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                      { "key": "Content-Type", "value": "application/json" }
+                    ],
+                    "url": { "raw": "{{base_url}}/api/academic/regimes/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", ""] },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"code\": \"navigant\",\n  \"label\": \"Régime Navigant\",\n  \"is_active\": true,\n  \"order\": 1\n}",
+                      "options": { "raw": { "language": "json" } }
+                    },
+                    "description": "`code` doit être unique. `order` contrôle l'ordre d'affichage."
+                  }
+                },
+                {
+                  "name": "Détail d'un régime",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": { "raw": "{{base_url}}/api/academic/regimes/navigant/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", "navigant", ""] },
+                    "description": "Remplacer `navigant` par le code du régime."
+                  }
+                },
+                {
+                  "name": "Modifier un régime (PATCH)",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [
+                      { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                      { "key": "Content-Type", "value": "application/json" }
+                    ],
+                    "url": { "raw": "{{base_url}}/api/academic/regimes/navigant/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", "navigant", ""] },
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n  \"label\": \"Régime Navigant Long Cours\",\n  \"is_active\": true\n}",
+                      "options": { "raw": { "language": "json" } }
+                    },
+                    "description": "Remplacer `navigant` par le code du régime. Champs modifiables : `label`, `is_active`, `order`."
+                  }
+                },
+                {
+                  "name": "Supprimer un régime",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                    "url": { "raw": "{{base_url}}/api/academic/regimes/navigant/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", "navigant", ""] },
+                    "description": "Attention : protégé par PROTECT si des programmes y sont liés."
+                  }
+                }
+              ]
             }
           ]
         },
