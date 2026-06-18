@@ -5,9 +5,13 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from .models import Event, PromotionBanner, CompetitionAlertSubscription, NewsPost, NewsCategory
 from .serializers import (
-    EventSerializer, PromotionBannerSerializer, CompetitionAlertSubscriptionSerializer,
-    NewsPostSerializer, NewsCategorySerializer,
+    EventSerializer, EventWriteSerializer,
+    PromotionBannerSerializer,
+    CompetitionAlertSubscriptionSerializer,
+    NewsPostSerializer, NewsPostWriteSerializer,
+    NewsCategorySerializer,
 )
+from users.permissions import IsAdminOrModeratorOrReadOnly
 
 class EventActiveListView(generics.ListAPIView):
     """Endpoint public pour lister les événements à venir dans l'agenda"""
@@ -84,3 +88,80 @@ class NewsCategoryListView(generics.ListAPIView):
     queryset = NewsCategory.objects.filter(is_active=True)
     serializer_class = NewsCategorySerializer
     permission_classes = [permissions.AllowAny]
+
+
+# ─── Admin manage views ───────────────────────────────────────────────────────
+
+class EventAdminListCreateView(generics.ListCreateAPIView):
+    """Admin: liste tous les événements (y compris non-publics) et permet la création."""
+    queryset = Event.objects.all()
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return EventWriteSerializer
+        return EventSerializer
+
+
+class EventAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Admin: modifier ou supprimer un événement."""
+    queryset = Event.objects.all()
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+    lookup_field = 'slug'
+
+    def get_serializer_class(self):
+        if self.request.method in ('PUT', 'PATCH'):
+            return EventWriteSerializer
+        return EventSerializer
+
+
+class PromotionBannerAdminListCreateView(generics.ListCreateAPIView):
+    """Admin: liste toutes les bannières (y compris inactives) et permet la création."""
+    queryset = PromotionBanner.objects.all()
+    serializer_class = PromotionBannerSerializer
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+
+class PromotionBannerDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Admin: modifier ou supprimer une bannière."""
+    queryset = PromotionBanner.objects.all()
+    serializer_class = PromotionBannerSerializer
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+
+class NewsPostAdminListCreateView(generics.ListCreateAPIView):
+    """Admin: liste tous les articles (publiés et non publiés) et permet la création."""
+    queryset = NewsPost.objects.all()
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return NewsPostWriteSerializer
+        return NewsPostSerializer
+
+
+class NewsPostAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Admin: modifier ou supprimer un article."""
+    queryset = NewsPost.objects.all()
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+    lookup_field = 'slug'
+
+    def get_serializer_class(self):
+        if self.request.method in ('PUT', 'PATCH'):
+            return NewsPostWriteSerializer
+        return NewsPostSerializer
+
+
+class NewsCategoryAdminListCreateView(generics.ListCreateAPIView):
+    """Admin: liste toutes les catégories et permet la création."""
+    queryset = NewsCategory.objects.all()
+    serializer_class = NewsCategorySerializer
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+
+class NewsCategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Admin: modifier ou supprimer une catégorie d'actualités."""
+    queryset = NewsCategory.objects.all()
+    serializer_class = NewsCategorySerializer
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+    lookup_field = 'code'

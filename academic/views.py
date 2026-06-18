@@ -9,14 +9,7 @@ from .serializers import (
     ProgramTypeSerializer, RegimeSerializer,
     DocumentSerializer,
 )
-
-
-class IsAdminOrReadOnly(permissions.BasePermission):
-    """Lecture publique, écriture réservée aux admins (is_staff)."""
-    def has_permission(self, request, _view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user and request.user.is_staff
+from users.permissions import IsAdminOrModeratorOrReadOnly, PRIVILEGED_ROLES
 
 
 # ─── Domains ──────────────────────────────────────────────────────────────────
@@ -24,13 +17,13 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 class DomainListView(generics.ListCreateAPIView):
     queryset = Domain.objects.all()
     serializer_class = DomainSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 class DomainDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Domain.objects.all()
     serializer_class = DomainSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
     lookup_field = 'slug'
 
 
@@ -53,7 +46,7 @@ class RegimeListView(generics.ListAPIView):
 # ─── Programs ─────────────────────────────────────────────────────────────────
 
 class ProgramListView(generics.ListCreateAPIView):
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
     def get_serializer_class(self):
         if self.request.method == 'POST':
@@ -61,10 +54,12 @@ class ProgramListView(generics.ListCreateAPIView):
         return ProgramListSerializer
 
     def get_queryset(self):
-        # Admins see all programs; public only sees active ones
-        queryset = Program.objects.all() if (
-            self.request.user.is_authenticated and self.request.user.is_staff
-        ) else Program.objects.filter(is_active=True)
+        # Admins/moderators see all programs; public only sees active ones
+        user = self.request.user
+        can_see_all = user.is_authenticated and (
+            user.is_staff or getattr(user, 'role', None) in PRIVILEGED_ROLES
+        )
+        queryset = Program.objects.all() if can_see_all else Program.objects.filter(is_active=True)
 
         program_type = self.request.query_params.get('type')
         domain_slug = self.request.query_params.get('domain')
@@ -81,7 +76,7 @@ class ProgramListView(generics.ListCreateAPIView):
 
 
 class ProgramDetailView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
     lookup_field = 'slug'
 
     def get_serializer_class(self):
@@ -90,9 +85,11 @@ class ProgramDetailView(generics.RetrieveUpdateDestroyAPIView):
         return ProgramDetailSerializer
 
     def get_queryset(self):
-        if self.request.user.is_authenticated and self.request.user.is_staff:
-            return Program.objects.all()
-        return Program.objects.filter(is_active=True)
+        user = self.request.user
+        can_see_all = user.is_authenticated and (
+            user.is_staff or getattr(user, 'role', None) in PRIVILEGED_ROLES
+        )
+        return Program.objects.all() if can_see_all else Program.objects.filter(is_active=True)
 
 
 # ─── Documents ────────────────────────────────────────────────────────────────
@@ -100,13 +97,13 @@ class ProgramDetailView(generics.RetrieveUpdateDestroyAPIView):
 class DocumentListView(generics.ListCreateAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 class DocumentDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 @api_view(['POST'])

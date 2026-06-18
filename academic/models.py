@@ -4,11 +4,15 @@ from users.models import LookupValue
 
 class Domain(models.Model):
     """Domaines d'expertise / Filières (Maritime, Portuaire, Logistique, Industriel)"""
-    name = models.CharField(max_length=100, verbose_name="Nom")
+    name = models.CharField(max_length=255, verbose_name="Nom")
     slug = models.SlugField(unique=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if self.pk:
+            original = Domain.objects.filter(pk=self.pk).values_list('name', flat=True).first()
+            if original != self.name:
+                self.slug = slugify(self.name)
+        elif not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
                                                     

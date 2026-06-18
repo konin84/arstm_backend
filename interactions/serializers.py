@@ -89,4 +89,10 @@ class JobOfferSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = JobOffer
-        fields = ['id', 'title', 'slug', 'offer_type', 'offer_type_display', 'organization', 'location', 'description', 'requirements', 'deadline', 'created_at']
+        fields = ['id', 'title', 'slug', 'offer_type', 'offer_type_display', 'organization', 'location', 'description', 'requirements', 'deadline', 'is_active', 'created_at']
+
+
+class JobOfferWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobOffer
+        fields = ['id', 'title', 'offer_type', 'organization', 'location', 'description', 'requirements', 'deadline', 'is_active']

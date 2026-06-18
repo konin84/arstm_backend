@@ -6,6 +6,8 @@ from django.db.models import Count
 from .models import ContentTraffic
 from .serializers import ContentTrafficSerializer
 from interactions.models import Lead
+from users.permissions import IsAdmin
+
 
 class TrackActionView(generics.CreateAPIView):
     """Endpoint public permettant au frontend d'envoyer une interaction (clic, vue)"""
@@ -19,12 +21,9 @@ class DCMDashboardStatsView(views.APIView):
     Endpoint hautement stratégique compilant les statistiques globales pour la Direction.
     Affiche le statut de l'objectif des 100 leads et la répartition géographique.
     """
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAdmin]
 
     def get(self, request, *args, **kwargs):
-        # Sécurité : Limité aux administrateurs ou à la direction com
-        if request.user.role not in ['admin', 'admin_dcm']:
-            return Response({"error": "Accès non autorisé."}, status=status.HTTP_403_FORBIDDEN)
 
         now = timezone.now()
 

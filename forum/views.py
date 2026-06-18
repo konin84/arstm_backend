@@ -2,12 +2,21 @@
 from rest_framework import generics, permissions
 from .models import Category, Topic, Post
 from .serializers import CategoryForumSerializer, TopicSerializer, PostSerializer
+from users.permissions import IsAdminOrModerator, IsAdminOrModeratorOrReadOnly
 
-class CategoryListView(generics.ListAPIView):
-    """Liste toutes les thématiques du forum (Accès public)"""
+
+class CategoryListView(generics.ListCreateAPIView):
+    """Lecture publique ; création réservée aux admins et modérateurs."""
     queryset = Category.objects.all()
     serializer_class = CategoryForumSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+
+class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Admin/Modérateur : modifier ou supprimer une catégorie du forum."""
+    queryset = Category.objects.all()
+    serializer_class = CategoryForumSerializer
+    permission_classes = [IsAdminOrModerator]
 
 
 class TopicListCreateView(generics.ListCreateAPIView):
@@ -49,3 +58,17 @@ class PostListCreateView(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # Assigne automatiquement l'utilisateur connecté comme auteur du message
         serializer.save(author=self.request.user)
+
+
+class TopicDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Admin/Modérateur : modifier ou supprimer un sujet (modération)."""
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+    permission_classes = [IsAdminOrModerator]
+
+
+class PostDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Admin/Modérateur : modifier ou supprimer un message (modération)."""
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = [IsAdminOrModerator]

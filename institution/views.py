@@ -5,14 +5,7 @@ from .serializers import (
     SchoolSerializer, InfrastructureSerializer, PartnerSerializer, PartnerTypeSerializer, TestimonialSerializer,
     DirectorMessageSerializer,
 )
-
-
-class IsAdminOrReadOnly(permissions.BasePermission):
-    """Lecture publique, écriture réservée aux admins (role=admin)."""
-    def has_permission(self, request, _view):
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        return request.user and request.user.is_authenticated and request.user.role == 'admin'
+from users.permissions import IsAdminOrModeratorOrReadOnly
 
 
 # ─── Schools ──────────────────────────────────────────────────────────────────
@@ -20,13 +13,13 @@ class IsAdminOrReadOnly(permissions.BasePermission):
 class SchoolListView(generics.ListCreateAPIView):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 class SchoolDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
     lookup_field = 'slug'
 
 
@@ -35,13 +28,13 @@ class SchoolDetailView(generics.RetrieveUpdateDestroyAPIView):
 class DirectorMessageListView(generics.ListCreateAPIView):
     queryset = DirectorMessage.objects.all()
     serializer_class = DirectorMessageSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 class DirectorMessageDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = DirectorMessage.objects.all()
     serializer_class = DirectorMessageSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 class DirectorMessageActiveView(generics.RetrieveAPIView):
@@ -61,13 +54,13 @@ class DirectorMessageActiveView(generics.RetrieveAPIView):
 class InfrastructureListView(generics.ListCreateAPIView):
     queryset = Infrastructure.objects.all()
     serializer_class = InfrastructureSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 class InfrastructureDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Infrastructure.objects.all()
     serializer_class = InfrastructureSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 # ─── Partner types (liste dynamique) ───────────────────────────────────────────
@@ -83,7 +76,7 @@ class PartnerTypeListView(generics.ListAPIView):
 
 class PartnerListView(generics.ListCreateAPIView):
     serializer_class = PartnerSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
     def get_queryset(self):
         queryset = Partner.objects.all()
@@ -96,14 +89,14 @@ class PartnerListView(generics.ListCreateAPIView):
 class PartnerDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Partner.objects.all()
     serializer_class = PartnerSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
 
 # ─── Testimonials ─────────────────────────────────────────────────────────────
 
 class TestimonialListView(generics.ListCreateAPIView):
     serializer_class = TestimonialSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
 
     def get_queryset(self):
         queryset = Testimonial.objects.all()
@@ -115,4 +108,4 @@ class TestimonialListView(generics.ListCreateAPIView):
 class TestimonialDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Testimonial.objects.all()
     serializer_class = TestimonialSerializer
-    permission_classes = [IsAdminOrReadOnly]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]

@@ -5,12 +5,34 @@ import uuid
 from .models import Product, Order
 from .serializers import ProductSerializer, OrderSerializer
 from payments.models import Transaction
+from users.permissions import IsAdminOrModeratorOrReadOnly, PRIVILEGED_ROLES
 
-class ProductListView(generics.ListAPIView):
-    """Liste des études sectorielles, revues et formations courtes"""
-    queryset = Product.objects.filter(is_active=True)
+
+class ProductListView(generics.ListCreateAPIView):
+    """Liste publique (produits actifs) ; création réservée aux admins et modérateurs."""
     serializer_class = ProductSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        is_privileged = user.is_authenticated and (
+            user.is_staff or getattr(user, 'role', None) in PRIVILEGED_ROLES
+        )
+        return Product.objects.all() if is_privileged else Product.objects.filter(is_active=True)
+
+
+class ProductDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Lecture publique ; modification et suppression réservées aux admins et modérateurs."""
+    serializer_class = ProductSerializer
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+        user = self.request.user
+        is_privileged = user.is_authenticated and (
+            user.is_staff or getattr(user, 'role', None) in PRIVILEGED_ROLES
+        )
+        return Product.objects.all() if is_privileged else Product.objects.filter(is_active=True)
 
 
 class CheckoutView(generics.CreateAPIView):

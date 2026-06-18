@@ -2811,6 +2811,109 @@
               ]
             }
           }
+        },
+        {
+          "name": "Admin — Gestion des offres",
+          "description": "Écriture réservée aux admins et modérateurs.",
+          "item": [
+            {
+              "name": "Créer une offre",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/interactions/jobs/", "host": ["{{base_url}}"], "path": ["api", "interactions", "jobs", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Officier de Pont — CMA CGM\",\n  \"offer_type\": \"emploi\",\n  \"organization\": \"CMA CGM Côte d'Ivoire\",\n  \"location\": \"Abidjan\",\n  \"description\": \"Nous recherchons un officier de pont expérimenté.\",\n  \"requirements\": \"Licence en navigation — 2 ans d'expérience minimum\",\n  \"deadline\": \"2026-07-31\",\n  \"is_active\": true\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "offer_type : emploi | stage. Slug auto-généré depuis title."
+              }
+            },
+            {
+              "name": "Modifier une offre (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/interactions/jobs/officier-de-pont/", "host": ["{{base_url}}"], "path": ["api", "interactions", "jobs", "officier-de-pont", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"is_active\": false\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer une offre",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/interactions/jobs/officier-de-pont/", "host": ["{{base_url}}"], "path": ["api", "interactions", "jobs", "officier-de-pont", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin — Leads & demandes",
+          "description": "Accessible aux admins et modérateurs.",
+          "item": [
+            {
+              "name": "Liste de tous les leads",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/interactions/leads/", "host": ["{{base_url}}"], "path": ["api", "interactions", "leads", ""] },
+                "description": "Tous les leads (contact, admission, stage). Accessible aux admins et modérateurs."
+              }
+            },
+            {
+              "name": "Mettre à jour le statut d'un lead (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/interactions/leads/1/", "host": ["{{base_url}}"], "path": ["api", "interactions", "leads", "1", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"status\": \"contacted\"\n}", "options": { "raw": { "language": "json" } } },
+                "description": "status : new | contacted | converted | closed"
+              }
+            },
+            {
+              "name": "Supprimer un lead",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/interactions/leads/1/", "host": ["{{base_url}}"], "path": ["api", "interactions", "leads", "1", ""] }
+              }
+            },
+            {
+              "name": "Liste des demandes de contact",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/interactions/manage/contacts/", "host": ["{{base_url}}"], "path": ["api", "interactions", "manage", "contacts", ""] }
+              }
+            },
+            {
+              "name": "Liste des demandes d'admission",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/interactions/manage/admissions/", "host": ["{{base_url}}"], "path": ["api", "interactions", "manage", "admissions", ""] }
+              }
+            },
+            {
+              "name": "Liste des candidatures de stage/emploi",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/interactions/manage/internships/", "host": ["{{base_url}}"], "path": ["api", "interactions", "manage", "internships", ""] }
+              }
+            }
+          ]
         }
       ]
     },
@@ -3014,6 +3117,206 @@
               ]
             }
           }
+        },
+        {
+          "name": "Admin — Gestion des événements",
+          "description": "Écriture réservée aux admins et modérateurs. Liste tous les événements y compris non-publics.",
+          "item": [
+            {
+              "name": "Liste de tous les événements",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/events/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "events", ""] }
+              }
+            },
+            {
+              "name": "Créer un événement",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/events/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "events", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Journée Maritime Mondiale 2026\",\n  \"description\": \"Célébration annuelle de la Journée Maritime Mondiale.\",\n  \"start_date\": \"2026-09-25T09:00:00Z\",\n  \"end_date\": \"2026-09-25T17:00:00Z\",\n  \"location\": \"ARSTM — Abidjan\",\n  \"is_public\": true\n}",
+                  "options": { "raw": { "language": "json" } }
+                }
+              }
+            },
+            {
+              "name": "Modifier un événement (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/events/journee-maritime-mondiale-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "events", "journee-maritime-mondiale-2026", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"is_public\": false\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer un événement",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/events/journee-maritime-mondiale-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "events", "journee-maritime-mondiale-2026", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin — Gestion des bannières",
+          "description": "Écriture réservée aux admins et modérateurs. Liste toutes les bannières y compris inactives.",
+          "item": [
+            {
+              "name": "Liste de toutes les bannières",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/banners/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", ""] }
+              }
+            },
+            {
+              "name": "Créer une bannière",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/banners/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title", "value": "Campagne Rentrée 2026", "type": "text" },
+                    { "key": "target_url", "value": "https://arstm.ci/rentrée", "type": "text" },
+                    { "key": "start_display", "value": "2026-08-01T00:00:00Z", "type": "text" },
+                    { "key": "end_display", "value": "2026-09-30T23:59:59Z", "type": "text" },
+                    { "key": "is_active", "value": "true", "type": "text" },
+                    { "key": "image", "type": "file", "description": "Visuel de la bannière" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Modifier une bannière (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/banners/1/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", "1", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"is_active\": false\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer une bannière",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/banners/1/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", "1", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin — Gestion des actualités",
+          "description": "Écriture réservée aux admins et modérateurs. Liste tous les articles y compris non-publiés.",
+          "item": [
+            {
+              "name": "Liste de toutes les actualités",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/news/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news", ""] }
+              }
+            },
+            {
+              "name": "Créer une actualité",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/news/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Journée sécurité maritime\",\n  \"category\": 1,\n  \"content\": \"L'ARSTM organise une journée dédiée à la sécurité maritime...\",\n  \"is_published\": true,\n  \"published_at\": \"2026-06-18T10:00:00Z\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "category = ID de la NewsCategory."
+              }
+            },
+            {
+              "name": "Modifier une actualité (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/news/journee-securite-maritime/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news", "journee-securite-maritime", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"is_published\": false\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer une actualité",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/news/journee-securite-maritime/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news", "journee-securite-maritime", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin — Catégories d'actualités",
+          "description": "Écriture réservée aux admins et modérateurs.",
+          "item": [
+            {
+              "name": "Liste de toutes les catégories",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/news-categories/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news-categories", ""] }
+              }
+            },
+            {
+              "name": "Créer une catégorie d'actualité",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/news-categories/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news-categories", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"code\": \"actualite\",\n  \"label\": \"Actualité institutionnelle\",\n  \"is_active\": true,\n  \"order\": 1\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Modifier une catégorie (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/news-categories/actualite/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news-categories", "actualite", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"label\": \"Actualité ARSTM\"\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer une catégorie",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/news-categories/actualite/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news-categories", "actualite", ""] }
+              }
+            }
+          ]
         }
       ]
     },
@@ -3062,7 +3365,7 @@
         {
           "name": "Télécharger un article (tracking)",
           "request": {
-            "method": "GET",
+            "method": "POST",
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/library/papers/1/download/",
@@ -3118,6 +3421,139 @@
               ]
             }
           }
+        },
+        {
+          "name": "Admin — Catégories de veille",
+          "description": "Écriture réservée aux admins et modérateurs.",
+          "item": [
+            {
+              "name": "Liste des catégories",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": { "raw": "{{base_url}}/api/library/categories/", "host": ["{{base_url}}"], "path": ["api", "library", "categories", ""] }
+              }
+            },
+            {
+              "name": "Créer une catégorie",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/library/categories/", "host": ["{{base_url}}"], "path": ["api", "library", "categories", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Sûreté Maritime\"\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Modifier une catégorie (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/library/categories/surete-maritime/", "host": ["{{base_url}}"], "path": ["api", "library", "categories", "surete-maritime", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Sûreté & Sécurité Maritime\"\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer une catégorie",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/library/categories/surete-maritime/", "host": ["{{base_url}}"], "path": ["api", "library", "categories", "surete-maritime", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin — Publications de recherche",
+          "description": "Écriture réservée aux admins et modérateurs.",
+          "item": [
+            {
+              "name": "Publier un article de recherche",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/library/papers/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title", "value": "Analyse des risques de piraterie dans le Golfe de Guinée", "type": "text" },
+                    { "key": "domain", "value": "1", "type": "text", "description": "ID du domaine" },
+                    { "key": "authors", "value": "Dr. Kouassi N'Dri, Prof. Diallo", "type": "text" },
+                    { "key": "abstract", "value": "Cette étude analyse les tendances de la piraterie...", "type": "text" },
+                    { "key": "pdf_file", "type": "file", "description": "Fichier PDF de l'article" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Modifier un article (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/library/papers/securite-maritime-golfe-de-guinee/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", "securite-maritime-golfe-de-guinee", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [{ "key": "abstract", "value": "Résumé mis à jour.", "type": "text" }]
+                }
+              }
+            },
+            {
+              "name": "Supprimer un article",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/library/papers/securite-maritime-golfe-de-guinee/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", "securite-maritime-golfe-de-guinee", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin — Veille sectorielle",
+          "description": "Écriture réservée aux admins et modérateurs.",
+          "item": [
+            {
+              "name": "Créer un article de veille",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/library/watch/", "host": ["{{base_url}}"], "path": ["api", "library", "watch", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title", "value": "Revue maritime T1 2026", "type": "text" },
+                    { "key": "category", "value": "1", "type": "text", "description": "ID de la catégorie" },
+                    { "key": "content", "value": "Contenu de la revue...", "type": "text" },
+                    { "key": "featured_image", "type": "file", "description": "Image d'illustration" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Modifier un article de veille (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/library/watch/revue-maritime-2024-q1/", "host": ["{{base_url}}"], "path": ["api", "library", "watch", "revue-maritime-2024-q1", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [{ "key": "content", "value": "Contenu mis à jour.", "type": "text" }]
+                }
+              }
+            },
+            {
+              "name": "Supprimer un article de veille",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/library/watch/revue-maritime-2024-q1/", "host": ["{{base_url}}"], "path": ["api", "library", "watch", "revue-maritime-2024-q1", ""] }
+              }
+            }
+          ]
         }
       ]
     },
@@ -3180,6 +3616,51 @@
             },
             "description": "Crée une commande et initialise une transaction Mobile Money (Orange/MTN/Wave). Retourne `transaction_reference` et `payment_url`."
           }
+        },
+        {
+          "name": "Admin — Gestion des produits",
+          "description": "Écriture réservée aux admins et modérateurs. Liste tous les produits y compris inactifs.",
+          "item": [
+            {
+              "name": "Créer un produit",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/shop/products/", "host": ["{{base_url}}"], "path": ["api", "shop", "products", ""] },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "title", "value": "Étude sectorielle — Transport maritime 2026", "type": "text" },
+                    { "key": "product_type", "value": "study", "type": "text", "description": "publication | study | formation_continue" },
+                    { "key": "description", "value": "Analyse complète du secteur du transport maritime en Afrique de l'Ouest.", "type": "text" },
+                    { "key": "price", "value": "25000", "type": "text", "description": "Prix en FCFA" },
+                    { "key": "is_active", "value": "true", "type": "text" },
+                    { "key": "file_attachment", "type": "file", "description": "Fichier numérique (PDF, optionnel)" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "Détail / Modifier un produit (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/shop/products/etude-sectorielle-transport-maritime-2026/", "host": ["{{base_url}}"], "path": ["api", "shop", "products", "etude-sectorielle-transport-maritime-2026", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"price\": 20000,\n  \"is_active\": false\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer un produit",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/shop/products/etude-sectorielle-transport-maritime-2026/", "host": ["{{base_url}}"], "path": ["api", "shop", "products", "etude-sectorielle-transport-maritime-2026", ""] }
+              }
+            }
+          ]
         },
         {
           "name": "Webhook paiement (agrégateur → serveur)",
@@ -3367,6 +3848,74 @@
               }
             }
           }
+        },
+        {
+          "name": "Admin — Modération",
+          "description": "Accessible aux admins et modérateurs.",
+          "item": [
+            {
+              "name": "Créer une catégorie du forum",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/forum/categories/", "host": ["{{base_url}}"], "path": ["api", "forum", "categories", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Préparation aux concours\",\n  \"description\": \"Questions et conseils pour les candidats aux concours ARSTM.\"\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Modifier une catégorie du forum (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/forum/categories/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "categories", "1", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"description\": \"Entraide pour les candidats aux concours d'entrée ARSTM.\"\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer une catégorie du forum",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/forum/categories/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "categories", "1", ""] }
+              }
+            },
+            {
+              "name": "Supprimer un sujet (modération)",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/forum/topics/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "topics", "1", ""] },
+                "description": "Supprime un sujet et tous ses messages. Remplacer 1 par l'ID du sujet."
+              }
+            },
+            {
+              "name": "Modifier un sujet (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/forum/topics/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "topics", "1", ""] },
+                "body": { "mode": "raw", "raw": "{\n  \"title\": \"[RÉSOLU] Question sur les admissions à l'ESN\"\n}", "options": { "raw": { "language": "json" } } }
+              }
+            },
+            {
+              "name": "Supprimer un message (modération)",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/forum/posts/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "posts", "1", ""] },
+                "description": "Supprime un message signalé. Remplacer 1 par l'ID du post."
+              }
+            }
+          ]
         }
       ]
     },

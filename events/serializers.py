@@ -6,19 +6,26 @@ from .models import Event, PromotionBanner, CompetitionAlertSubscription, NewsPo
 class NewsCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = NewsCategory
-        fields = ['code', 'label']
+        fields = ['id', 'code', 'label', 'is_active', 'order']
+
 
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        # On ne passe que les champs natifs. DRF renverra la traduction active.
-        fields = ['id', 'title', 'slug', 'description', 'start_date', 'end_date', 'location', 'image']
+        fields = ['id', 'title', 'slug', 'description', 'start_date', 'end_date', 'location', 'image', 'is_public']
+
+
+class EventWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = ['id', 'title', 'description', 'start_date', 'end_date', 'location', 'image', 'is_public']
 
 
 class PromotionBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = PromotionBanner
-        fields = ['id', 'title', 'image', 'target_url', 'click_count']
+        fields = ['id', 'title', 'image', 'target_url', 'click_count', 'start_display', 'end_display', 'is_active']
+        read_only_fields = ['click_count']
 
 
 class CompetitionAlertSubscriptionSerializer(serializers.ModelSerializer):
@@ -33,4 +40,10 @@ class NewsPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = NewsPost
-        fields = ['id', 'title', 'slug', 'category', 'category_display', 'content', 'featured_image', 'published_at']
+        fields = ['id', 'title', 'slug', 'category', 'category_display', 'content', 'featured_image', 'is_published', 'published_at']
+
+
+class NewsPostWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsPost
+        fields = ['id', 'title', 'category', 'content', 'featured_image', 'is_published', 'published_at']
