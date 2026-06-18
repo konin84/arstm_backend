@@ -944,10 +944,6 @@
                     "value": "Bearer {{access_token}}"
                   },
                   {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  },
-                  {
                     "key": "Accept-Language",
                     "value": "fr"
                   }
@@ -965,15 +961,36 @@
                   ]
                 },
                 "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"name\": \"École Supérieure de Navigation\",\n  \"description\": \"Formation des officiers et personnels de la marine marchande.\",\n  \"website_url\": \"https://esn.arstm.ci\",\n  \"presentation_video_url\": \"\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "name",
+                      "value": "École Supérieure de Navigation",
+                      "type": "text"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Formation des officiers et personnels de la marine marchande.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "website_url",
+                      "value": "https://esn.arstm.ci",
+                      "type": "text"
+                    },
+                    {
+                      "key": "presentation_video_url",
+                      "value": "",
+                      "type": "text"
+                    },
+                    {
+                      "key": "featured_image",
+                      "type": "file",
+                      "description": "Image de couverture de l'école (optionnel)"
                     }
-                  }
+                  ]
                 },
-                "description": "Le `slug` est auto-généré depuis `name`. Pour uploader `featured_image`, utiliser multipart/form-data. `description` est enregistré dans la langue indiquée par `Accept-Language` (ici fr)."
+                "description": "Utilise multipart/form-data pour permettre l'upload de `featured_image`. Le `slug` est auto-généré depuis `name`. `description` est enregistré dans la langue indiquée par `Accept-Language` (ici fr)."
               }
             },
             {
@@ -1072,15 +1089,26 @@
                   ]
                 },
                 "body": {
-                  "mode": "raw",
-                  "raw": "{\n  \"description\": \"Description mise à jour.\",\n  \"website_url\": \"https://esn.arstm.ci\"\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "description",
+                      "value": "Description mise à jour.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "website_url",
+                      "value": "https://esn.arstm.ci",
+                      "type": "text"
+                    },
+                    {
+                      "key": "featured_image",
+                      "type": "file",
+                      "description": "Nouvelle image de couverture (optionnel)"
                     }
-                  }
+                  ]
                 },
-                "description": "Met à jour la langue indiquée par `Accept-Language` (ici fr). Répéter avec `Accept-Language: en` pour mettre à jour la version anglaise. `website_url` est indépendant de la langue."
+                "description": "Utilise multipart/form-data pour permettre l'upload de `featured_image`. Met à jour la langue indiquée par `Accept-Language` (ici fr). Répéter avec `Accept-Language: en` pour la version anglaise. `website_url` est indépendant de la langue."
               }
             },
             {
