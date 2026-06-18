@@ -5,6 +5,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from .utils import send_welcome_email, generate_temp_password
 from django.shortcuts import get_object_or_404
 from .serializers import (
     UserRegistrationSerializer,
@@ -30,10 +31,19 @@ class CustomTokenObtainPairView(TokenObtainPairView):
 
 
 class RegisterView(generics.CreateAPIView):
-    """Inscription publique — rôles admin et modérateur exclus."""
+    """Inscription publique — rôles admin et modérateur exclus. Mot de passe généré automatiquement."""
     queryset = User.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = UserRegistrationSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        if user.role != 'student':
+            send_welcome_email(user, user._temp_password)
+        headers = self.get_success_headers(serializer.data)
+        return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class UserProfileView(generics.RetrieveUpdateAPIView):
@@ -64,10 +74,9 @@ class AdminCreateUserView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        return Response(
-            UserSerializer(user).data,
-            status=status.HTTP_201_CREATED,
-        )
+        if user.role != 'student':
+            send_welcome_email(user, user._temp_password)
+        return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
 
 
 class ChangePasswordView(APIView):
@@ -143,8 +152,13 @@ class ApproveStudentView(APIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        temp_password = generate_temp_password()
+        student.set_password(temp_password)
         student.is_active = True
-        student.save(update_fields=['is_active'])
+        student.must_change_password = True
+        student.save(update_fields=['password', 'is_active', 'must_change_password'])
+
+        send_welcome_email(student, temp_password)
 
         return Response(
             {

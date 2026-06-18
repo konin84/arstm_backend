@@ -56,7 +56,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"etudiant@example.com\",\n  \"first_name\": \"Kofi\",\n  \"last_name\": \"Asante\",\n  \"role\": \"student\",\n  \"phone\": \"+2250700000001\",\n  \"password\": \"TestPassword123!\",\n  \"profile\": {\n    \"school\": 1,\n    \"current_year\": \"Licence 2\",\n    \"nationality\": \"Ivoirien\",\n    \"birth_date\": \"2001-05-20\",\n    \"matricule\": \"\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"etudiant@example.com\",\n  \"first_name\": \"Kofi\",\n  \"last_name\": \"Asante\",\n  \"role\": \"student\",\n  \"phone\": \"+2250700000001\",\n  \"profile\": {\n    \"school\": 1,\n    \"current_year\": \"Licence 2\",\n    \"nationality\": \"Ivoirien\",\n    \"birth_date\": \"2001-05-20\",\n    \"matricule\": \"\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -90,7 +90,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"pro@armateur.ci\",\n  \"first_name\": \"Serge\",\n  \"last_name\": \"Aboua\",\n  \"role\": \"professional\",\n  \"phone\": \"+2250700000010\",\n  \"password\": \"TestPassword123!\",\n  \"profile\": {\n    \"company_name\": \"SIVOMAR\",\n    \"job_title\": \"Directeur Technique\",\n    \"sector\": \"maritime\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://sivomar.ci\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"pro@armateur.ci\",\n  \"first_name\": \"Serge\",\n  \"last_name\": \"Aboua\",\n  \"role\": \"professional\",\n  \"phone\": \"+2250700000010\",\n  \"profile\": {\n    \"company_name\": \"SIVOMAR\",\n    \"job_title\": \"Directeur Technique\",\n    \"sector\": \"maritime\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://sivomar.ci\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -124,7 +124,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"rh@groupe-bollore.com\",\n  \"first_name\": \"Estelle\",\n  \"last_name\": \"Mensah\",\n  \"role\": \"recruiter\",\n  \"phone\": \"+2250700000020\",\n  \"password\": \"TestPassword123!\",\n  \"profile\": {\n    \"company_name\": \"Groupe Bolloré Africa Logistics\",\n    \"job_title\": \"Responsable RH\",\n    \"sector\": \"port\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://bollore-africa-logistics.com\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"rh@groupe-bollore.com\",\n  \"first_name\": \"Estelle\",\n  \"last_name\": \"Mensah\",\n  \"role\": \"recruiter\",\n  \"phone\": \"+2250700000020\",\n  \"profile\": {\n    \"company_name\": \"Groupe Bolloré Africa Logistics\",\n    \"job_title\": \"Responsable RH\",\n    \"sector\": \"port\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://bollore-africa-logistics.com\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -158,7 +158,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"dr.koffi@uao.edu.ci\",\n  \"first_name\": \"Adou\",\n  \"last_name\": \"Koffi\",\n  \"role\": \"researcher\",\n  \"phone\": \"+2250700000030\",\n  \"password\": \"TestPassword123!\",\n  \"profile\": {\n    \"academic_title\": \"dr\",\n    \"institution\": \"Université Alassane Ouattara — Bouaké\",\n    \"country\": \"Côte d'Ivoire\",\n    \"research_profile_url\": \"https://orcid.org/0000-0002-1234-5678\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"dr.koffi@uao.edu.ci\",\n  \"first_name\": \"Adou\",\n  \"last_name\": \"Koffi\",\n  \"role\": \"researcher\",\n  \"phone\": \"+2250700000030\",\n  \"profile\": {\n    \"academic_title\": \"dr\",\n    \"institution\": \"Université Alassane Ouattara — Bouaké\",\n    \"country\": \"Côte d'Ivoire\",\n    \"research_profile_url\": \"https://orcid.org/0000-0002-1234-5678\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -192,7 +192,7 @@
                 },
                 "body": {
                   "mode": "raw",
-                  "raw": "{\n  \"email\": \"contact@omi-wca.org\",\n  \"first_name\": \"Ibrahim\",\n  \"last_name\": \"Coulibaly\",\n  \"role\": \"donor\",\n  \"phone\": \"+2250700000040\",\n  \"password\": \"TestPassword123!\",\n  \"profile\": {\n    \"organization_name\": \"Organisation Maritime Internationale — Région Afrique de l'Ouest\",\n    \"position\": \"Représentant Régional\",\n    \"organization_type\": \"multilateral\",\n    \"country\": \"Côte d'Ivoire\"\n  }\n}",
+                  "raw": "{\n  \"email\": \"contact@omi-wca.org\",\n  \"first_name\": \"Ibrahim\",\n  \"last_name\": \"Coulibaly\",\n  \"role\": \"donor\",\n  \"phone\": \"+2250700000040\",\n  \"profile\": {\n    \"organization_name\": \"Organisation Maritime Internationale — Région Afrique de l'Ouest\",\n    \"position\": \"Représentant Régional\",\n    \"organization_type\": \"multilateral\",\n    \"country\": \"Côte d'Ivoire\"\n  }\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -511,7 +511,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"etudiant.nouveau@arstm.ci\",\n  \"first_name\": \"Yao\",\n  \"last_name\": \"Kouame\",\n  \"role\": \"student\",\n  \"phone\": \"+2250700000050\",\n  \"profile\": {\n    \"current_year\": \"Licence 1\",\n    \"nationality\": \"Ivoirien\",\n    \"birth_date\": \"2003-09-12\"\n  },\n  \"password\": \"TestPassword123!\"\n}",
+              "raw": "{\n  \"email\": \"etudiant.nouveau@arstm.ci\",\n  \"first_name\": \"Yao\",\n  \"last_name\": \"Kouame\",\n  \"role\": \"student\",\n  \"phone\": \"+2250700000050\",\n  \"profile\": {\n    \"current_year\": \"Licence 1\",\n    \"nationality\": \"Ivoirien\",\n    \"birth_date\": \"2003-09-12\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -548,7 +548,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"capitaine@armement.ci\",\n  \"first_name\": \"Marcel\",\n  \"last_name\": \"Guehi\",\n  \"role\": \"professional\",\n  \"phone\": \"+2250700000060\",\n  \"profile\": {\n    \"company_name\": \"PETROCI\",\n    \"job_title\": \"Capitaine de navire\",\n    \"sector\": \"offshore\",\n    \"country\": \"Côte d'Ivoire\"\n  },\n  \"password\": \"TestPassword123!\"\n}",
+              "raw": "{\n  \"email\": \"capitaine@armement.ci\",\n  \"first_name\": \"Marcel\",\n  \"last_name\": \"Guehi\",\n  \"role\": \"professional\",\n  \"phone\": \"+2250700000060\",\n  \"profile\": {\n    \"company_name\": \"PETROCI\",\n    \"job_title\": \"Capitaine de navire\",\n    \"sector\": \"offshore\",\n    \"country\": \"Côte d'Ivoire\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -585,7 +585,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"rh@port-abidjan.ci\",\n  \"first_name\": \"Carine\",\n  \"last_name\": \"Bamba\",\n  \"role\": \"recruiter\",\n  \"phone\": \"+2250700000070\",\n  \"profile\": {\n    \"company_name\": \"Port Autonome d'Abidjan\",\n    \"job_title\": \"Chargée de Recrutement\",\n    \"sector\": \"port\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://paa.ci\"\n  },\n  \"password\": \"TestPassword123!\"\n}",
+              "raw": "{\n  \"email\": \"rh@port-abidjan.ci\",\n  \"first_name\": \"Carine\",\n  \"last_name\": \"Bamba\",\n  \"role\": \"recruiter\",\n  \"phone\": \"+2250700000070\",\n  \"profile\": {\n    \"company_name\": \"Port Autonome d'Abidjan\",\n    \"job_title\": \"Chargée de Recrutement\",\n    \"sector\": \"port\",\n    \"country\": \"Côte d'Ivoire\",\n    \"company_website\": \"https://paa.ci\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -622,7 +622,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"prof.toure@ucad.sn\",\n  \"first_name\": \"Mamadou\",\n  \"last_name\": \"Touré\",\n  \"role\": \"researcher\",\n  \"phone\": \"+2210700000080\",\n  \"profile\": {\n    \"academic_title\": \"prof\",\n    \"institution\": \"Université Cheikh Anta Diop de Dakar\",\n    \"country\": \"Sénégal\",\n    \"research_profile_url\": \"https://researchgate.net/profile/mamadou-toure\"\n  },\n  \"password\": \"TestPassword123!\"\n}",
+              "raw": "{\n  \"email\": \"prof.toure@ucad.sn\",\n  \"first_name\": \"Mamadou\",\n  \"last_name\": \"Touré\",\n  \"role\": \"researcher\",\n  \"phone\": \"+2210700000080\",\n  \"profile\": {\n    \"academic_title\": \"prof\",\n    \"institution\": \"Université Cheikh Anta Diop de Dakar\",\n    \"country\": \"Sénégal\",\n    \"research_profile_url\": \"https://researchgate.net/profile/mamadou-toure\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -659,7 +659,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"partenaire@cedeao.int\",\n  \"first_name\": \"Fatou\",\n  \"last_name\": \"Diallo\",\n  \"role\": \"donor\",\n  \"phone\": \"+2230700000090\",\n  \"profile\": {\n    \"organization_name\": \"Commission de la CEDEAO\",\n    \"position\": \"Directrice des Transports Maritimes\",\n    \"organization_type\": \"multilateral\",\n    \"country\": \"Nigeria\"\n  },\n  \"password\": \"TestPassword123!\"\n}",
+              "raw": "{\n  \"email\": \"partenaire@cedeao.int\",\n  \"first_name\": \"Fatou\",\n  \"last_name\": \"Diallo\",\n  \"role\": \"donor\",\n  \"phone\": \"+2230700000090\",\n  \"profile\": {\n    \"organization_name\": \"Commission de la CEDEAO\",\n    \"position\": \"Directrice des Transports Maritimes\",\n    \"organization_type\": \"multilateral\",\n    \"country\": \"Nigeria\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -696,7 +696,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"moderateur@arstm.ci\",\n  \"first_name\": \"Ange\",\n  \"last_name\": \"Konan\",\n  \"role\": \"moderator\",\n  \"phone\": \"+2250700000003\",\n  \"profile\": {\n    \"department\": \"Direction des Études et de la Scolarité\",\n    \"employee_id\": \"ARSTM-MOD-001\"\n  },\n  \"password\": \"TestPassword123!\"\n}",
+              "raw": "{\n  \"email\": \"moderateur@arstm.ci\",\n  \"first_name\": \"Ange\",\n  \"last_name\": \"Konan\",\n  \"role\": \"moderator\",\n  \"phone\": \"+2250700000003\",\n  \"profile\": {\n    \"department\": \"Direction des Études et de la Scolarité\",\n    \"employee_id\": \"ARSTM-MOD-001\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -734,7 +734,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"agent.dcm@arstm.ci\",\n  \"first_name\": \"Jean\",\n  \"last_name\": \"Dupont\",\n  \"role\": \"admin\",\n  \"phone\": \"+2250700000002\",\n  \"profile\": {\n    \"department\": \"Direction de la Communication Maritime (DCM)\",\n    \"employee_id\": \"ARSTM-2024-001\"\n  },\n  \"password\": \"TestPassword123!\"\n}",
+              "raw": "{\n  \"email\": \"agent.dcm@arstm.ci\",\n  \"first_name\": \"Jean\",\n  \"last_name\": \"Dupont\",\n  \"role\": \"admin\",\n  \"phone\": \"+2250700000002\",\n  \"profile\": {\n    \"department\": \"Direction de la Communication Maritime (DCM)\",\n    \"employee_id\": \"ARSTM-2024-001\"\n  }\n}",
               "options": {
                 "raw": {
                   "language": "json"

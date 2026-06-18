@@ -2,6 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from django.db import transaction
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .utils import generate_temp_password
 from .models import (
     StudentProfile, ProfessionalProfile,
     ResearcherProfile, InstitutionalProfile, StaffProfile,
@@ -102,13 +103,12 @@ RESTRICTED_ROLES = ('admin', 'moderator')
 
 
 class AdminCreateUserSerializer(serializers.ModelSerializer):
-    """Création de compte par un administrateur. Le mot de passe est saisi manuellement."""
+    """Création de compte par un administrateur. Le mot de passe temporaire est généré automatiquement."""
     profile = serializers.DictField(child=serializers.CharField(allow_blank=True), required=False)
-    password = serializers.CharField(write_only=True, min_length=8)
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'phone', 'role', 'password', 'profile']
+        fields = ['email', 'first_name', 'last_name', 'phone', 'role', 'profile']
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -123,10 +123,15 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
-        password = validated_data.pop('password')
         role = validated_data.get('role', 'student')
+        temp_password = generate_temp_password()
 
-        user = User.objects.create_user(password=password, **validated_data)
+        user = User.objects.create_user(
+            password=temp_password,
+            must_change_password=True,
+            **validated_data,
+        )
+        user._temp_password = temp_password
 
         if role in ROLE_PROFILE_MAP:
             _, ProfileModel, ProfileSerializer = ROLE_PROFILE_MAP[role]
@@ -139,17 +144,15 @@ class AdminCreateUserSerializer(serializers.ModelSerializer):
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
-    Auto-inscription publique.
-    Les étudiants n'ont pas de mot de passe à ce stade — il leur sera défini lors
-    de l'activation du compte par un administrateur.
-    Les autres rôles saisissent leur mot de passe directement.
+    Auto-inscription publique. Le mot de passe est généré automatiquement.
+    Les étudiants reçoivent leurs identifiants après approbation par un admin.
+    Les autres rôles les reçoivent immédiatement par email.
     """
     profile = serializers.DictField(child=serializers.CharField(allow_blank=True), required=False)
-    password = serializers.CharField(write_only=True, min_length=8, required=False)
 
     class Meta:
         model = User
-        fields = ['email', 'first_name', 'last_name', 'role', 'phone', 'password', 'profile']
+        fields = ['email', 'first_name', 'last_name', 'role', 'phone', 'profile']
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -166,23 +169,21 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Ce rôle ne peut pas être attribué lors de l'inscription publique.")
         return value
 
-    def validate(self, attrs):
-        role = attrs.get('role', 'student')
-        if role != 'student' and not attrs.get('password'):
-            raise serializers.ValidationError({"password": "Ce champ est obligatoire pour ce rôle."})
-        return attrs
-
     @transaction.atomic
     def create(self, validated_data):
         profile_data = validated_data.pop('profile', {})
-        password = validated_data.pop('password', None)
         role = validated_data.get('role', 'student')
+        temp_password = generate_temp_password()
 
         if role == 'student':
             validated_data['is_active'] = False
-            user = User.objects.create_user(password=password or None, **validated_data)
-        else:
-            user = User.objects.create_user(password=password, **validated_data)
+
+        user = User.objects.create_user(
+            password=temp_password,
+            must_change_password=True,
+            **validated_data,
+        )
+        user._temp_password = temp_password
 
         if role in ROLE_PROFILE_MAP:
             _, ProfileModel, ProfileSerializer = ROLE_PROFILE_MAP[role]
