@@ -974,6 +974,46 @@
                       "type": "text"
                     },
                     {
+                      "key": "director_name",
+                      "value": "Capitaine Kouassi N'Guessan",
+                      "type": "text"
+                    },
+                    {
+                      "key": "address",
+                      "value": "Boulevard de Marseille, Zone 4",
+                      "type": "text"
+                    },
+                    {
+                      "key": "city",
+                      "value": "Abidjan",
+                      "type": "text"
+                    },
+                    {
+                      "key": "country",
+                      "value": "Côte d'Ivoire",
+                      "type": "text"
+                    },
+                    {
+                      "key": "phone",
+                      "value": "+22527222222",
+                      "type": "text"
+                    },
+                    {
+                      "key": "email",
+                      "value": "esn@arstm.ci",
+                      "type": "text"
+                    },
+                    {
+                      "key": "founded_year",
+                      "value": "1990",
+                      "type": "text"
+                    },
+                    {
+                      "key": "accreditation",
+                      "value": "OMI — Convention STCW",
+                      "type": "text"
+                    },
+                    {
                       "key": "website_url",
                       "value": "https://esn.arstm.ci",
                       "type": "text"
