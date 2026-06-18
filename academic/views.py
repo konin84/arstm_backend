@@ -29,18 +29,42 @@ class DomainDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 # ─── Program types & régimes (listes dynamiques) ───────────────────────────────
 
-class ProgramTypeListView(generics.ListAPIView):
-    """Endpoint public — types de formation disponibles (filtre/création de programme)."""
-    queryset = ProgramType.objects.filter(is_active=True)
+class ProgramTypeListView(generics.ListCreateAPIView):
+    """Lecture publique (actifs seulement) ; écriture réservée aux admins et modérateurs."""
     serializer_class = ProgramTypeSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and (user.is_staff or getattr(user, 'role', None) in PRIVILEGED_ROLES):
+            return ProgramType.objects.all()
+        return ProgramType.objects.filter(is_active=True)
 
 
-class RegimeListView(generics.ListAPIView):
-    """Endpoint public — régimes de formation disponibles (filtre/création de programme)."""
-    queryset = Regime.objects.filter(is_active=True)
+class ProgramTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ProgramType.objects.all()
+    serializer_class = ProgramTypeSerializer
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+    lookup_field = 'code'
+
+
+class RegimeListView(generics.ListCreateAPIView):
+    """Lecture publique (actifs seulement) ; écriture réservée aux admins et modérateurs."""
     serializer_class = RegimeSerializer
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_authenticated and (user.is_staff or getattr(user, 'role', None) in PRIVILEGED_ROLES):
+            return Regime.objects.all()
+        return Regime.objects.filter(is_active=True)
+
+
+class RegimeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Regime.objects.all()
+    serializer_class = RegimeSerializer
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+    lookup_field = 'code'
 
 
 # ─── Programs ─────────────────────────────────────────────────────────────────

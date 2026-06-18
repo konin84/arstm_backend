@@ -45,12 +45,12 @@ class Program(models.Model):
     
     is_active = models.BooleanField(default=True)
 
-    # --- Éléments cruciaux pour le SEO ---
-    meta_title = models.CharField(max_length=70, blank=True, help_text="Titre SEO pour Google (max 70 car.)")
-    meta_description = models.CharField(max_length=160, blank=True, help_text="Description SEO pour Google (max 160 car.)")
-
     def save(self, *args, **kwargs):
-        if not self.slug:
+        if self.pk:
+            original = Program.objects.filter(pk=self.pk).values_list('title', flat=True).first()
+            if original != self.title:
+                self.slug = slugify(self.title)
+        elif not self.slug:
             self.slug = slugify(self.title)
         super().save(*args, **kwargs)
 

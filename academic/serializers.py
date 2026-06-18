@@ -13,13 +13,13 @@ class DocumentSerializer(serializers.ModelSerializer):
 class ProgramTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProgramType
-        fields = ['code', 'label']
+        fields = ['id', 'code', 'label', 'is_active', 'order']
 
 
 class RegimeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Regime
-        fields = ['code', 'label']
+        fields = ['id', 'code', 'label', 'is_active', 'order']
 
 
 class DomainSerializer(serializers.ModelSerializer):
@@ -58,7 +58,6 @@ class ProgramDetailSerializer(serializers.ModelSerializer):
             'id', 'title', 'slug', 'program_type', 'regime', 'duration',
             'description', 'career_opportunities',
             'domain', 'school', 'documents', 'is_active',
-            'meta_title', 'meta_description',
         ]
 
 
@@ -73,6 +72,6 @@ class ProgramWriteSerializer(serializers.ModelSerializer):
             'id', 'domain', 'school', 'title', 'slug',
             'program_type', 'regime', 'duration',
             'description', 'career_opportunities',
-            'is_active', 'meta_title', 'meta_description',
+            'is_active',
         ]
         read_only_fields = ['slug']
