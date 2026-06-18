@@ -178,6 +178,8 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='ARSTM DEV <225devtest
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 # Quand défini, tous les emails sont redirigés vers cette adresse (utile en développement)
 TEST_EMAIL_RECIPIENT = config('TEST_EMAIL_RECIPIENT', default='')
+# URL de base du site — utilisée pour construire les URLs absolues dans les emails
+SITE_URL = config('SITE_URL', default='http://localhost:8000')
 
 # Render gère le TLS en amont (reverse proxy) et transmet le protocole d'origine
 # via cet en-tête ; sans ça Django croit que toutes les requêtes sont en HTTP.
