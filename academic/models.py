@@ -21,7 +21,7 @@ class Domain(models.Model):
 
 
 class ProgramType(LookupValue):
-    """Type de formation (initiale, continue…)."""
+    """Type de formation (professionnelle, continue…)."""
 
 
 class Regime(LookupValue):
@@ -29,7 +29,7 @@ class Regime(LookupValue):
 
 
 class Program(models.Model):
-    """Formations offertes (Initiale ou Continue) par les composantes de l'ARSTM"""
+    """Formations offertes (professionnelle ou Continue) par les composantes de l'ARSTM"""
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE, related_name='programs')
     school = models.ForeignKey('institution.School', on_delete=models.CASCADE, related_name='programs')
 
