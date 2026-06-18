@@ -80,11 +80,11 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'id', 'email', 'first_name', 'last_name', 'role', 'phone', 'avatar',
-            'must_change_password',
+            'is_active', 'must_change_password',
             'student_profile', 'professional_profile',
             'researcher_profile', 'institutional_profile', 'staff_profile',
         ]
-        read_only_fields = ['id', 'role', 'must_change_password']
+        read_only_fields = ['id', 'role', 'is_active', 'must_change_password']
 
 
 # Maps each role to its (profile_field, profile_model, profile_serializer)
