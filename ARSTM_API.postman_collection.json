@@ -861,9 +861,17 @@
               "name": "Test email",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
                 "url": { "raw": "{{base_url}}/api/users/test-email/", "host": ["{{base_url}}"], "path": ["api", "users", "test-email", ""] },
-                "description": "Réservé aux admins. Envoie un email de test synchrone à TEST_EMAIL_RECIPIENT (ou à l'email de l'admin connecté si non défini). Retourne 200 avec confirmation ou 500 avec le message d'erreur exact."
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recipient\": \"destinataire@example.com\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Réservé aux admins. Envoie un email de test synchrone. Priorité : `recipient` (corps) → `TEST_EMAIL_RECIPIENT` (env) → email de l'admin connecté. Retourne 200 avec confirmation ou 500 avec le message d'erreur exact."
               }
             }
           ]

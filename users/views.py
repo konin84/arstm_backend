@@ -162,7 +162,11 @@ class TestEmailView(APIView):
     permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser]
 
     def post(self, request):
-        recipient = getattr(settings, 'TEST_EMAIL_RECIPIENT', '') or request.user.email
+        recipient = (
+            request.data.get('recipient')
+            or getattr(settings, 'TEST_EMAIL_RECIPIENT', '')
+            or request.user.email
+        )
         try:
             send_mail(
                 subject='[ARSTM] Email de test',
