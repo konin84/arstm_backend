@@ -8,11 +8,11 @@ from .serializers import (
 
 
 class IsAdminOrReadOnly(permissions.BasePermission):
-    """Lecture publique, écriture réservée aux admins (is_staff)."""
+    """Lecture publique, écriture réservée aux admins (role=admin)."""
     def has_permission(self, request, _view):
         if request.method in permissions.SAFE_METHODS:
             return True
-        return request.user and request.user.is_staff
+        return request.user and request.user.is_authenticated and request.user.role == 'admin'
 
 
 # ─── Schools ──────────────────────────────────────────────────────────────────

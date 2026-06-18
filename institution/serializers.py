@@ -4,7 +4,7 @@ from .models import School, Infrastructure, Partner, PartnerType, Testimonial, D
 class SchoolSerializer(serializers.ModelSerializer):
     class Meta:
         model = School
-        fields = ['id', 'name', 'slug', 'description', 'presentation_video_url', 'featured_image']
+        fields = ['id', 'name', 'slug', 'description', 'website_url', 'presentation_video_url', 'featured_image']
         read_only_fields = ['slug']
 
 
