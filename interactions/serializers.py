@@ -1,7 +1,9 @@
 # apps/interactions/serializers.py
 from rest_framework import serializers
 from django.db import transaction
-from .models import Lead, ContactRequest, AdmissionRequest, InternshipRequest, JobOffer
+
+from users.utils import send_newsletter_confirmation_email, send_newsletter_unsubscribe_email
+from .models import Lead, ContactRequest, AdmissionRequest, InternshipRequest, JobOffer, NewsletterSubscription
 
 class LeadSerializer(serializers.ModelSerializer):
     class Meta:
@@ -96,3 +98,50 @@ class JobOfferWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobOffer
         fields = ['id', 'title', 'offer_type', 'organization', 'location', 'description', 'requirements', 'deadline', 'is_active']
+
+
+# ───────────────────────────────────────────────────────────────────────────────
+# Serializers pour la gestion de la newsletter (abonnement/désabonnement)
+class NewsletterSubscriptionSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+    lead = LeadSerializer(read_only=True)
+
+    class Meta:
+        model = NewsletterSubscription
+        fields = ['id', 'lead', 'email', 'is_active']
+        read_only_fields = ['is_active']
+
+    @transaction.atomic
+    def create(self, validated_data):
+        email = validated_data.pop('email')
+
+        existing_sub = NewsletterSubscription.objects.filter(lead__email=email).first()
+        if existing_sub:
+            if not existing_sub.is_active:
+                existing_sub.is_active = True
+                existing_sub.save()
+            send_newsletter_confirmation_email(email)
+            return existing_sub
+
+        lead = Lead.objects.create(
+            email=email,
+            source='newsletter'
+        )
+        subscription = NewsletterSubscription.objects.create(lead=lead, **validated_data)
+        send_newsletter_confirmation_email(email)
+        return subscription
+
+
+class NewsletterUnsubscribeSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+    def save(self, **kwargs):
+        email = self.validated_data['email']
+        subscription = NewsletterSubscription.objects.filter(lead__email=email).first()
+
+        if subscription and subscription.is_active:
+            subscription.is_active = False
+            subscription.save()
+            send_newsletter_unsubscribe_email(email)
+
+        return subscription

@@ -2442,6 +2442,15 @@
               "description": "CRUD sur les types de formation (ProgramType). Écriture réservée aux admins et modérateurs. Lookup par `code`.",
               "item": [
                 {
+                  "name": "Liste de tous les types de formation",
+                  "request": {
+                    "method": "GET",
+                    "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                    "url": { "raw": "{{base_url}}/api/academic/program-types/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", ""] },
+                    "description": "Avec token admin/modérateur : retourne tous les types y compris inactifs. Sans token : actifs seulement."
+                  }
+                },
+                {
                   "name": "Créer un type de formation",
                   "request": {
                     "method": "POST",
@@ -2478,10 +2487,10 @@
                     "url": { "raw": "{{base_url}}/api/academic/program-types/initiale/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", "initiale", ""] },
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"label\": \"Formation Initiale Diplômante\",\n  \"is_active\": true\n}",
+                      "raw": "{\n  \"code\": \"initiale\",\n  \"label\": \"Formation Initiale Diplômante\",\n  \"is_active\": true,\n  \"order\": 1\n}",
                       "options": { "raw": { "language": "json" } }
                     },
-                    "description": "Remplacer `initiale` par le code du type. Champs modifiables : `label`, `is_active`, `order`."
+                    "description": "Remplacer `initiale` (dans l'URL) par le code actuel du type. Champs modifiables : `code`, `label`, `is_active`, `order`. Si `code` est modifié, mettre à jour l'URL en conséquence."
                   }
                 },
                 {
@@ -2499,6 +2508,15 @@
               "name": "Admin — Régimes",
               "description": "CRUD sur les régimes de formation (Regime). Écriture réservée aux admins et modérateurs. Lookup par `code`.",
               "item": [
+                {
+                  "name": "Liste de tous les régimes",
+                  "request": {
+                    "method": "GET",
+                    "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                    "url": { "raw": "{{base_url}}/api/academic/regimes/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", ""] },
+                    "description": "Avec token admin/modérateur : retourne tous les régimes y compris inactifs. Sans token : actifs seulement."
+                  }
+                },
                 {
                   "name": "Créer un régime",
                   "request": {
@@ -2536,10 +2554,10 @@
                     "url": { "raw": "{{base_url}}/api/academic/regimes/navigant/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", "navigant", ""] },
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n  \"label\": \"Régime Navigant Long Cours\",\n  \"is_active\": true\n}",
+                      "raw": "{\n  \"code\": \"navigant\",\n  \"label\": \"Régime Navigant Long Cours\",\n  \"is_active\": true,\n  \"order\": 1\n}",
                       "options": { "raw": { "language": "json" } }
                     },
-                    "description": "Remplacer `navigant` par le code du régime. Champs modifiables : `label`, `is_active`, `order`."
+                    "description": "Remplacer `navigant` (dans l'URL) par le code actuel du régime. Champs modifiables : `code`, `label`, `is_active`, `order`. Si `code` est modifié, mettre à jour l'URL en conséquence."
                   }
                 },
                 {

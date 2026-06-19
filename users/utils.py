@@ -1,3 +1,5 @@
+
+# users/utils.py
 import logging
 import secrets
 import string
@@ -65,6 +67,74 @@ L'équipe ARSTM
     })
 
     recipient = settings.TEST_EMAIL_RECIPIENT or user.email
+    email_message = EmailMultiAlternatives(
+        subject=subject,
+        body=text_body,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[recipient],
+    )
+    email_message.attach_alternative(html_body, 'text/html')
+
+    _email_executor.submit(_send_email_safely, email_message)
+
+
+def send_newsletter_confirmation_email(email):
+    """Envoie un email de confirmation lors de l'abonnement à la newsletter."""
+    subject = "Bienvenue dans la newsletter de l'ARSTM"
+    text_body = f"""Bonjour,
+
+Merci de vous être abonné(e) à la newsletter de l'Académie Régionale des Sciences et Techniques de la Mer (ARSTM).
+
+Vous recevrez désormais nos actualités, événements et offres directement dans votre boîte mail.
+
+Si vous n'êtes pas à l'origine de cette inscription, vous pouvez ignorer ce message sans crainte.
+
+Cordialement,
+L'équipe ARSTM
+"""
+    site_url = settings.SITE_URL.rstrip('/')
+    logo_url = site_url + staticfiles_storage.url('users/images/arstm_logo.jpeg')
+
+    html_body = render_to_string('users/emails/newsletter_subscription.html', {
+        'subject': subject,
+        'logo_url': logo_url,
+    })
+
+    recipient = settings.TEST_EMAIL_RECIPIENT or email
+    email_message = EmailMultiAlternatives(
+        subject=subject,
+        body=text_body,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        to=[recipient],
+    )
+    email_message.attach_alternative(html_body, 'text/html')
+
+    _email_executor.submit(_send_email_safely, email_message)
+
+
+def send_newsletter_unsubscribe_email(email):
+    """Envoie un email de confirmation de désabonnement à la newsletter."""
+    subject = "Vous êtes désabonné(e) de la newsletter de l'ARSTM"
+    text_body = f"""Bonjour,
+
+Nous confirmons votre désabonnement de la newsletter de l'Académie Régionale des Sciences et Techniques de la Mer (ARSTM).
+
+Vous ne recevrez plus nos actualités, événements et offres par email.
+
+Si ce désabonnement n'était pas volontaire, vous pouvez vous réabonner à tout moment depuis notre site.
+
+Cordialement,
+L'équipe ARSTM
+"""
+    site_url = settings.SITE_URL.rstrip('/')
+    logo_url = site_url + staticfiles_storage.url('users/images/arstm_logo.jpeg')
+
+    html_body = render_to_string('users/emails/newsletter_unsubscribe.html', {
+        'subject': subject,
+        'logo_url': logo_url,
+    })
+
+    recipient = settings.TEST_EMAIL_RECIPIENT or email
     email_message = EmailMultiAlternatives(
         subject=subject,
         body=text_body,

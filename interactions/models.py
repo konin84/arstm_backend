@@ -101,3 +101,13 @@ class JobOffer(models.Model):
 
     def __str__(self):
         return f"[{self.get_offer_type_display()}] {self.title} - {self.organization}"
+
+
+# --- NOUVEAU MODÈLE NEWSLETTER ---
+class NewsletterSubscription(models.Model):
+    """Détails spécifiques et statut d'activation pour les abonnements Newsletter"""
+    lead = models.OneToOneField(Lead, on_delete=models.CASCADE, related_name='newsletter_detail')
+    is_active = models.BooleanField(default=True, verbose_name="Abonnement Actif", help_text="Permet de gérer le désabonnement (Opt-out)")
+
+    def __str__(self):
+        return f"Newsletter : {self.lead.email} [Actif: {self.is_active}]"

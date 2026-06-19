@@ -1,10 +1,10 @@
 # apps/interactions/views.py
 from rest_framework import generics, permissions
-from .models import ContactRequest, AdmissionRequest, InternshipRequest, JobOffer, Lead
+from .models import ContactRequest, AdmissionRequest, InternshipRequest, JobOffer, Lead, NewsletterSubscription
 from .serializers import (
     ContactRequestSerializer, AdmissionRequestSerializer,
     InternshipRequestSerializer, JobOfferSerializer, JobOfferWriteSerializer,
-    LeadSerializer,
+    LeadSerializer, NewsletterSubscriptionSerializer, NewsletterUnsubscribeSerializer,
 )
 from users.permissions import IsAdminOrModerator, IsAdminOrModeratorOrReadOnly, PRIVILEGED_ROLES
 
@@ -108,3 +108,26 @@ class InternshipRequestAdminListView(generics.ListAPIView):
     queryset = InternshipRequest.objects.select_related('lead').all()
     serializer_class = InternshipRequestSerializer
     permission_classes = [IsAdminOrModerator]
+
+
+class NewsletterSubscribeView(generics.CreateAPIView):
+    """Endpoint public pour s'abonner à la newsletter de l'ARSTM (ex: depuis le footer)"""
+    queryset = NewsletterSubscription.objects.all()
+    serializer_class = NewsletterSubscriptionSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+
+class NewsletterUnsubscribeView(generics.GenericAPIView):
+    """Endpoint public pour se désabonner de la newsletter de l'ARSTM"""
+    serializer_class = NewsletterUnsubscribeSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": "Vous avez été désabonné(e) avec succès."},
+            status=status.HTTP_200_OK
+        )

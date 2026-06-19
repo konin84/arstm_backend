@@ -4,7 +4,7 @@ from .views import (
     ContactCreateView, AdmissionCreateView, InternshipCreateView,
     JobOfferListView, JobOfferDetailView,
     LeadListView, LeadDetailView,
-    ContactRequestAdminListView, AdmissionRequestAdminListView, InternshipRequestAdminListView,
+    ContactRequestAdminListView, AdmissionRequestAdminListView, InternshipRequestAdminListView, NewsletterSubscribeView, NewsletterUnsubscribeView,
 )
 
 urlpatterns = [
@@ -23,4 +23,7 @@ urlpatterns = [
     path('manage/contacts/', ContactRequestAdminListView.as_view(), name='contact_admin_list'),
     path('manage/admissions/', AdmissionRequestAdminListView.as_view(), name='admission_admin_list'),
     path('manage/internships/', InternshipRequestAdminListView.as_view(), name='internship_admin_list'),
+    # Nouvelle route Newsletter
+    path('newsletter/subscribe/', NewsletterSubscribeView.as_view(), name='newsletter_subscribe'),
+    path('newsletter/unsubscribe/', NewsletterUnsubscribeView.as_view(), name='newsletter_unsubscribe'),
 ]
