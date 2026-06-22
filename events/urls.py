@@ -3,7 +3,7 @@ from .views import (
     EventActiveListView, EventDetailView,
     ActiveBannerListView, track_banner_click,
     CompetitionAlertSubscribeView,
-    CompetitionPublicListView, CompetitionPublicDetailView,
+    CompetitionPublicListView, CompetitionPublicDetailView, CandidateCompetitionsView,
     NewsPostListView, NewsPostDetailView, NewsCategoryListView,
     EventAdminListCreateView, EventAdminDetailView,
     PromotionBannerAdminListCreateView, PromotionBannerDetailView,
@@ -23,6 +23,7 @@ urlpatterns = [
     path('subscribe-competition-alert/', CompetitionAlertSubscribeView.as_view(), name='subscribe_alert'),
 
     path('competitions/', CompetitionPublicListView.as_view(), name='competition_list'),
+    path('competitions/mine/', CandidateCompetitionsView.as_view(), name='candidate_competitions'),
     path('competitions/<slug:slug>/', CompetitionPublicDetailView.as_view(), name='competition_detail'),
 
     path('news-categories/', NewsCategoryListView.as_view(), name='news_category_list'),

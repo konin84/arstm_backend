@@ -25,6 +25,17 @@ class IsAdminOrModerator(permissions.BasePermission):
         )
 
 
+class IsCandidate(permissions.BasePermission):
+    """Grants access to authenticated users with role='candidate'."""
+
+    def has_permission(self, request, view):
+        return (
+            request.user
+            and request.user.is_authenticated
+            and request.user.role == 'candidate'
+        )
+
+
 class IsAdminOrModeratorOrReadOnly(permissions.BasePermission):
     """Read-only for everyone; write access restricted to admins and moderators."""
 

@@ -12,7 +12,7 @@ from .serializers import (
     NewsPostSerializer, NewsPostWriteSerializer,
     NewsCategorySerializer,
 )
-from users.permissions import IsAdminOrModeratorOrReadOnly
+from users.permissions import IsAdminOrModeratorOrReadOnly, IsCandidate
 
 class EventActiveListView(generics.ListAPIView):
     """Endpoint public pour lister les événements à venir dans l'agenda"""
@@ -95,6 +95,15 @@ class CompetitionPublicListView(generics.ListAPIView):
     """Endpoint public — liste les concours ouverts."""
     serializer_class = CompetitionSerializer
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return Competition.objects.filter(is_active=True)
+
+
+class CandidateCompetitionsView(generics.ListAPIView):
+    """Espace candidat — liste les concours actifs. Réservé aux utilisateurs authentifiés avec role=candidate."""
+    serializer_class = CompetitionSerializer
+    permission_classes = [IsCandidate]
 
     def get_queryset(self):
         return Competition.objects.filter(is_active=True)

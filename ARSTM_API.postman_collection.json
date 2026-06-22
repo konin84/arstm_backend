@@ -3254,6 +3254,21 @@
           }
         },
         {
+          "name": "Mes concours (espace candidat)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/events/competitions/mine/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "events", "competitions", "mine", ""]
+            },
+            "description": "Réservé aux utilisateurs authentifiés avec role=candidate. Retourne tous les concours actifs qui leur sont destinés. Retourne 403 pour tout autre rôle."
+          }
+        },
+        {
           "name": "Détail d'un concours",
           "request": {
             "method": "GET",
