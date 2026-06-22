@@ -49,6 +49,28 @@ class CompetitionAlertSubscription(models.Model):
     subscribed_at = models.DateTimeField(auto_now_add=True)
 
 
+class Competition(models.Model):
+    """Concours d'admission ouverts par l'ARSTM."""
+    title = models.CharField(max_length=255, verbose_name="Intitulé du concours")
+    slug = models.SlugField(max_length=255, unique=True, blank=True)
+    description = models.TextField(verbose_name="Description")
+    application_deadline = models.DateField(null=True, blank=True, verbose_name="Date limite de dépôt")
+    competition_date = models.DateField(null=True, blank=True, verbose_name="Date du concours")
+    is_active = models.BooleanField(default=False, verbose_name="Concours ouvert")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
 class NewsCategory(LookupValue):
     """Catégorie d'actualité (institutionnelle, communiqué, revue de presse…)."""
 

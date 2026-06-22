@@ -45,6 +45,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractUser):
     ROLE_CHOICES = (
+        ('candidate', 'Candidat / Postulant'),
         ('student', 'Étudiant'),
         ('professional', 'Professionnel / Entreprise'),
         ('recruiter', 'Recruteur / Partenaire RH'),

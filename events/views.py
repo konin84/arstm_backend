@@ -3,11 +3,12 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from .models import Event, PromotionBanner, CompetitionAlertSubscription, NewsPost, NewsCategory
+from .models import Event, PromotionBanner, CompetitionAlertSubscription, Competition, NewsPost, NewsCategory
 from .serializers import (
     EventSerializer, EventWriteSerializer,
     PromotionBannerSerializer,
     CompetitionAlertSubscriptionSerializer,
+    CompetitionSerializer, CompetitionWriteSerializer,
     NewsPostSerializer, NewsPostWriteSerializer,
     NewsCategorySerializer,
 )
@@ -90,6 +91,23 @@ class NewsCategoryListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
 
+class CompetitionPublicListView(generics.ListAPIView):
+    """Endpoint public — liste les concours ouverts."""
+    serializer_class = CompetitionSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return Competition.objects.filter(is_active=True)
+
+
+class CompetitionPublicDetailView(generics.RetrieveAPIView):
+    """Endpoint public — détail d'un concours via son slug."""
+    queryset = Competition.objects.filter(is_active=True)
+    serializer_class = CompetitionSerializer
+    lookup_field = 'slug'
+    permission_classes = [permissions.AllowAny]
+
+
 # ─── Admin manage views ───────────────────────────────────────────────────────
 
 class EventAdminListCreateView(generics.ListCreateAPIView):
@@ -127,6 +145,36 @@ class PromotionBannerDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = PromotionBanner.objects.all()
     serializer_class = PromotionBannerSerializer
     permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+
+class CompetitionAdminListCreateView(generics.ListCreateAPIView):
+    """Admin: liste tous les concours (actifs et inactifs) et permet la création."""
+    queryset = Competition.objects.all()
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return CompetitionWriteSerializer
+        return CompetitionSerializer
+
+
+class CompetitionAdminDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """Admin: modifier ou supprimer un concours. Déclenche les notifications quand is_active passe à True."""
+    queryset = Competition.objects.all()
+    permission_classes = [IsAdminOrModeratorOrReadOnly]
+    lookup_field = 'slug'
+
+    def get_serializer_class(self):
+        if self.request.method in ('PUT', 'PATCH'):
+            return CompetitionWriteSerializer
+        return CompetitionSerializer
+
+    def perform_update(self, serializer):
+        was_active = serializer.instance.is_active
+        competition = serializer.save()
+        if not was_active and competition.is_active:
+            from users.utils import send_competition_launch_notifications
+            send_competition_launch_notifications(competition)
 
 
 class NewsPostAdminListCreateView(generics.ListCreateAPIView):

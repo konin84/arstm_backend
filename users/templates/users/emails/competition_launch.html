@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ subject }}</title>
+</head>
+<body style="font-family: 'Segoe UI', Arial, sans-serif; background:#f0f2f5; padding:20px; margin:0;">
+    <div style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+        <!-- Header -->
+        <div style="background:linear-gradient(135deg, #0b3d62 0%, #1a5a8a 100%);padding:28px 30px;text-align:center;position:relative;">
+            <div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:#f39c12;"></div>
+            <img src="cid:arstm_logo" alt="ARSTM" style="height:55px;display:block;margin:0 auto;">
+            <p style="color:rgba(255,255,255,0.7);font-size:13px;margin:8px 0 0;letter-spacing:1px;text-transform:uppercase;">Concours d'admission</p>
+        </div>
+
+        <!-- Content -->
+        <div style="padding:35px 40px 30px;color:#2d3748;line-height:1.7;">
+            <h2 style="color:#0b3d62;font-size:22px;margin:0 0 6px;font-weight:700;">Nouveau concours ouvert</h2>
+            <div style="width:50px;height:3px;background:#f39c12;margin-bottom:22px;border-radius:2px;"></div>
+
+            <p style="font-size:16px;margin:0 0 16px;">Bonjour,</p>
+            <p style="font-size:16px;margin:0 0 20px;color:#4a5568;">
+                L'<strong style="color:#0b3d62;">ARSTM</strong> a le plaisir de vous informer de l'ouverture d'un nouveau concours d'admission.
+            </p>
+
+            <!-- Competition card -->
+            <div style="background:#f7fafc;border-left:4px solid #f39c12;border-radius:0 8px 8px 0;padding:20px 24px;margin-bottom:24px;">
+                <h3 style="color:#0b3d62;font-size:18px;margin:0 0 10px;font-weight:700;">{{ competition.title }}</h3>
+                <p style="font-size:15px;color:#4a5568;margin:0 0 16px;line-height:1.6;">{{ competition.description }}</p>
+
+                {% if competition.application_deadline or competition.competition_date %}
+                <table style="width:100%;border-collapse:collapse;margin-top:8px;">
+                    {% if competition.application_deadline %}
+                    <tr>
+                        <td style="padding:6px 0;font-size:14px;color:#718096;width:55%;">Date limite de dépôt</td>
+                        <td style="padding:6px 0;font-size:14px;font-weight:600;color:#2d3748;text-align:right;">{{ competition.application_deadline|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% endif %}
+                    {% if competition.competition_date %}
+                    <tr>
+                        <td style="padding:6px 0;font-size:14px;color:#718096;">Date du concours</td>
+                        <td style="padding:6px 0;font-size:14px;font-weight:600;color:#2d3748;text-align:right;">{{ competition.competition_date|date:"d/m/Y" }}</td>
+                    </tr>
+                    {% endif %}
+                </table>
+                {% endif %}
+            </div>
+
+            <p style="font-size:14px;color:#718096;margin:0;">
+                Pour toute information complémentaire, veuillez contacter l'ARSTM directement ou consulter notre site web.
+            </p>
+
+            <div style="margin-top:30px;padding-top:25px;border-top:1px solid #e2e8f0;">
+                <p style="font-size:15px;margin:0;color:#2d3748;">
+                    Cordialement,<br>
+                    <strong style="color:#0b3d62;font-size:16px;">L'équipe ARSTM</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background:#f7fafc;padding:18px 40px;text-align:center;border-top:1px solid #edf2f7;">
+            <p style="font-size:13px;color:#a0aec0;margin:0;">
+                ARSTM • Tous droits réservés &copy; {% now "Y" %}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

@@ -3,9 +3,11 @@ from .views import (
     EventActiveListView, EventDetailView,
     ActiveBannerListView, track_banner_click,
     CompetitionAlertSubscribeView,
+    CompetitionPublicListView, CompetitionPublicDetailView,
     NewsPostListView, NewsPostDetailView, NewsCategoryListView,
     EventAdminListCreateView, EventAdminDetailView,
     PromotionBannerAdminListCreateView, PromotionBannerDetailView,
+    CompetitionAdminListCreateView, CompetitionAdminDetailView,
     NewsPostAdminListCreateView, NewsPostAdminDetailView,
     NewsCategoryAdminListCreateView, NewsCategoryDetailView,
 )
@@ -20,6 +22,9 @@ urlpatterns = [
 
     path('subscribe-competition-alert/', CompetitionAlertSubscribeView.as_view(), name='subscribe_alert'),
 
+    path('competitions/', CompetitionPublicListView.as_view(), name='competition_list'),
+    path('competitions/<slug:slug>/', CompetitionPublicDetailView.as_view(), name='competition_detail'),
+
     path('news-categories/', NewsCategoryListView.as_view(), name='news_category_list'),
     path('news/', NewsPostListView.as_view(), name='news_list'),
     path('news/<slug:slug>/', NewsPostDetailView.as_view(), name='news_detail'),
@@ -30,6 +35,9 @@ urlpatterns = [
 
     path('manage/banners/', PromotionBannerAdminListCreateView.as_view(), name='banner_admin_list'),
     path('manage/banners/<int:pk>/', PromotionBannerDetailView.as_view(), name='banner_admin_detail'),
+
+    path('manage/competitions/', CompetitionAdminListCreateView.as_view(), name='competition_admin_list'),
+    path('manage/competitions/<slug:slug>/', CompetitionAdminDetailView.as_view(), name='competition_admin_detail'),
 
     path('manage/news/', NewsPostAdminListCreateView.as_view(), name='news_admin_list'),
     path('manage/news/<slug:slug>/', NewsPostAdminDetailView.as_view(), name='news_admin_detail'),

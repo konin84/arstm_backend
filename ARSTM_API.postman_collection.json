@@ -67,6 +67,40 @@
               }
             },
             {
+              "name": "Candidat / Postulant (candidate)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users",
+                    "register",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"candidat@example.com\",\n  \"first_name\": \"Kouamé\",\n  \"last_name\": \"Assouman\",\n  \"role\": \"candidate\",\n  \"phone\": \"+2250700000099\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "description": "Candidat aux concours d'entrée ARSTM. Pas de sous-profil requis. Reçoit automatiquement un email de notification à chaque ouverture de concours."
+              }
+            },
+            {
               "name": "Professionnel / Entreprise (professional)",
               "request": {
                 "method": "POST",
@@ -518,6 +552,44 @@
                 }
               }
             }
+          }
+        },
+        {
+          "name": "Créer — Candidat (candidate)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/create/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "create",
+                ""
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"candidat.arstm@example.com\",\n  \"first_name\": \"Kouamé\",\n  \"last_name\": \"Assouman\",\n  \"role\": \"candidate\",\n  \"phone\": \"+2250700000099\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Crée un candidat aux concours ARSTM. Aucun sous-profil requis. L'utilisateur sera notifié par email à chaque ouverture de concours (`is_active=true`)."
           }
         },
         {
@@ -3169,6 +3241,32 @@
           }
         },
         {
+          "name": "Concours ouverts (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/events/competitions/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "events", "competitions", ""]
+            },
+            "description": "Liste tous les concours avec is_active=true. Retourne title, slug, description, application_deadline, competition_date."
+          }
+        },
+        {
+          "name": "Détail d'un concours",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/events/competitions/concours-entree-2026/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "events", "competitions", "concours-entree-2026", ""]
+            },
+            "description": "Remplacer `concours-entree-2026` par le slug du concours."
+          }
+        },
+        {
           "name": "Catégories d'actualités disponibles",
           "request": {
             "method": "GET",
@@ -3352,6 +3450,80 @@
                 "method": "DELETE",
                 "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
                 "url": { "raw": "{{base_url}}/api/events/manage/banners/1/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", "1", ""] }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin — Gestion des concours",
+          "description": "Écriture réservée aux admins et modérateurs. Quand is_active passe de false à true, une notification email est envoyée automatiquement à tous les candidats (role=candidate) et abonnés aux alertes concours.",
+          "item": [
+            {
+              "name": "Liste de tous les concours",
+              "request": {
+                "method": "GET",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/competitions/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", ""] },
+                "description": "Retourne tous les concours (actifs et brouillons)."
+              }
+            },
+            {
+              "name": "Créer un concours (brouillon)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/competitions/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Concours d'entrée ARSTM 2026\",\n  \"description\": \"Concours d'admission aux formations initiales de l'ARSTM pour l'année académique 2026-2027.\",\n  \"application_deadline\": \"2026-08-31\",\n  \"competition_date\": \"2026-09-15\",\n  \"is_active\": false\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Créer avec is_active=false pour travailler en brouillon sans déclencher les notifications. Slug auto-généré depuis title."
+              }
+            },
+            {
+              "name": "Lancer un concours (déclenche notifications)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", "concours-entree-arstm-2026", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_active\": true\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Passer is_active de false à true déclenche l'envoi automatique d'emails à tous les utilisateurs avec role=candidate ET tous les abonnés aux alertes concours (CompetitionAlertSubscription). Ce déclenchement est unique — modifier à nouveau n'envoie pas de doublon."
+              }
+            },
+            {
+              "name": "Modifier un concours (PATCH)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": { "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", "concours-entree-arstm-2026", ""] },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"application_deadline\": \"2026-09-05\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Mise à jour partielle. Si is_active est déjà true, aucune notification n'est renvoyée."
+              }
+            },
+            {
+              "name": "Supprimer un concours",
+              "request": {
+                "method": "DELETE",
+                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+                "url": { "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", "concours-entree-arstm-2026", ""] }
               }
             }
           ]

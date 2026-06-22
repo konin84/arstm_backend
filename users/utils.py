@@ -187,6 +187,54 @@ def send_newsletter_broadcast(subject, html_content, text_content=None):
     return len(recipients)
 
 
+def send_competition_launch_notifications(competition):
+    """Notifie tous les candidats et abonnés aux alertes qu'un concours vient d'ouvrir."""
+    from events.models import CompetitionAlertSubscription
+    from .models import User
+
+    candidate_emails = set(User.objects.filter(role='candidate').values_list('email', flat=True))
+    subscriber_emails = set(CompetitionAlertSubscription.objects.values_list('email', flat=True))
+    all_emails = candidate_emails | subscriber_emails
+
+    if not all_emails:
+        return 0
+
+    subject = f"Nouveau concours ouvert : {competition.title}"
+    text_body = f"""Bonjour,
+
+L'ARSTM vient d'ouvrir un nouveau concours.
+
+{competition.title}
+{competition.description}
+"""
+    if competition.application_deadline:
+        text_body += f"\nDate limite de dépôt : {competition.application_deadline.strftime('%d/%m/%Y')}"
+    if competition.competition_date:
+        text_body += f"\nDate du concours : {competition.competition_date.strftime('%d/%m/%Y')}"
+    text_body += "\n\nCordialement,\nL'équipe ARSTM\n"
+
+    html_body = render_to_string('users/emails/competition_launch.html', {
+        'subject': subject,
+        'competition': competition,
+    })
+
+    def _send_batch():
+        for email in all_emails:
+            message = EmailMultiAlternatives(
+                subject=subject,
+                body=text_body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                to=[email],
+            )
+            message.mixed_subtype = 'related'
+            message.attach_alternative(html_body, 'text/html')
+            message.attach(_make_logo_attachment())
+            _send_email_safely(message)
+
+    _email_executor.submit(_send_batch)
+    return len(all_emails)
+
+
 UNSUBSCRIBE_SALT = 'newsletter-unsubscribe'
 
 def generate_unsubscribe_token(email):
