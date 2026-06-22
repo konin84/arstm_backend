@@ -3,22 +3,63 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body style="font-family: Arial, sans-serif; background:#f4f4f4; padding:20px;">
-    <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:8px;overflow:hidden;">
-        <div style="background:#0b3d62;padding:20px;text-align:center;">
-            <img src="{{ logo_url }}" alt="ARSTM" style="height:50px;">
+<body style="font-family: 'Segoe UI', Arial, sans-serif; background:#f0f2f5; padding:20px; margin:0;">
+    <div
+        style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,0.08);">
+
+        <!-- Header with logo and decorative accent -->
+        <div
+            style="background:linear-gradient(135deg, #0b3d62 0%, #1a5a8a 100%);padding:28px 30px;text-align:center;position:relative;">
+            <div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:#f39c12;"></div>
+            <img src="cid:arstm_logo" alt="ARSTM" style="height:55px;display:block;margin:0 auto;">
+            <p
+                style="color:rgba(255,255,255,0.7);font-size:13px;margin:8px 0 0;letter-spacing:1px;text-transform:uppercase;">
+                Newsletter</p>
         </div>
-        <div style="padding:30px;color:#333;">
-            <h2 style="color:#0b3d62;">{{ subject }}</h2>
-            <p>Bonjour,</p>
-            <p>Merci de vous être abonné(e) à la newsletter de l'<strong>ARSTM</strong>. Vous recevrez désormais nos
-                actualités, événements et offres directement dans votre boîte mail.</p>
-            <p>Si vous n'êtes pas à l'origine de cette inscription, vous pouvez ignorer ce message sans crainte.</p>
-            <p>Cordialement,<br>L'équipe ARSTM</p>
+
+        <!-- Main content -->
+        <div style="padding:35px 40px 30px;color:#2d3748;line-height:1.7;">
+            <h2 style="color:#0b3d62;font-size:24px;margin:0 0 8px;font-weight:600;">{{ subject }}</h2>
+            <div style="width:50px;height:3px;background:#f39c12;margin-bottom:22px;border-radius:2px;"></div>
+
+            <p style="font-size:16px;margin:0 0 16px;">Bonjour,</p>
+
+            <p style="font-size:16px;margin:0 0 18px;color:#4a5568;">
+                Merci de vous être abonné(e) à la newsletter de l'<strong style="color:#0b3d62;">ARSTM</strong>.
+                Vous recevrez désormais nos actualités, événements et offres directement dans votre boîte mail.
+            </p>
+
+
+            <p style="font-size:16px;margin:0 0 6px;color:#4a5568;">
+                Si vous n'êtes pas à l'origine de cette inscription, vous pouvez ignorer ce message sans crainte.
+            </p>
+
+            <div style="margin-top:30px;padding-top:25px;border-top:1px solid #e2e8f0;">
+                <p style="font-size:15px;margin:0;color:#2d3748;">
+                    Cordialement,<br>
+                    <strong style="color:#0b3d62;font-size:16px;">L'équipe ARSTM</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background:#f7fafc;padding:18px 40px;text-align:center;border-top:1px solid #edf2f7;">
+            <p style="font-size:13px;color:#718096;margin:0;">
+                <a href="{{ unsubscribe_url }}"
+                    style="color:#0b3d62;text-decoration:none;font-weight:500;border-bottom:1px dotted #cbd5e0;padding-bottom:1px;">Se
+                    désabonner</a>
+                <span style="color:#a0aec0;margin:0 6px;">•</span>
+                <span style="color:#a0aec0;">ARSTM • Tous droits réservés @<span id="year"></span></span>
+            </p>
         </div>
     </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 </body>
 
 </html>

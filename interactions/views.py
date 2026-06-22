@@ -4,7 +4,7 @@ from .models import ContactRequest, AdmissionRequest, InternshipRequest, JobOffe
 from .serializers import (
     ContactRequestSerializer, AdmissionRequestSerializer,
     InternshipRequestSerializer, JobOfferSerializer, JobOfferWriteSerializer,
-    LeadSerializer, NewsletterSubscriptionSerializer, NewsletterUnsubscribeSerializer,
+    LeadSerializer, NewsletterBroadcastSerializer, NewsletterSubscriptionSerializer, NewsletterUnsubscribeSerializer,
 )
 from users.permissions import IsAdminOrModerator, IsAdminOrModeratorOrReadOnly, PRIVILEGED_ROLES
 
@@ -130,4 +130,21 @@ class NewsletterUnsubscribeView(generics.GenericAPIView):
         return Response(
             {"detail": "Vous avez été désabonné(e) avec succès."},
             status=status.HTTP_200_OK
+        )
+    
+class NewsletterBroadcastView(generics.GenericAPIView):
+    """Admin/Modérateur : envoie un message à tous les abonnés actifs de la newsletter."""
+    serializer_class = NewsletterBroadcastSerializer
+    permission_classes = [IsAdminOrModerator]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        count = send_newsletter_broadcast(
+            subject=serializer.validated_data['subject'],
+            html_content=serializer.validated_data['message'],
+        )
+        return Response(
+            {"detail": f"Diffusion lancée pour {count} abonné(e)s actifs."},
+            status=status.HTTP_202_ACCEPTED
         )

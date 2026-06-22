@@ -145,3 +145,7 @@ class NewsletterUnsubscribeSerializer(serializers.Serializer):
             send_newsletter_unsubscribe_email(email)
 
         return subscription
+    
+class NewsletterBroadcastSerializer(serializers.Serializer):
+    subject = serializers.CharField(max_length=255)
+    message = serializers.CharField(help_text="Contenu HTML du message")
