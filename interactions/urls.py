@@ -2,6 +2,7 @@
 from django.urls import path
 from .views import (
     ContactCreateView, AdmissionCreateView, InternshipCreateView,
+    MyAdmissionsView,
     JobOfferListView, JobOfferDetailView,
     LeadListView, LeadDetailView,
     ContactRequestAdminListView, AdmissionRequestAdminListView, InternshipRequestAdminListView, NewsletterBroadcastView, NewsletterSubscribeView, NewsletterUnsubscribeView,
@@ -12,6 +13,9 @@ urlpatterns = [
     path('contact/', ContactCreateView.as_view(), name='submit_contact'),
     path('admission/', AdmissionCreateView.as_view(), name='submit_admission'),
     path('internship/', InternshipCreateView.as_view(), name='submit_internship'),
+
+    # ── Espace utilisateur ────────────────────────────────────────────────────
+    path('admissions/me/', MyAdmissionsView.as_view(), name='my_admissions'),
 
     # ── Offres d'emploi / stage (lecture publique + CRUD admin) ──────────────
     path('jobs/', JobOfferListView.as_view(), name='job_offer_list'),

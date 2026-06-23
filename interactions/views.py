@@ -73,6 +73,19 @@ class JobOfferDetailView(generics.RetrieveUpdateDestroyAPIView):
         return JobOffer.objects.all() if is_privileged else JobOffer.objects.filter(is_active=True)
 
 
+# ─── Espace utilisateur ──────────────────────────────────────────────────────
+
+class MyAdmissionsView(generics.ListAPIView):
+    """Endpoint authentifié — liste les demandes d'admission liées à l'email du compte connecté."""
+    serializer_class = AdmissionRequestSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return AdmissionRequest.objects.filter(
+            lead__email=self.request.user.email
+        ).select_related('lead')
+
+
 # ─── Gestion admin des leads et demandes ─────────────────────────────────────
 
 class LeadListView(generics.ListAPIView):

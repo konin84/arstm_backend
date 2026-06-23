@@ -2823,6 +2823,21 @@
       "name": "06 · Interactions & Formulaires",
       "item": [
         {
+          "name": "Mes candidatures (admissions)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/interactions/admissions/me/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "interactions", "admissions", "me", ""]
+            },
+            "description": "Authentifié requis. Retourne toutes les demandes d'admission dont l'email du lead correspond à l'email du compte connecté. Champs retournés : id, lead (prénom, nom, email, statut…), program, academic_level, birth_date."
+          }
+        },
+        {
           "name": "Formulaire de contact",
           "request": {
             "method": "POST",
