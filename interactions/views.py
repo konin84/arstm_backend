@@ -1,5 +1,7 @@
 # apps/interactions/views.py
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
 from .models import ContactRequest, AdmissionRequest, InternshipRequest, JobOffer, Lead, NewsletterSubscription
 from .serializers import (
     ContactRequestSerializer, AdmissionRequestSerializer,
@@ -121,6 +123,28 @@ class InternshipRequestAdminListView(generics.ListAPIView):
     queryset = InternshipRequest.objects.select_related('lead').all()
     serializer_class = InternshipRequestSerializer
     permission_classes = [IsAdminOrModerator]
+
+
+@api_view(['GET'])
+@permission_classes([permissions.AllowAny])
+def newsletter_token_unsubscribe(request):
+    """Lien de désabonnement depuis l'email — GET /newsletter/unsubscribe?token=..."""
+    from users.utils import verify_unsubscribe_token, send_newsletter_unsubscribe_email
+    token = request.query_params.get('token')
+    if not token:
+        return Response({'detail': 'Token manquant.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    email = verify_unsubscribe_token(token)
+    if not email:
+        return Response({'detail': 'Lien invalide ou expiré.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    subscription = NewsletterSubscription.objects.filter(lead__email=email).first()
+    if subscription and subscription.is_active:
+        subscription.is_active = False
+        subscription.save()
+        send_newsletter_unsubscribe_email(email)
+
+    return Response({'detail': 'Vous avez été désabonné(e) avec succès.'}, status=status.HTTP_200_OK)
 
 
 class NewsletterSubscribeView(generics.CreateAPIView):

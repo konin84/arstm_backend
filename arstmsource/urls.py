@@ -3,9 +3,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from interactions.views import newsletter_token_unsubscribe
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('newsletter/unsubscribe', newsletter_token_unsubscribe, name='newsletter_token_unsubscribe'),
     path('api/users/', include('users.urls')), # Préfixe toutes les routes de l'application users
     path('api/academic/', include('academic.urls')),
     path('api/institution/', include('institution.urls')),

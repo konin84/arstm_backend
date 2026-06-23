@@ -3100,7 +3100,7 @@
               }
             },
             {
-              "name": "Se désabonner de la newsletter",
+              "name": "Se désabonner de la newsletter (par email)",
               "request": {
                 "method": "POST",
                 "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -3115,6 +3115,20 @@
                   "options": { "raw": { "language": "json" } }
                 },
                 "description": "Public. Passe is_active à false sur l'abonnement et envoie un email de confirmation de désabonnement."
+              }
+            },
+            {
+              "name": "Se désabonner de la newsletter (lien email)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/newsletter/unsubscribe?token={{unsubscribe_token}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["newsletter", "unsubscribe"],
+                  "query": [{ "key": "token", "value": "{{unsubscribe_token}}", "description": "Token signé inclus dans l'email de confirmation de newsletter" }]
+                },
+                "description": "Lien cliquable depuis l'email de confirmation newsletter. Vérifie le token signé, désactive l'abonnement et envoie l'email de confirmation de désabonnement. Retourne 400 si le token est invalide ou expiré."
               }
             },
             {
@@ -3286,7 +3300,7 @@
           }
         },
         {
-          "name": "S'inscrire aux alertes concours",
+          "name": "S'abonner / se réabonner aux alertes concours",
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
@@ -3300,7 +3314,7 @@
               "raw": "{\n  \"email\": \"candidat@example.com\"\n}",
               "options": { "raw": { "language": "json" } }
             },
-            "description": "Public. Inscrit un email anonyme aux alertes concours (CompetitionAlertSubscription)."
+            "description": "• Candidat authentifié (Bearer token) : réactive receive_competition_notifications. Retourne 200.\n• Anonyme / autre rôle : crée une entrée CompetitionAlertSubscription pour l'email fourni. Retourne 201.\nSi le candidat est déjà abonné, retourne 200 avec un message informatif."
           }
         },
         {

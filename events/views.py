@@ -58,7 +58,9 @@ def track_banner_click(request, banner_id):
 
 class CompetitionAlertSubscribeView(generics.GenericAPIView):
     """
-    POST  — S'abonner aux alertes concours (public, par email).
+    POST  — S'abonner / se réabonner aux alertes concours.
+             • Candidat authentifié : réactive receive_competition_notifications.
+             • Autre / anonyme      : crée une entrée CompetitionAlertSubscription par email.
     DELETE — Se désabonner :
              • Candidat authentifié : désactive receive_competition_notifications.
              • Autre / anonyme      : supprime l'entrée CompetitionAlertSubscription par email.
@@ -67,6 +69,20 @@ class CompetitionAlertSubscribeView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request):
+        user = request.user
+        if user.is_authenticated and user.role == 'candidate':
+            if user.receive_competition_notifications:
+                return Response(
+                    {'detail': 'Vous êtes déjà abonné(e) aux alertes concours.'},
+                    status=status.HTTP_200_OK,
+                )
+            user.receive_competition_notifications = True
+            user.save(update_fields=['receive_competition_notifications'])
+            return Response(
+                {'detail': 'Vous êtes à nouveau abonné(e) aux alertes concours.'},
+                status=status.HTTP_200_OK,
+            )
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
