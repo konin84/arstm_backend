@@ -3078,6 +3078,69 @@
           ]
         },
         {
+          "name": "Newsletter",
+          "description": "Abonnement, désabonnement et diffusion de la newsletter ARSTM.",
+          "item": [
+            {
+              "name": "S'abonner à la newsletter",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/newsletter/subscribe/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "interactions", "newsletter", "subscribe", ""]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"lecteur@example.com\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Public. Crée un Lead + NewsletterSubscription et envoie un email de confirmation. Si l'email est déjà abonné mais inactif, le réactive et renvoie le mail de confirmation."
+              }
+            },
+            {
+              "name": "Se désabonner de la newsletter",
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/newsletter/unsubscribe/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "interactions", "newsletter", "unsubscribe", ""]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"lecteur@example.com\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Public. Passe is_active à false sur l'abonnement et envoie un email de confirmation de désabonnement."
+              }
+            },
+            {
+              "name": "Diffuser un message aux abonnés (admin)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
+                  { "key": "Content-Type", "value": "application/json" }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/newsletter/broadcast/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "interactions", "newsletter", "broadcast", ""]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"subject\": \"Actualités ARSTM — Juin 2026\",\n  \"message\": \"<p>Bonjour,</p><p>Voici les dernières actualités de l'ARSTM...</p>\"\n}",
+                  "options": { "raw": { "language": "json" } }
+                },
+                "description": "Réservé aux admins et modérateurs. Envoie le message HTML à tous les abonnés actifs (is_active=true). Retourne le nombre de destinataires ciblés."
+              }
+            }
+          ]
+        },
+        {
           "name": "Admin — Leads & demandes",
           "description": "Accessible aux admins et modérateurs.",
           "item": [
