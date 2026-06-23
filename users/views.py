@@ -17,6 +17,8 @@ from .serializers import (
     PendingStudentSerializer,
     SectorSerializer,
     OrganizationTypeSerializer,
+    ForgotPasswordSerializer,
+    ResetPasswordSerializer,
     RESTRICTED_ROLES,
 )
 from .models import Sector, OrganizationType
@@ -165,6 +167,38 @@ class ApproveStudentView(APIView):
                 "detail": "Compte étudiant activé avec succès.",
                 "user": UserSerializer(student).data,
             },
+            status=status.HTTP_200_OK,
+        )
+
+
+# ─── Mot de passe oublié ────────────────────────────────────────────────────
+
+class ForgotPasswordView(generics.GenericAPIView):
+    """Envoie un OTP à 6 chiffres par email pour réinitialiser le mot de passe."""
+    serializer_class = ForgotPasswordSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": "Si cet email est associé à un compte actif, un code de vérification vous a été envoyé."},
+            status=status.HTTP_200_OK,
+        )
+
+
+class ResetPasswordView(generics.GenericAPIView):
+    """Vérifie l'OTP et applique le nouveau mot de passe."""
+    serializer_class = ResetPasswordSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"detail": "Mot de passe réinitialisé avec succès. Vous pouvez maintenant vous connecter."},
             status=status.HTTP_200_OK,
         )
 

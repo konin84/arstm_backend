@@ -13,6 +13,8 @@ from .views import (
     SectorListView,
     OrganizationTypeListView,
     TestEmailView,
+    ForgotPasswordView,
+    ResetPasswordView,
 )
 
 urlpatterns = [
@@ -24,6 +26,10 @@ urlpatterns = [
     # Espace sécurisé utilisateur
     path('profile/', UserProfileView.as_view(), name='user_profile'),
     path('change-password/', ChangePasswordView.as_view(), name='change_password'),
+
+    # Mot de passe oublié — flux OTP (public)
+    path('forgot-password/', ForgotPasswordView.as_view(), name='forgot_password'),
+    path('reset-password/', ResetPasswordView.as_view(), name='reset_password'),
 
     # Listes de valeurs dynamiques — publiques, pour peupler les formulaires
     path('sectors/', SectorListView.as_view(), name='sector_list'),

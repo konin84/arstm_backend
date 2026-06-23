@@ -172,3 +172,15 @@ class StaffProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name()} — {self.department}"
+
+
+class PasswordResetOTP(models.Model):
+    """Code OTP à 6 chiffres envoyé par email pour réinitialiser un mot de passe oublié."""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='password_reset_otps')
+    otp = models.CharField(max_length=6)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']

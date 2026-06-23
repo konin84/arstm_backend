@@ -41,6 +41,11 @@ def _send_email_safely(email_message):
         logger.exception("Échec de l'envoi d'email à %s", email_message.to)
 
 
+def generate_otp():
+    """Génère un code OTP à 6 chiffres sécurisé."""
+    return f"{secrets.randbelow(1000000):06d}"
+
+
 def generate_temp_password(length=12):
     """Génère un mot de passe aléatoire sécurisé avec lettres, chiffres et symboles."""
     alphabet = string.ascii_letters + string.digits + '!@#$%&*'
@@ -236,6 +241,74 @@ L'ARSTM vient d'ouvrir un nouveau concours.
 
     _email_executor.submit(_send_batch)
     return len(all_emails)
+
+
+def send_password_reset_otp_email(user, otp):
+    """Envoie le code OTP de réinitialisation de mot de passe à l'utilisateur."""
+    subject = "Réinitialisation de votre mot de passe ARSTM"
+    text_body = f"""Bonjour {user.get_full_name()},
+
+Voici votre code de vérification pour réinitialiser votre mot de passe :
+
+  {otp}
+
+Ce code est valable 10 minutes. Ne le partagez avec personne.
+
+Si vous n'avez pas demandé cette réinitialisation, ignorez ce message.
+
+Cordialement,
+L'équipe ARSTM
+"""
+    html_body = render_to_string('users/emails/password_reset_otp.html', {
+        'subject': subject,
+        'full_name': user.get_full_name(),
+        'otp': otp,
+    })
+
+    recipient = settings.TEST_EMAIL_RECIPIENT or user.email
+    email_message = EmailMultiAlternatives(
+        subject=subject, body=text_body,
+        from_email=settings.DEFAULT_FROM_EMAIL, to=[recipient],
+    )
+    email_message.mixed_subtype = 'related'
+    email_message.attach_alternative(html_body, 'text/html')
+    email_message.attach(_make_logo_attachment())
+    _email_executor.submit(_send_email_safely, email_message)
+
+
+def send_password_reset_confirmation_email(user, new_password):
+    """Confirme la réinitialisation du mot de passe et envoie le nouveau mot de passe à l'utilisateur."""
+    subject = "Votre mot de passe ARSTM a été réinitialisé"
+    text_body = f"""Bonjour {user.get_full_name()},
+
+Votre mot de passe a été réinitialisé avec succès.
+
+─────────────────────────────
+  Identifiant       : {user.email}
+  Nouveau mot de passe : {new_password}
+─────────────────────────────
+
+Si vous n'êtes pas à l'origine de cette modification, veuillez contacter immédiatement l'équipe ARSTM.
+
+Cordialement,
+L'équipe ARSTM
+"""
+    html_body = render_to_string('users/emails/password_reset_confirmation.html', {
+        'subject': subject,
+        'full_name': user.get_full_name(),
+        'email': user.email,
+        'new_password': new_password,
+    })
+
+    recipient = settings.TEST_EMAIL_RECIPIENT or user.email
+    email_message = EmailMultiAlternatives(
+        subject=subject, body=text_body,
+        from_email=settings.DEFAULT_FROM_EMAIL, to=[recipient],
+    )
+    email_message.mixed_subtype = 'related'
+    email_message.attach_alternative(html_body, 'text/html')
+    email_message.attach(_make_logo_attachment())
+    _email_executor.submit(_send_email_safely, email_message)
 
 
 UNSUBSCRIBE_SALT = 'newsletter-unsubscribe'

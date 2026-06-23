@@ -253,6 +253,80 @@ class PendingStudentSerializer(serializers.ModelSerializer):
         return None
 
 
+class ForgotPasswordSerializer(serializers.Serializer):
+    """Demande de réinitialisation — envoie un OTP à 6 chiffres par email."""
+    email = serializers.EmailField()
+
+    def save(self):
+        from datetime import timedelta
+        from django.utils import timezone
+        from .models import PasswordResetOTP
+        from .utils import generate_otp, send_password_reset_otp_email
+
+        email = self.validated_data['email']
+        try:
+            user = User.objects.get(email=email, is_active=True)
+        except User.DoesNotExist:
+            return  # réponse identique pour ne pas révéler si l'email existe
+
+        PasswordResetOTP.objects.filter(user=user).delete()
+        otp = generate_otp()
+        PasswordResetOTP.objects.create(
+            user=user,
+            otp=otp,
+            expires_at=timezone.now() + timedelta(minutes=10),
+        )
+        send_password_reset_otp_email(user, otp)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    """Réinitialisation effective — vérifie l'OTP et applique le nouveau mot de passe."""
+    email = serializers.EmailField()
+    otp = serializers.CharField(min_length=6, max_length=6)
+    new_password = serializers.CharField(write_only=True, min_length=8)
+    confirm_password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        from django.utils import timezone
+        from .models import PasswordResetOTP
+
+        if attrs['new_password'] != attrs['confirm_password']:
+            raise serializers.ValidationError({"confirm_password": "Les mots de passe ne correspondent pas."})
+
+        try:
+            user = User.objects.get(email=attrs['email'], is_active=True)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"email": "Compte introuvable."})
+
+        otp_record = PasswordResetOTP.objects.filter(
+            user=user, otp=attrs['otp'], is_used=False
+        ).first()
+
+        if not otp_record:
+            raise serializers.ValidationError({"otp": "Code OTP invalide."})
+
+        if timezone.now() > otp_record.expires_at:
+            raise serializers.ValidationError({"otp": "Ce code a expiré. Veuillez en demander un nouveau."})
+
+        attrs['_user'] = user
+        attrs['_otp_record'] = otp_record
+        return attrs
+
+    def save(self):
+        from .models import PasswordResetOTP
+        from .utils import send_password_reset_confirmation_email
+
+        user = self.validated_data['_user']
+        new_password = self.validated_data['new_password']
+
+        user.set_password(new_password)
+        user.must_change_password = False
+        user.save(update_fields=['password', 'must_change_password'])
+
+        PasswordResetOTP.objects.filter(user=user).delete()
+        send_password_reset_confirmation_email(user, new_password)
+
+
 class UserListSerializer(serializers.ModelSerializer):
     """Lecture seule — utilisée par les admins et modérateurs pour lister les utilisateurs."""
     student_profile = StudentProfileSerializer(read_only=True)
