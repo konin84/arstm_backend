@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if success %}Désabonnement confirmé{% else %}Lien invalide{% endif %} — ARSTM</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 520px;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .header {
+            background: linear-gradient(135deg, #0b3d62 0%, #1a5a8a 100%);
+            padding: 28px 30px;
+            text-align: center;
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 4px;
+            background: #f39c12;
+        }
+        .header img { height: 50px; display: block; margin: 0 auto; }
+        .body { padding: 40px 40px 32px; text-align: center; color: #2d3748; }
+        .icon { font-size: 52px; margin-bottom: 16px; }
+        h1 { font-size: 22px; color: #0b3d62; margin-bottom: 10px; }
+        p { font-size: 15px; color: #4a5568; line-height: 1.7; }
+        .footer {
+            background: #f7fafc;
+            border-top: 1px solid #edf2f7;
+            padding: 16px 40px;
+            text-align: center;
+            font-size: 13px;
+            color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <img src="{% load static %}{% static 'users/images/arstm_logo.jpeg' %}" alt="ARSTM">
+        </div>
+        <div class="body">
+            {% if success %}
+            <div class="icon">✅</div>
+            <h1>Désabonnement confirmé</h1>
+            <p>Vous avez été désabonné(e) de la newsletter de l'<strong>ARSTM</strong> avec succès.<br>
+               Vous ne recevrez plus nos actualités par email.</p>
+            {% else %}
+            <div class="icon">❌</div>
+            <h1>Lien invalide ou expiré</h1>
+            <p>Ce lien de désabonnement est invalide ou a expiré.<br>
+               Si vous souhaitez vous désabonner, veuillez utiliser le lien présent dans votre dernier email.</p>
+            {% endif %}
+        </div>
+        <div class="footer">ARSTM &mdash; Tous droits réservés &copy; {% now "Y" %}</div>
+    </div>
+</body>
+</html>
