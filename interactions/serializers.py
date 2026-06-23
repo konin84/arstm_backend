@@ -117,9 +117,12 @@ class NewsletterSubscriptionSerializer(serializers.ModelSerializer):
 
         existing_sub = NewsletterSubscription.objects.filter(lead__email=email).first()
         if existing_sub:
-            if not existing_sub.is_active:
-                existing_sub.is_active = True
-                existing_sub.save()
+            if existing_sub.is_active:
+                raise serializers.ValidationError(
+                    {'email': "Cet email est déjà abonné à la newsletter."}
+                )
+            existing_sub.is_active = True
+            existing_sub.save()
             send_newsletter_confirmation_email(email)
             return existing_sub
 
