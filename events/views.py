@@ -1,6 +1,7 @@
 from rest_framework import generics, status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from .models import Event, PromotionBanner, CompetitionAlertSubscription, Competition, NewsPost, NewsCategory
@@ -148,30 +149,42 @@ class NewsCategoryListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
 
 
+def _active_competitions_qs():
+    """Retourne les concours ouverts et non expirés (date du concours non dépassée)."""
+    today = timezone.now().date()
+    return Competition.objects.filter(
+        is_active=True
+    ).filter(
+        Q(competition_date__isnull=True) | Q(competition_date__gte=today)
+    )
+
+
 class CompetitionPublicListView(generics.ListAPIView):
-    """Endpoint public — liste les concours ouverts."""
+    """Endpoint public — liste les concours ouverts et non expirés."""
     serializer_class = CompetitionSerializer
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
-        return Competition.objects.filter(is_active=True)
+        return _active_competitions_qs()
 
 
 class CandidateCompetitionsView(generics.ListAPIView):
-    """Espace candidat — liste les concours actifs. Réservé aux utilisateurs authentifiés avec role=candidate."""
+    """Espace candidat — liste les concours actifs et non expirés. Réservé aux utilisateurs avec role=candidate."""
     serializer_class = CompetitionSerializer
     permission_classes = [IsCandidate]
 
     def get_queryset(self):
-        return Competition.objects.filter(is_active=True)
+        return _active_competitions_qs()
 
 
 class CompetitionPublicDetailView(generics.RetrieveAPIView):
-    """Endpoint public — détail d'un concours via son slug."""
-    queryset = Competition.objects.filter(is_active=True)
+    """Endpoint public — détail d'un concours via son slug (masqué si expiré)."""
     serializer_class = CompetitionSerializer
     lookup_field = 'slug'
     permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        return _active_competitions_qs()
 
 
 # ─── Admin manage views ───────────────────────────────────────────────────────
