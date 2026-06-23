@@ -3211,33 +3211,49 @@
           "name": "S'inscrire aux alertes concours",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
             "url": {
               "raw": "{{base_url}}/api/events/subscribe-competition-alert/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "events",
-                "subscribe-competition-alert",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "events", "subscribe-competition-alert", ""]
             },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"candidat@example.com\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            }
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "Public. Inscrit un email anonyme aux alertes concours (CompetitionAlertSubscription)."
+          }
+        },
+        {
+          "name": "Se désabonner des alertes concours",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/events/subscribe-competition-alert/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "events", "subscribe-competition-alert", ""]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"candidat@example.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "description": "• Candidat authentifié (Bearer token) : désactive receive_competition_notifications sur son compte — pas besoin de fournir l'email dans le body.\n• Anonyme / autre rôle : supprime l'entrée CompetitionAlertSubscription correspondant à l'email fourni dans le body.\nRetourne 204 en cas de succès, 404 si l'abonnement est introuvable."
+          }
+        },
+        {
+          "name": "Statut d'abonnement aux alertes concours",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": {
+              "raw": "{{base_url}}/api/events/competitions/alert-status/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "events", "competitions", "alert-status", ""]
+            },
+            "description": "Authentifié requis. Retourne {\"subscribed\": true/false}.\n• Candidat : reflète receive_competition_notifications du compte.\n• Autre rôle : indique si l'email est dans CompetitionAlertSubscription."
           }
         },
         {

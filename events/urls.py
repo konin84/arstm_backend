@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     EventActiveListView, EventDetailView,
     ActiveBannerListView, track_banner_click,
-    CompetitionAlertSubscribeView,
+    CompetitionAlertSubscribeView, CompetitionAlertStatusView,
     CompetitionPublicListView, CompetitionPublicDetailView, CandidateCompetitionsView,
     NewsPostListView, NewsPostDetailView, NewsCategoryListView,
     EventAdminListCreateView, EventAdminDetailView,
@@ -24,6 +24,7 @@ urlpatterns = [
 
     path('competitions/', CompetitionPublicListView.as_view(), name='competition_list'),
     path('competitions/mine/', CandidateCompetitionsView.as_view(), name='candidate_competitions'),
+    path('competitions/alert-status/', CompetitionAlertStatusView.as_view(), name='competition_alert_status'),
     path('competitions/<slug:slug>/', CompetitionPublicDetailView.as_view(), name='competition_detail'),
 
     path('news-categories/', NewsCategoryListView.as_view(), name='news_category_list'),

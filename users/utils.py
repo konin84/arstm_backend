@@ -192,7 +192,10 @@ def send_competition_launch_notifications(competition):
     from events.models import CompetitionAlertSubscription
     from .models import User
 
-    candidate_emails = set(User.objects.filter(role='candidate').values_list('email', flat=True))
+    candidate_emails = set(
+        User.objects.filter(role='candidate', receive_competition_notifications=True)
+        .values_list('email', flat=True)
+    )
     subscriber_emails = set(CompetitionAlertSubscription.objects.values_list('email', flat=True))
     all_emails = candidate_emails | subscriber_emails
 

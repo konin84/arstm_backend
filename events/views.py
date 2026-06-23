@@ -56,11 +56,52 @@ def track_banner_click(request, banner_id):
     return Response({'status': 'click tracked', 'current_clicks': banner.click_count}, status=status.HTTP_200_OK)
 
 
-class CompetitionAlertSubscribeView(generics.CreateAPIView):
-    """Endpoint public permettant aux candidats de s'abonner aux alertes de concours"""
-    queryset = CompetitionAlertSubscription.objects.all()
+class CompetitionAlertSubscribeView(generics.GenericAPIView):
+    """
+    POST  — S'abonner aux alertes concours (public, par email).
+    DELETE — Se désabonner :
+             • Candidat authentifié : désactive receive_competition_notifications.
+             • Autre / anonyme      : supprime l'entrée CompetitionAlertSubscription par email.
+    """
     serializer_class = CompetitionAlertSubscriptionSerializer
     permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def delete(self, request):
+        user = request.user
+        if user.is_authenticated and user.role == 'candidate':
+            user.receive_competition_notifications = False
+            user.save(update_fields=['receive_competition_notifications'])
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        email = request.data.get('email')
+        if not email:
+            return Response({'error': 'email requis'}, status=status.HTTP_400_BAD_REQUEST)
+        deleted, _ = CompetitionAlertSubscription.objects.filter(email=email).delete()
+        if deleted:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({'error': 'Abonnement introuvable'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class CompetitionAlertStatusView(generics.GenericAPIView):
+    """
+    GET — Retourne le statut d'abonnement aux alertes concours pour l'utilisateur connecté.
+          • Candidat : indique si receive_competition_notifications est actif.
+          • Autre rôle : indique si l'email est dans CompetitionAlertSubscription.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        if user.role == 'candidate':
+            return Response({'subscribed': user.receive_competition_notifications})
+        subscribed = CompetitionAlertSubscription.objects.filter(email=user.email).exists()
+        return Response({'subscribed': subscribed})
 
 
 class NewsPostListView(generics.ListAPIView):

@@ -69,6 +69,10 @@ class User(AbstractUser):
         default=False,
         help_text="Oblige l'utilisateur à changer son mot de passe à la prochaine connexion"
     )
+    receive_competition_notifications = models.BooleanField(
+        default=True,
+        help_text="L'utilisateur reçoit les emails lors de l'ouverture d'un nouveau concours"
+    )
 
     def save(self, *args, **kwargs):
         if not self.username:
