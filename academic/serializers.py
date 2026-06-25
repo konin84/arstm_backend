@@ -40,7 +40,7 @@ class ProgramListSerializer(serializers.ModelSerializer):
         model = Program
         fields = [
             'id', 'title', 'slug', 'program_type',
-            'regime', 'duration', 'domain_name', 'school_name',
+            'regime', 'duration', 'domain_name', 'school_name', 'is_active',
         ]
 
 

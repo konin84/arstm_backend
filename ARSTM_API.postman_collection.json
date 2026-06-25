@@ -330,6 +330,76 @@
               }
             }
           }
+        },
+        {
+          "name": "Mot de passe oublié — demander un OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/forgot-password/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "forgot-password",
+                ""
+              ]
+            },
+            "description": "Envoie un code OTP à 6 chiffres valable 10 minutes. Réponse identique que l'email existe ou non (protection contre l'énumération)."
+          },
+          "response": []
+        },
+        {
+          "name": "Réinitialiser le mot de passe (avec OTP)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"otp\": \"482913\",\n  \"new_password\": \"NouveauMotDePasse1!\",\n  \"confirm_password\": \"NouveauMotDePasse1!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/reset-password/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                "reset-password",
+                ""
+              ]
+            },
+            "description": "Vérifie l'OTP reçu par email et applique le nouveau mot de passe. Retourne 400 si OTP invalide ou expiré. Un email de confirmation est envoyé après succès."
+          },
+          "response": []
         }
       ]
     },
@@ -934,14 +1004,35 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/users/test-email/", "host": ["{{base_url}}"], "path": ["api", "users", "test-email", ""] },
+                "url": {
+                  "raw": "{{base_url}}/api/users/test-email/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users",
+                    "test-email",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"recipient\": \"destinataire@example.com\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "Réservé aux admins. Envoie un email de test synchrone. Priorité : `recipient` (corps) → `TEST_EMAIL_RECIPIENT` (env) → email de l'admin connecté. Retourne 200 avec confirmation ou 500 avec le message d'erreur exact."
               }
@@ -2517,8 +2608,24 @@
                   "name": "Liste de tous les types de formation",
                   "request": {
                     "method": "GET",
-                    "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                    "url": { "raw": "{{base_url}}/api/academic/program-types/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", ""] },
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/program-types/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "program-types",
+                        ""
+                      ]
+                    },
                     "description": "Avec token admin/modérateur : retourne tous les types y compris inactifs. Sans token : actifs seulement."
                   }
                 },
@@ -2527,14 +2634,35 @@
                   "request": {
                     "method": "POST",
                     "header": [
-                      { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                      { "key": "Content-Type", "value": "application/json" }
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
                     ],
-                    "url": { "raw": "{{base_url}}/api/academic/program-types/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", ""] },
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/program-types/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "program-types",
+                        ""
+                      ]
+                    },
                     "body": {
                       "mode": "raw",
                       "raw": "{\n  \"code\": \"initiale\",\n  \"label\": \"Formation Initiale\",\n  \"is_active\": true,\n  \"order\": 1\n}",
-                      "options": { "raw": { "language": "json" } }
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "description": "`code` doit être unique. `order` contrôle l'ordre d'affichage."
                   }
@@ -2544,7 +2672,19 @@
                   "request": {
                     "method": "GET",
                     "header": [],
-                    "url": { "raw": "{{base_url}}/api/academic/program-types/initiale/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", "initiale", ""] },
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/program-types/initiale/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "program-types",
+                        "initiale",
+                        ""
+                      ]
+                    },
                     "description": "Remplacer `initiale` par le code du type."
                   }
                 },
@@ -2553,14 +2693,36 @@
                   "request": {
                     "method": "PATCH",
                     "header": [
-                      { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                      { "key": "Content-Type", "value": "application/json" }
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
                     ],
-                    "url": { "raw": "{{base_url}}/api/academic/program-types/initiale/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", "initiale", ""] },
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/program-types/initiale/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "program-types",
+                        "initiale",
+                        ""
+                      ]
+                    },
                     "body": {
                       "mode": "raw",
                       "raw": "{\n  \"code\": \"initiale\",\n  \"label\": \"Formation Initiale Diplômante\",\n  \"is_active\": true,\n  \"order\": 1\n}",
-                      "options": { "raw": { "language": "json" } }
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "description": "Remplacer `initiale` (dans l'URL) par le code actuel du type. Champs modifiables : `code`, `label`, `is_active`, `order`. Si `code` est modifié, mettre à jour l'URL en conséquence."
                   }
@@ -2569,8 +2731,25 @@
                   "name": "Supprimer un type de formation",
                   "request": {
                     "method": "DELETE",
-                    "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                    "url": { "raw": "{{base_url}}/api/academic/program-types/initiale/", "host": ["{{base_url}}"], "path": ["api", "academic", "program-types", "initiale", ""] },
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/program-types/initiale/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "program-types",
+                        "initiale",
+                        ""
+                      ]
+                    },
                     "description": "Attention : protégé par PROTECT si des programmes y sont liés."
                   }
                 }
@@ -2584,8 +2763,24 @@
                   "name": "Liste de tous les régimes",
                   "request": {
                     "method": "GET",
-                    "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                    "url": { "raw": "{{base_url}}/api/academic/regimes/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", ""] },
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/regimes/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "regimes",
+                        ""
+                      ]
+                    },
                     "description": "Avec token admin/modérateur : retourne tous les régimes y compris inactifs. Sans token : actifs seulement."
                   }
                 },
@@ -2594,14 +2789,35 @@
                   "request": {
                     "method": "POST",
                     "header": [
-                      { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                      { "key": "Content-Type", "value": "application/json" }
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
                     ],
-                    "url": { "raw": "{{base_url}}/api/academic/regimes/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", ""] },
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/regimes/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "regimes",
+                        ""
+                      ]
+                    },
                     "body": {
                       "mode": "raw",
                       "raw": "{\n  \"code\": \"navigant\",\n  \"label\": \"Régime Navigant\",\n  \"is_active\": true,\n  \"order\": 1\n}",
-                      "options": { "raw": { "language": "json" } }
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "description": "`code` doit être unique. `order` contrôle l'ordre d'affichage."
                   }
@@ -2611,7 +2827,19 @@
                   "request": {
                     "method": "GET",
                     "header": [],
-                    "url": { "raw": "{{base_url}}/api/academic/regimes/navigant/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", "navigant", ""] },
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/regimes/navigant/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "regimes",
+                        "navigant",
+                        ""
+                      ]
+                    },
                     "description": "Remplacer `navigant` par le code du régime."
                   }
                 },
@@ -2620,14 +2848,36 @@
                   "request": {
                     "method": "PATCH",
                     "header": [
-                      { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                      { "key": "Content-Type", "value": "application/json" }
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
                     ],
-                    "url": { "raw": "{{base_url}}/api/academic/regimes/navigant/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", "navigant", ""] },
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/regimes/navigant/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "regimes",
+                        "navigant",
+                        ""
+                      ]
+                    },
                     "body": {
                       "mode": "raw",
                       "raw": "{\n  \"code\": \"navigant\",\n  \"label\": \"Régime Navigant Long Cours\",\n  \"is_active\": true,\n  \"order\": 1\n}",
-                      "options": { "raw": { "language": "json" } }
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
                     },
                     "description": "Remplacer `navigant` (dans l'URL) par le code actuel du régime. Champs modifiables : `code`, `label`, `is_active`, `order`. Si `code` est modifié, mettre à jour l'URL en conséquence."
                   }
@@ -2636,8 +2886,25 @@
                   "name": "Supprimer un régime",
                   "request": {
                     "method": "DELETE",
-                    "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                    "url": { "raw": "{{base_url}}/api/academic/regimes/navigant/", "host": ["{{base_url}}"], "path": ["api", "academic", "regimes", "navigant", ""] },
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "Bearer {{access_token}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{base_url}}/api/academic/regimes/navigant/",
+                      "host": [
+                        "{{base_url}}"
+                      ],
+                      "path": [
+                        "api",
+                        "academic",
+                        "regimes",
+                        "navigant",
+                        ""
+                      ]
+                    },
                     "description": "Attention : protégé par PROTECT si des programmes y sont liés."
                   }
                 }
@@ -2827,12 +3094,23 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/api/interactions/admissions/me/",
-              "host": ["{{base_url}}"],
-              "path": ["api", "interactions", "admissions", "me", ""]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "interactions",
+                "admissions",
+                "me",
+                ""
+              ]
             },
             "description": "Authentifié requis. Retourne toutes les demandes d'admission dont l'email du lead correspond à l'email du compte connecté. Champs retournés : id, lead (prénom, nom, email, statut…), program, academic_level, birth_date."
           }
@@ -3043,14 +3321,35 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/interactions/jobs/", "host": ["{{base_url}}"], "path": ["api", "interactions", "jobs", ""] },
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/jobs/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "jobs",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"title\": \"Officier de Pont — CMA CGM\",\n  \"offer_type\": \"emploi\",\n  \"organization\": \"CMA CGM Côte d'Ivoire\",\n  \"location\": \"Abidjan\",\n  \"description\": \"Nous recherchons un officier de pont expérimenté.\",\n  \"requirements\": \"Licence en navigation — 2 ans d'expérience minimum\",\n  \"deadline\": \"2026-07-31\",\n  \"is_active\": true\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "offer_type : emploi | stage. Slug auto-généré depuis title."
               }
@@ -3060,19 +3359,139 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/interactions/jobs/officier-de-pont/", "host": ["{{base_url}}"], "path": ["api", "interactions", "jobs", "officier-de-pont", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"is_active\": false\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/jobs/officier-de-pont/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "jobs",
+                    "officier-de-pont",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_active\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer une offre",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/interactions/jobs/officier-de-pont/", "host": ["{{base_url}}"], "path": ["api", "interactions", "jobs", "officier-de-pont", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/jobs/officier-de-pont/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "jobs",
+                    "officier-de-pont",
+                    ""
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Paramètres du site",
+          "description": "Logo et liens vers les réseaux sociaux. Lecture publique, mise à jour réservée aux admins et modérateurs.",
+          "item": [
+            {
+              "name": "Lire les paramètres du site (public)",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/site-settings/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "interactions", "site-settings", ""]
+                },
+                "description": "Public. Retourne le logo et tous les liens réseaux sociaux configurés."
+              }
+            },
+            {
+              "name": "Mettre à jour les paramètres du site (admin)",
+              "request": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/site-settings/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "interactions", "site-settings", ""]
+                },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "logo",
+                      "type": "file",
+                      "description": "Logo de l'école (PNG/SVG recommandé)"
+                    },
+                    {
+                      "key": "facebook",
+                      "value": "https://facebook.com/arstm.ci",
+                      "type": "text"
+                    },
+                    {
+                      "key": "twitter",
+                      "value": "https://twitter.com/arstm_ci",
+                      "type": "text"
+                    },
+                    {
+                      "key": "linkedin",
+                      "value": "https://linkedin.com/company/arstm",
+                      "type": "text"
+                    },
+                    {
+                      "key": "instagram",
+                      "value": "https://instagram.com/arstm.ci",
+                      "type": "text"
+                    },
+                    {
+                      "key": "youtube",
+                      "value": "https://youtube.com/@arstm",
+                      "type": "text"
+                    },
+                    {
+                      "key": "whatsapp",
+                      "value": "+22527000000",
+                      "type": "text"
+                    }
+                  ]
+                },
+                "description": "Réservé aux admins et modérateurs. Utilise multipart/form-data pour permettre l'upload du logo. Tous les champs sont optionnels — seuls ceux envoyés seront mis à jour."
               }
             }
           ]
@@ -3085,16 +3504,33 @@
               "name": "S'abonner à la newsletter",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
                 "url": {
                   "raw": "{{base_url}}/api/interactions/newsletter/subscribe/",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "interactions", "newsletter", "subscribe", ""]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "newsletter",
+                    "subscribe",
+                    ""
+                  ]
                 },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"email\": \"lecteur@example.com\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "Public. Crée un Lead + NewsletterSubscription et envoie un email de confirmation. Si l'email est déjà abonné mais inactif, le réactive et renvoie le mail de confirmation."
               }
@@ -3103,16 +3539,33 @@
               "name": "Se désabonner de la newsletter (par email)",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
                 "url": {
                   "raw": "{{base_url}}/api/interactions/newsletter/unsubscribe/",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "interactions", "newsletter", "unsubscribe", ""]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "newsletter",
+                    "unsubscribe",
+                    ""
+                  ]
                 },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"email\": \"lecteur@example.com\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "Public. Passe is_active à false sur l'abonnement et envoie un email de confirmation de désabonnement."
               }
@@ -3124,9 +3577,20 @@
                 "header": [],
                 "url": {
                   "raw": "{{base_url}}/newsletter/unsubscribe?token={{unsubscribe_token}}",
-                  "host": ["{{base_url}}"],
-                  "path": ["newsletter", "unsubscribe"],
-                  "query": [{ "key": "token", "value": "{{unsubscribe_token}}", "description": "Token signé inclus dans l'email de confirmation de newsletter" }]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "newsletter",
+                    "unsubscribe"
+                  ],
+                  "query": [
+                    {
+                      "key": "token",
+                      "value": "{{unsubscribe_token}}",
+                      "description": "Token signé inclus dans l'email de confirmation de newsletter"
+                    }
+                  ]
                 },
                 "description": "Lien cliquable depuis l'email de confirmation newsletter. Vérifie le token signé, désactive l'abonnement et envoie l'email de confirmation de désabonnement. Retourne 400 si le token est invalide ou expiré."
               }
@@ -3136,18 +3600,36 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
                 "url": {
                   "raw": "{{base_url}}/api/interactions/newsletter/broadcast/",
-                  "host": ["{{base_url}}"],
-                  "path": ["api", "interactions", "newsletter", "broadcast", ""]
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "newsletter",
+                    "broadcast",
+                    ""
+                  ]
                 },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"subject\": \"Actualités ARSTM — Juin 2026\",\n  \"message\": \"<p>Bonjour,</p><p>Voici les dernières actualités de l'ARSTM...</p>\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "Réservé aux admins et modérateurs. Envoie le message HTML à tous les abonnés actifs (is_active=true). Retourne le nombre de destinataires ciblés."
               }
@@ -3162,8 +3644,24 @@
               "name": "Liste de tous les leads",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/interactions/leads/", "host": ["{{base_url}}"], "path": ["api", "interactions", "leads", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/leads/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "leads",
+                    ""
+                  ]
+                },
                 "description": "Tous les leads (contact, admission, stage). Accessible aux admins et modérateurs."
               }
             },
@@ -3172,11 +3670,37 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/interactions/leads/1/", "host": ["{{base_url}}"], "path": ["api", "interactions", "leads", "1", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"status\": \"contacted\"\n}", "options": { "raw": { "language": "json" } } },
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/leads/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "leads",
+                    "1",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"contacted\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
                 "description": "status : new | contacted | converted | closed"
               }
             },
@@ -3184,32 +3708,100 @@
               "name": "Supprimer un lead",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/interactions/leads/1/", "host": ["{{base_url}}"], "path": ["api", "interactions", "leads", "1", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/leads/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "leads",
+                    "1",
+                    ""
+                  ]
+                }
               }
             },
             {
               "name": "Liste des demandes de contact",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/interactions/manage/contacts/", "host": ["{{base_url}}"], "path": ["api", "interactions", "manage", "contacts", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/manage/contacts/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "manage",
+                    "contacts",
+                    ""
+                  ]
+                }
               }
             },
             {
               "name": "Liste des demandes d'admission",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/interactions/manage/admissions/", "host": ["{{base_url}}"], "path": ["api", "interactions", "manage", "admissions", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/manage/admissions/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "manage",
+                    "admissions",
+                    ""
+                  ]
+                }
               }
             },
             {
               "name": "Liste des candidatures de stage/emploi",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/interactions/manage/internships/", "host": ["{{base_url}}"], "path": ["api", "interactions", "manage", "internships", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/manage/internships/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "interactions",
+                    "manage",
+                    "internships",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -3303,16 +3895,32 @@
           "name": "S'abonner / se réabonner aux alertes concours",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/events/subscribe-competition-alert/",
-              "host": ["{{base_url}}"],
-              "path": ["api", "events", "subscribe-competition-alert", ""]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "subscribe-competition-alert",
+                ""
+              ]
             },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"candidat@example.com\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "description": "• Candidat authentifié (Bearer token) : réactive receive_competition_notifications. Retourne 200.\n• Anonyme / autre rôle : crée une entrée CompetitionAlertSubscription pour l'email fourni. Retourne 201.\nSi le candidat est déjà abonné, retourne 200 avec un message informatif."
           }
@@ -3321,16 +3929,32 @@
           "name": "Se désabonner des alertes concours",
           "request": {
             "method": "DELETE",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/events/subscribe-competition-alert/",
-              "host": ["{{base_url}}"],
-              "path": ["api", "events", "subscribe-competition-alert", ""]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "subscribe-competition-alert",
+                ""
+              ]
             },
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"candidat@example.com\"\n}",
-              "options": { "raw": { "language": "json" } }
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
             },
             "description": "• Candidat authentifié (Bearer token) : désactive receive_competition_notifications sur son compte — pas besoin de fournir l'email dans le body.\n• Anonyme / autre rôle : supprime l'entrée CompetitionAlertSubscription correspondant à l'email fourni dans le body.\nRetourne 204 en cas de succès, 404 si l'abonnement est introuvable."
           }
@@ -3339,11 +3963,24 @@
           "name": "Statut d'abonnement aux alertes concours",
           "request": {
             "method": "GET",
-            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
             "url": {
               "raw": "{{base_url}}/api/events/competitions/alert-status/",
-              "host": ["{{base_url}}"],
-              "path": ["api", "events", "competitions", "alert-status", ""]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "competitions",
+                "alert-status",
+                ""
+              ]
             },
             "description": "Authentifié requis. Retourne {\"subscribed\": true/false}.\n• Candidat : reflète receive_competition_notifications du compte.\n• Autre rôle : indique si l'email est dans CompetitionAlertSubscription."
           }
@@ -3355,8 +3992,15 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/events/competitions/",
-              "host": ["{{base_url}}"],
-              "path": ["api", "events", "competitions", ""]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "competitions",
+                ""
+              ]
             },
             "description": "Liste tous les concours avec is_active=true. Retourne title, slug, description, application_deadline, competition_date."
           }
@@ -3366,12 +4010,23 @@
           "request": {
             "method": "GET",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{access_token}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
             ],
             "url": {
               "raw": "{{base_url}}/api/events/competitions/mine/",
-              "host": ["{{base_url}}"],
-              "path": ["api", "events", "competitions", "mine", ""]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "competitions",
+                "mine",
+                ""
+              ]
             },
             "description": "Réservé aux utilisateurs authentifiés avec role=candidate. Retourne tous les concours actifs qui leur sont destinés. Retourne 403 pour tout autre rôle."
           }
@@ -3383,8 +4038,16 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/events/competitions/concours-entree-2026/",
-              "host": ["{{base_url}}"],
-              "path": ["api", "events", "competitions", "concours-entree-2026", ""]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "events",
+                "competitions",
+                "concours-entree-2026",
+                ""
+              ]
             },
             "description": "Remplacer `concours-entree-2026` par le slug du concours."
           }
@@ -3482,8 +4145,25 @@
               "name": "Liste de tous les événements",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/events/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "events", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "events",
+                    ""
+                  ]
+                }
               }
             },
             {
@@ -3491,14 +4171,36 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/events/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "events", ""] },
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/events/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "events",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"title\": \"Journée Maritime Mondiale 2026\",\n  \"description\": \"Célébration annuelle de la Journée Maritime Mondiale.\",\n  \"start_date\": \"2026-09-25T09:00:00Z\",\n  \"end_date\": \"2026-09-25T17:00:00Z\",\n  \"location\": \"ARSTM — Abidjan\",\n  \"is_public\": true\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 }
               }
             },
@@ -3507,19 +4209,64 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/events/journee-maritime-mondiale-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "events", "journee-maritime-mondiale-2026", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"is_public\": false\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/events/journee-maritime-mondiale-2026/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "events",
+                    "journee-maritime-mondiale-2026",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_public\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer un événement",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/events/journee-maritime-mondiale-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "events", "journee-maritime-mondiale-2026", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/events/journee-maritime-mondiale-2026/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "events",
+                    "journee-maritime-mondiale-2026",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -3532,25 +4279,83 @@
               "name": "Liste de toutes les bannières",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/banners/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/banners/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "banners",
+                    ""
+                  ]
+                }
               }
             },
             {
               "name": "Créer une bannière",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/banners/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/banners/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "banners",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "title", "value": "Campagne Rentrée 2026", "type": "text" },
-                    { "key": "target_url", "value": "https://arstm.ci/rentrée", "type": "text" },
-                    { "key": "start_display", "value": "2026-08-01T00:00:00Z", "type": "text" },
-                    { "key": "end_display", "value": "2026-09-30T23:59:59Z", "type": "text" },
-                    { "key": "is_active", "value": "true", "type": "text" },
-                    { "key": "image", "type": "file", "description": "Visuel de la bannière" }
+                    {
+                      "key": "title",
+                      "value": "Campagne Rentrée 2026",
+                      "type": "text"
+                    },
+                    {
+                      "key": "target_url",
+                      "value": "https://arstm.ci/rentrée",
+                      "type": "text"
+                    },
+                    {
+                      "key": "start_display",
+                      "value": "2026-08-01T00:00:00Z",
+                      "type": "text"
+                    },
+                    {
+                      "key": "end_display",
+                      "value": "2026-09-30T23:59:59Z",
+                      "type": "text"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "image",
+                      "type": "file",
+                      "description": "Visuel de la bannière"
+                    }
                   ]
                 }
               }
@@ -3560,19 +4365,64 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/banners/1/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", "1", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"is_active\": false\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/banners/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "banners",
+                    "1",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_active\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer une bannière",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/banners/1/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "banners", "1", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/banners/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "banners",
+                    "1",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -3585,8 +4435,25 @@
               "name": "Liste de tous les concours",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/competitions/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/competitions/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "competitions",
+                    ""
+                  ]
+                },
                 "description": "Retourne tous les concours (actifs et brouillons)."
               }
             },
@@ -3595,14 +4462,36 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/competitions/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", ""] },
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/competitions/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "competitions",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"title\": \"Concours d'entrée ARSTM 2026\",\n  \"description\": \"Concours d'admission aux formations initiales de l'ARSTM pour l'année académique 2026-2027.\",\n  \"application_deadline\": \"2026-08-31\",\n  \"competition_date\": \"2026-09-15\",\n  \"is_active\": false\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "Créer avec is_active=false pour travailler en brouillon sans déclencher les notifications. Slug auto-généré depuis title."
               }
@@ -3612,14 +4501,37 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", "concours-entree-arstm-2026", ""] },
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "competitions",
+                    "concours-entree-arstm-2026",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"is_active\": true\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "Passer is_active de false à true déclenche l'envoi automatique d'emails à tous les utilisateurs avec role=candidate ET tous les abonnés aux alertes concours (CompetitionAlertSubscription). Ce déclenchement est unique — modifier à nouveau n'envoie pas de doublon."
               }
@@ -3629,14 +4541,37 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", "concours-entree-arstm-2026", ""] },
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "competitions",
+                    "concours-entree-arstm-2026",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"application_deadline\": \"2026-09-05\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "Mise à jour partielle. Si is_active est déjà true, aucune notification n'est renvoyée."
               }
@@ -3645,8 +4580,26 @@
               "name": "Supprimer un concours",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "competitions", "concours-entree-arstm-2026", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/competitions/concours-entree-arstm-2026/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "competitions",
+                    "concours-entree-arstm-2026",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -3659,8 +4612,25 @@
               "name": "Liste de toutes les actualités",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/news/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/news/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "news",
+                    ""
+                  ]
+                }
               }
             },
             {
@@ -3668,14 +4638,36 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/news/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news", ""] },
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/news/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "news",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "raw",
                   "raw": "{\n  \"title\": \"Journée sécurité maritime\",\n  \"category\": 1,\n  \"content\": \"L'ARSTM organise une journée dédiée à la sécurité maritime...\",\n  \"is_published\": true,\n  \"published_at\": \"2026-06-18T10:00:00Z\"\n}",
-                  "options": { "raw": { "language": "json" } }
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
                 },
                 "description": "category = ID de la NewsCategory."
               }
@@ -3685,19 +4677,64 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/news/journee-securite-maritime/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news", "journee-securite-maritime", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"is_published\": false\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/news/journee-securite-maritime/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "news",
+                    "journee-securite-maritime",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"is_published\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer une actualité",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/news/journee-securite-maritime/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news", "journee-securite-maritime", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/news/journee-securite-maritime/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "news",
+                    "journee-securite-maritime",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -3710,8 +4747,25 @@
               "name": "Liste de toutes les catégories",
               "request": {
                 "method": "GET",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/news-categories/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news-categories", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/news-categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "news-categories",
+                    ""
+                  ]
+                }
               }
             },
             {
@@ -3719,11 +4773,37 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/news-categories/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news-categories", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"code\": \"actualite\",\n  \"label\": \"Actualité institutionnelle\",\n  \"is_active\": true,\n  \"order\": 1\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/news-categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "news-categories",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"code\": \"actualite\",\n  \"label\": \"Actualité institutionnelle\",\n  \"is_active\": true,\n  \"order\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
@@ -3731,19 +4811,64 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/events/manage/news-categories/actualite/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news-categories", "actualite", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"label\": \"Actualité ARSTM\"\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/news-categories/actualite/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "news-categories",
+                    "actualite",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"label\": \"Actualité ARSTM\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer une catégorie",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/events/manage/news-categories/actualite/", "host": ["{{base_url}}"], "path": ["api", "events", "manage", "news-categories", "actualite", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/events/manage/news-categories/actualite/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "events",
+                    "manage",
+                    "news-categories",
+                    "actualite",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -3861,7 +4986,18 @@
               "request": {
                 "method": "GET",
                 "header": [],
-                "url": { "raw": "{{base_url}}/api/library/categories/", "host": ["{{base_url}}"], "path": ["api", "library", "categories", ""] }
+                "url": {
+                  "raw": "{{base_url}}/api/library/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "categories",
+                    ""
+                  ]
+                }
               }
             },
             {
@@ -3869,11 +5005,36 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/library/categories/", "host": ["{{base_url}}"], "path": ["api", "library", "categories", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Sûreté Maritime\"\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/library/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "categories",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Sûreté Maritime\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
@@ -3881,19 +5042,62 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/library/categories/surete-maritime/", "host": ["{{base_url}}"], "path": ["api", "library", "categories", "surete-maritime", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Sûreté & Sécurité Maritime\"\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/library/categories/surete-maritime/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "categories",
+                    "surete-maritime",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Sûreté & Sécurité Maritime\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer une catégorie",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/library/categories/surete-maritime/", "host": ["{{base_url}}"], "path": ["api", "library", "categories", "surete-maritime", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/library/categories/surete-maritime/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "categories",
+                    "surete-maritime",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -3906,16 +5110,53 @@
               "name": "Publier un article de recherche",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/library/papers/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/library/papers/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "papers",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "title", "value": "Analyse des risques de piraterie dans le Golfe de Guinée", "type": "text" },
-                    { "key": "domain", "value": "1", "type": "text", "description": "ID du domaine" },
-                    { "key": "authors", "value": "Dr. Kouassi N'Dri, Prof. Diallo", "type": "text" },
-                    { "key": "abstract", "value": "Cette étude analyse les tendances de la piraterie...", "type": "text" },
-                    { "key": "pdf_file", "type": "file", "description": "Fichier PDF de l'article" }
+                    {
+                      "key": "title",
+                      "value": "Analyse des risques de piraterie dans le Golfe de Guinée",
+                      "type": "text"
+                    },
+                    {
+                      "key": "domain",
+                      "value": "1",
+                      "type": "text",
+                      "description": "ID du domaine"
+                    },
+                    {
+                      "key": "authors",
+                      "value": "Dr. Kouassi N'Dri, Prof. Diallo",
+                      "type": "text"
+                    },
+                    {
+                      "key": "abstract",
+                      "value": "Cette étude analyse les tendances de la piraterie...",
+                      "type": "text"
+                    },
+                    {
+                      "key": "pdf_file",
+                      "type": "file",
+                      "description": "Fichier PDF de l'article"
+                    }
                   ]
                 }
               }
@@ -3924,11 +5165,34 @@
               "name": "Modifier un article (PATCH)",
               "request": {
                 "method": "PATCH",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/library/papers/securite-maritime-golfe-de-guinee/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", "securite-maritime-golfe-de-guinee", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/library/papers/securite-maritime-golfe-de-guinee/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "papers",
+                    "securite-maritime-golfe-de-guinee",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "formdata",
-                  "formdata": [{ "key": "abstract", "value": "Résumé mis à jour.", "type": "text" }]
+                  "formdata": [
+                    {
+                      "key": "abstract",
+                      "value": "Résumé mis à jour.",
+                      "type": "text"
+                    }
+                  ]
                 }
               }
             },
@@ -3936,8 +5200,25 @@
               "name": "Supprimer un article",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/library/papers/securite-maritime-golfe-de-guinee/", "host": ["{{base_url}}"], "path": ["api", "library", "papers", "securite-maritime-golfe-de-guinee", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/library/papers/securite-maritime-golfe-de-guinee/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "papers",
+                    "securite-maritime-golfe-de-guinee",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -3950,15 +5231,48 @@
               "name": "Créer un article de veille",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/library/watch/", "host": ["{{base_url}}"], "path": ["api", "library", "watch", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/library/watch/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "watch",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "title", "value": "Revue maritime T1 2026", "type": "text" },
-                    { "key": "category", "value": "1", "type": "text", "description": "ID de la catégorie" },
-                    { "key": "content", "value": "Contenu de la revue...", "type": "text" },
-                    { "key": "featured_image", "type": "file", "description": "Image d'illustration" }
+                    {
+                      "key": "title",
+                      "value": "Revue maritime T1 2026",
+                      "type": "text"
+                    },
+                    {
+                      "key": "category",
+                      "value": "1",
+                      "type": "text",
+                      "description": "ID de la catégorie"
+                    },
+                    {
+                      "key": "content",
+                      "value": "Contenu de la revue...",
+                      "type": "text"
+                    },
+                    {
+                      "key": "featured_image",
+                      "type": "file",
+                      "description": "Image d'illustration"
+                    }
                   ]
                 }
               }
@@ -3967,11 +5281,34 @@
               "name": "Modifier un article de veille (PATCH)",
               "request": {
                 "method": "PATCH",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/library/watch/revue-maritime-2024-q1/", "host": ["{{base_url}}"], "path": ["api", "library", "watch", "revue-maritime-2024-q1", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/library/watch/revue-maritime-2024-q1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "watch",
+                    "revue-maritime-2024-q1",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "formdata",
-                  "formdata": [{ "key": "content", "value": "Contenu mis à jour.", "type": "text" }]
+                  "formdata": [
+                    {
+                      "key": "content",
+                      "value": "Contenu mis à jour.",
+                      "type": "text"
+                    }
+                  ]
                 }
               }
             },
@@ -3979,8 +5316,25 @@
               "name": "Supprimer un article de veille",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/library/watch/revue-maritime-2024-q1/", "host": ["{{base_url}}"], "path": ["api", "library", "watch", "revue-maritime-2024-q1", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/library/watch/revue-maritime-2024-q1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "library",
+                    "watch",
+                    "revue-maritime-2024-q1",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -4055,17 +5409,59 @@
               "name": "Créer un produit",
               "request": {
                 "method": "POST",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/shop/products/", "host": ["{{base_url}}"], "path": ["api", "shop", "products", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/shop/products/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "shop",
+                    "products",
+                    ""
+                  ]
+                },
                 "body": {
                   "mode": "formdata",
                   "formdata": [
-                    { "key": "title", "value": "Étude sectorielle — Transport maritime 2026", "type": "text" },
-                    { "key": "product_type", "value": "study", "type": "text", "description": "publication | study | formation_continue" },
-                    { "key": "description", "value": "Analyse complète du secteur du transport maritime en Afrique de l'Ouest.", "type": "text" },
-                    { "key": "price", "value": "25000", "type": "text", "description": "Prix en FCFA" },
-                    { "key": "is_active", "value": "true", "type": "text" },
-                    { "key": "file_attachment", "type": "file", "description": "Fichier numérique (PDF, optionnel)" }
+                    {
+                      "key": "title",
+                      "value": "Étude sectorielle — Transport maritime 2026",
+                      "type": "text"
+                    },
+                    {
+                      "key": "product_type",
+                      "value": "study",
+                      "type": "text",
+                      "description": "publication | study | formation_continue"
+                    },
+                    {
+                      "key": "description",
+                      "value": "Analyse complète du secteur du transport maritime en Afrique de l'Ouest.",
+                      "type": "text"
+                    },
+                    {
+                      "key": "price",
+                      "value": "25000",
+                      "type": "text",
+                      "description": "Prix en FCFA"
+                    },
+                    {
+                      "key": "is_active",
+                      "value": "true",
+                      "type": "text"
+                    },
+                    {
+                      "key": "file_attachment",
+                      "type": "file",
+                      "description": "Fichier numérique (PDF, optionnel)"
+                    }
                   ]
                 }
               }
@@ -4075,19 +5471,62 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/shop/products/etude-sectorielle-transport-maritime-2026/", "host": ["{{base_url}}"], "path": ["api", "shop", "products", "etude-sectorielle-transport-maritime-2026", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"price\": 20000,\n  \"is_active\": false\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/shop/products/etude-sectorielle-transport-maritime-2026/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "shop",
+                    "products",
+                    "etude-sectorielle-transport-maritime-2026",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"price\": 20000,\n  \"is_active\": false\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer un produit",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/shop/products/etude-sectorielle-transport-maritime-2026/", "host": ["{{base_url}}"], "path": ["api", "shop", "products", "etude-sectorielle-transport-maritime-2026", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/shop/products/etude-sectorielle-transport-maritime-2026/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "shop",
+                    "products",
+                    "etude-sectorielle-transport-maritime-2026",
+                    ""
+                  ]
+                }
               }
             }
           ]
@@ -4288,11 +5727,36 @@
               "request": {
                 "method": "POST",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/forum/categories/", "host": ["{{base_url}}"], "path": ["api", "forum", "categories", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"name\": \"Préparation aux concours\",\n  \"description\": \"Questions et conseils pour les candidats aux concours ARSTM.\"\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/forum/categories/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "forum",
+                    "categories",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Préparation aux concours\",\n  \"description\": \"Questions et conseils pour les candidats aux concours ARSTM.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
@@ -4300,27 +5764,87 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/forum/categories/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "categories", "1", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"description\": \"Entraide pour les candidats aux concours d'entrée ARSTM.\"\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/forum/categories/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "forum",
+                    "categories",
+                    "1",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Entraide pour les candidats aux concours d'entrée ARSTM.\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer une catégorie du forum",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/forum/categories/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "categories", "1", ""] }
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/forum/categories/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "forum",
+                    "categories",
+                    "1",
+                    ""
+                  ]
+                }
               }
             },
             {
               "name": "Supprimer un sujet (modération)",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/forum/topics/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "topics", "1", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/forum/topics/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "forum",
+                    "topics",
+                    "1",
+                    ""
+                  ]
+                },
                 "description": "Supprime un sujet et tous ses messages. Remplacer 1 par l'ID du sujet."
               }
             },
@@ -4329,19 +5853,62 @@
               "request": {
                 "method": "PATCH",
                 "header": [
-                  { "key": "Authorization", "value": "Bearer {{access_token}}" },
-                  { "key": "Content-Type", "value": "application/json" }
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
                 ],
-                "url": { "raw": "{{base_url}}/api/forum/topics/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "topics", "1", ""] },
-                "body": { "mode": "raw", "raw": "{\n  \"title\": \"[RÉSOLU] Question sur les admissions à l'ESN\"\n}", "options": { "raw": { "language": "json" } } }
+                "url": {
+                  "raw": "{{base_url}}/api/forum/topics/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "forum",
+                    "topics",
+                    "1",
+                    ""
+                  ]
+                },
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"[RÉSOLU] Question sur les admissions à l'ESN\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
               }
             },
             {
               "name": "Supprimer un message (modération)",
               "request": {
                 "method": "DELETE",
-                "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
-                "url": { "raw": "{{base_url}}/api/forum/posts/1/", "host": ["{{base_url}}"], "path": ["api", "forum", "posts", "1", ""] },
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/forum/posts/1/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "forum",
+                    "posts",
+                    "1",
+                    ""
+                  ]
+                },
                 "description": "Supprime un message signalé. Remplacer 1 par l'ID du post."
               }
             }

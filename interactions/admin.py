@@ -1,6 +1,20 @@
 from django.contrib import admin
 
-from interactions.models import AdmissionRequest, ContactRequest, InternshipRequest, Lead
+from interactions.models import AdmissionRequest, ContactRequest, InternshipRequest, Lead, SiteSettings
+
+
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ("Logo", {"fields": ("logo",)}),
+        ("Réseaux sociaux", {"fields": ("facebook", "twitter", "linkedin", "instagram", "youtube", "whatsapp")}),
+    )
+
+    def has_add_permission(self, _request):
+        return not SiteSettings.objects.exists()
+
+    def has_delete_permission(self, _request, _obj=None):
+        return False
 
 # Register your models here.
 admin.site.site_header = "ARSTM - Administration"

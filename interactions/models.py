@@ -103,6 +103,36 @@ class JobOffer(models.Model):
         return f"[{self.get_offer_type_display()}] {self.title} - {self.organization}"
 
 
+class SiteSettings(models.Model):
+    """Paramètres globaux du site : logo et liens vers les réseaux sociaux."""
+    logo = models.ImageField(upload_to='site/logo/', verbose_name="Logo de l'école", blank=True, null=True)
+
+    facebook = models.URLField(verbose_name="Facebook", blank=True)
+    twitter = models.URLField(verbose_name="Twitter / X", blank=True)
+    linkedin = models.URLField(verbose_name="LinkedIn", blank=True)
+    instagram = models.URLField(verbose_name="Instagram", blank=True)
+    youtube = models.URLField(verbose_name="YouTube", blank=True)
+    whatsapp = models.CharField(max_length=20, verbose_name="WhatsApp (numéro)", blank=True, help_text="Ex: +22500000000")
+
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Paramètres du site"
+        verbose_name_plural = "Paramètres du site"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1  # enforce singleton
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def __str__(self):
+        return "Paramètres du site"
+
+
 # --- NOUVEAU MODÈLE NEWSLETTER ---
 class NewsletterSubscription(models.Model):
     """Détails spécifiques et statut d'activation pour les abonnements Newsletter"""

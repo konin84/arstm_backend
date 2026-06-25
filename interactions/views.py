@@ -1,11 +1,12 @@
 # apps/interactions/views.py
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from .models import ContactRequest, AdmissionRequest, InternshipRequest, JobOffer, Lead, NewsletterSubscription
+from .models import ContactRequest, AdmissionRequest, InternshipRequest, JobOffer, Lead, NewsletterSubscription, SiteSettings
 from .serializers import (
     ContactRequestSerializer, AdmissionRequestSerializer,
     InternshipRequestSerializer, JobOfferSerializer, JobOfferWriteSerializer,
     LeadSerializer, NewsletterBroadcastSerializer, NewsletterSubscriptionSerializer, NewsletterUnsubscribeSerializer,
+    SiteSettingsSerializer,
 )
 from users.permissions import IsAdminOrModerator, IsAdminOrModeratorOrReadOnly, PRIVILEGED_ROLES
 
@@ -168,6 +169,19 @@ class NewsletterUnsubscribeView(generics.GenericAPIView):
             status=status.HTTP_200_OK
         )
     
+class SiteSettingsView(generics.RetrieveUpdateAPIView):
+    """Lecture publique des paramètres du site ; mise à jour réservée aux admins et modérateurs."""
+    serializer_class = SiteSettingsSerializer
+
+    def get_permissions(self):
+        if self.request.method in ('PUT', 'PATCH'):
+            return [IsAdminOrModerator()]
+        return [permissions.AllowAny()]
+
+    def get_object(self):
+        return SiteSettings.get()
+
+
 class NewsletterBroadcastView(generics.GenericAPIView):
     """Admin/Modérateur : envoie un message à tous les abonnés actifs de la newsletter."""
     serializer_class = NewsletterBroadcastSerializer

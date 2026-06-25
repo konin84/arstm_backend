@@ -3,7 +3,7 @@ from rest_framework import serializers
 from django.db import transaction
 
 from users.utils import send_newsletter_confirmation_email, send_newsletter_unsubscribe_email
-from .models import Lead, ContactRequest, AdmissionRequest, InternshipRequest, JobOffer, NewsletterSubscription
+from .models import Lead, ContactRequest, AdmissionRequest, InternshipRequest, JobOffer, NewsletterSubscription, SiteSettings
 
 class LeadSerializer(serializers.ModelSerializer):
     class Meta:
@@ -152,3 +152,10 @@ class NewsletterUnsubscribeSerializer(serializers.Serializer):
 class NewsletterBroadcastSerializer(serializers.Serializer):
     subject = serializers.CharField(max_length=255)
     message = serializers.CharField(help_text="Contenu HTML du message")
+
+
+class SiteSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SiteSettings
+        fields = ['logo', 'facebook', 'twitter', 'linkedin', 'instagram', 'youtube', 'whatsapp', 'updated_at']
+        read_only_fields = ['updated_at']
