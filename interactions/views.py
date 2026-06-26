@@ -169,17 +169,41 @@ class NewsletterUnsubscribeView(generics.GenericAPIView):
             status=status.HTTP_200_OK
         )
     
-class SiteSettingsView(generics.RetrieveUpdateAPIView):
-    """Lecture publique des paramètres du site ; mise à jour réservée aux admins et modérateurs."""
+class SiteSettingsView(generics.GenericAPIView):
+    """Paramètres du site : logo et réseaux sociaux. Singleton — une seule instance possible."""
     serializer_class = SiteSettingsSerializer
 
     def get_permissions(self):
-        if self.request.method in ('PUT', 'PATCH'):
-            return [IsAdminOrModerator()]
-        return [permissions.AllowAny()]
+        if self.request.method == 'GET':
+            return [permissions.AllowAny()]
+        return [IsAdminOrModerator()]
 
-    def get_object(self):
-        return SiteSettings.get()
+    def get(self, request):
+        serializer = self.get_serializer(SiteSettings.get())
+        return Response(serializer.data)
+
+    def post(self, request):
+        if SiteSettings.objects.exists():
+            return Response(
+                {"detail": "Les paramètres du site existent déjà. Utilisez PATCH pour les modifier."},
+                status=status.HTTP_409_CONFLICT
+            )
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def patch(self, request):
+        serializer = self.get_serializer(SiteSettings.get(), data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def put(self, request):
+        serializer = self.get_serializer(SiteSettings.get(), data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
 class NewsletterBroadcastView(generics.GenericAPIView):

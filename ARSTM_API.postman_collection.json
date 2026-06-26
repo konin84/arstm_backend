@@ -2392,7 +2392,8 @@
                     "programs",
                     ""
                   ]
-                }
+                },
+                "description": "Public. Retourne la liste résumée des programmes : id, title, slug, program_type, regime, duration, domain_name, school_name, is_active. Utiliser les filtres `type`, `regime` et `domain` pour affiner les résultats."
               }
             },
             {
@@ -3423,6 +3424,40 @@
           "name": "Paramètres du site",
           "description": "Logo et liens vers les réseaux sociaux. Lecture publique, mise à jour réservée aux admins et modérateurs.",
           "item": [
+            {
+              "name": "Créer les paramètres du site (admin)",
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/interactions/site-settings/",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "interactions", "site-settings", ""]
+                },
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "logo",
+                      "type": "file",
+                      "description": "Logo de l'école (PNG/SVG recommandé)"
+                    },
+                    { "key": "facebook",  "value": "https://facebook.com/arstm.ci", "type": "text" },
+                    { "key": "twitter",   "value": "https://twitter.com/arstm_ci",  "type": "text" },
+                    { "key": "linkedin",  "value": "https://linkedin.com/company/arstm", "type": "text" },
+                    { "key": "instagram", "value": "https://instagram.com/arstm.ci", "type": "text" },
+                    { "key": "youtube",   "value": "https://youtube.com/@arstm",    "type": "text" },
+                    { "key": "whatsapp",  "value": "+22527000000",                  "type": "text" }
+                  ]
+                },
+                "description": "Réservé aux admins et modérateurs. Crée les paramètres du site (une seule fois). Retourne 409 si un enregistrement existe déjà — utiliser PATCH pour modifier."
+              }
+            },
             {
               "name": "Lire les paramètres du site (public)",
               "request": {
